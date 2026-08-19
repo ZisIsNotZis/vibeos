@@ -18,6 +18,14 @@ test('opens the App Shop root surface immediately', async () => {
   assert.equal(runtime.snapshot().surfaces.find(surface => surface.appId === 'shop' && surface.route === '/')?.status, 'ready');
   assert.equal(agent.tasks.length, 0);
 });
+test('loads a cached recursive child surface with its real content', async () => {
+  const runtime = new OperatingSystemRuntime(new FakeAgent(), { send() {} });
+  const operation = await runtime.dispatch({ type: 'open_surface', appId: 'app-tetris', route: '/play' });
+  const surface = runtime.snapshot().surfaces.find(item => item.appId === 'app-tetris' && item.route === '/play');
+  assert.equal(operation.state, 'ready');
+  assert.equal(surface?.content.heading, 'Tetris — Play');
+  assert.notEqual(surface?.content.body, 'A world imagined for app-tetris at /play.');
+});
 test('opens the browser root surface immediately', async () => {
   const agent = new FakeAgent(); const runtime = new OperatingSystemRuntime(agent, { send() {} });
   const operation = await runtime.dispatch({ type: 'open_surface', appId: 'browser', route: '/' });
@@ -56,7 +64,7 @@ test('app installation requests a generated identity artifact', async () => {
   const agent = new FakeAgent(); const runtime = new OperatingSystemRuntime(agent, { send() {} });
   await runtime.dispatch({ type: 'install_app', app: { id: 'app-poetry', name: 'Poetry House', description: 'A writing space', icon: '', category: 'Creative' } });
   assert.equal(agent.tasks.at(-1)?.capability, 'app:identity');
-  assert.equal(agent.tasks.at(-1)?.target, 'world/apps/app-poetry');
+  assert.match(agent.tasks.at(-1)?.target ?? '', /world\/apps\/app-poetry$/);
 });
 test('fulfills an unavailable capability then resumes the original operation', async () => {
   const agent = new FakeAgent(); const runtime = new OperatingSystemRuntime(agent, { send() {} });

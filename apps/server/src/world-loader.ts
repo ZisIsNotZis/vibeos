@@ -12,20 +12,20 @@ export function loadWorld(root: string): WorldIndex {
     if (!entry.isDirectory()) continue;
     const path = join(appsRoot, entry.name, 'node.json'); const node = readNode(path); if (!node) continue;
     nodes.push(node); apps.push({ id: node.id, name: node.title, description: node.surface?.body ?? '', icon: node.icon ?? '', category: node.kind, installed: true, status: node.status ?? 'available' });
-    if (node.surface) surfaces.push(toSurface(node.id, node.id, '/', node.title, node.surface));
-    loadChildren(join(appsRoot, entry.name, 'children'), node.id, node.id, nodes, surfaces);
+    if (node.surface) surfaces.push(toSurface(node.id, node.id, node.route ?? '/', node.title, node.surface));
+    loadChildren(join(appsRoot, entry.name, 'children'), node.id, node.id, '/', nodes, surfaces);
   }
   return { apps, surfaces, nodes };
 }
 
-function loadChildren(root: string, parentId: string, appId: string, nodes: WorldNode[], surfaces: Surface[]) {
+function loadChildren(root: string, parentId: string, appId: string, parentRoute: string, nodes: WorldNode[], surfaces: Surface[]) {
   if (!statSafe(root)) return;
   for (const entry of readdirSync(root, { withFileTypes: true })) {
     if (!entry.isDirectory()) continue;
     const node = readNode(join(root, entry.name, 'node.json')); if (!node) continue;
-    node.parentId ??= parentId; nodes.push(node);
-    if (node.surface) surfaces.push(toSurface(node.id, appId, node.route ?? '/', node.title, node.surface));
-    loadChildren(join(root, entry.name, 'children'), node.id, appId, nodes, surfaces);
+    node.parentId ??= parentId; nodes.push(node); const route = node.route ?? `${parentRoute}/${entry.name}`.replace(/\/+/g, '/');
+    if (node.surface) surfaces.push(toSurface(node.id, appId, route, node.title, node.surface));
+    loadChildren(join(root, entry.name, 'children'), node.id, appId, route, nodes, surfaces);
   }
 }
 
