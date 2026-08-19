@@ -42,6 +42,12 @@ test('app install is visible as a launcher-ready placeholder', async () => {
   const app = runtime.snapshot().apps.find(item => item.id === 'app-tetris');
   assert.deepEqual({ name: app?.name, installed: app?.installed, status: app?.status }, { name: 'Tetris', installed: true, status: 'placeholder' });
 });
+test('app installation requests a generated identity artifact', async () => {
+  const agent = new FakeAgent(); const runtime = new OperatingSystemRuntime(agent, { send() {} });
+  await runtime.dispatch({ type: 'install_app', app: { id: 'app-poetry', name: 'Poetry House', description: 'A writing space', icon: '', category: 'Creative' } });
+  assert.equal(agent.tasks.at(-1)?.capability, 'app:identity');
+  assert.equal(agent.tasks.at(-1)?.target, 'world/apps/app-poetry');
+});
 test('fulfills an unavailable capability then resumes the original operation', async () => {
   const agent = new FakeAgent(); const runtime = new OperatingSystemRuntime(agent, { send() {} });
   const operation = await runtime.dispatch({ type: 'open_file', path: '/notes/today.txt' });
