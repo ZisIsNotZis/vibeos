@@ -1,0 +1,17 @@
+{
+  "id": "app-tetris",
+  "title": "Tetris",
+  "kind": "app",
+  "status": "available",
+  "icon": "icon.svg",
+  "children": [],
+  "surface": {
+    "heading": "Tetris",
+    "body": "Stack falling blocks, clear lines, and chase a new high score. The board is ready when you are.",
+    "controls": [
+      { "id": "play", "label": "Play game", "intent": { "type": "open_surface", "appId": "app-tetris", "route": "/play" } },
+      { "id": "scores", "label": "High scores", "intent": { "type": "open_surface", "appId": "app-tetris", "route": "/scores" } },
+      { "id": "how-to-play", "label": "How to play", "intent": { "type": "open_surface", "appId": "app-tetris", "route": "/guide" } }
+    ]
+  }
+}
