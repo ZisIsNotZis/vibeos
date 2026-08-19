@@ -28,10 +28,10 @@ export class OperatingSystemRuntime {
         case 'close_window': this.state.windows = this.state.windows.filter(window => window.id !== intent.windowId); this.emit({ type: 'snapshot', snapshot: this.snapshot() }); break;
         case 'focus_window': this.focus(intent.windowId); break;
         case 'minimize_window': this.changeWindow(intent.windowId, 'minimized'); break;
-        case 'maximize_window': this.changeWindow(intent.windowId, 'maximized'); break;
+        case 'maximize_window': this.toggleMaximize(intent.windowId); break;
         case 'move_window': this.moveWindow(intent.windowId, intent.x, intent.y); break;
         case 'resize_window': this.resizeWindow(intent.windowId, intent.width, intent.height); break;
-        case 'activate_control': { const window = this.state.windows.find(item => item.appId === intent.appId && item.focused); await this.ensureSurface(intent.appId, `${intent.surfaceId}/${intent.controlId}`, window?.id); break; }
+        case 'activate_control': { const window = this.state.windows.find(item => item.appId === intent.appId && item.focused); const surface = this.state.surfaces.find(item => item.id === intent.surfaceId); const control = surface?.content.controls.find(item => item.id === intent.controlId); if (!control) throw new Error('The selected control is no longer available.'); if (control.action.type === 'activate_control') { this.trace(operation.id, `control ${intent.controlId} acknowledged`); break; } await this.dispatch(control.action); break; }
         case 'navigate_browser': { const route = this.route(intent.url); const window = this.openOrNavigateApp('browser', route); await this.ensureSurface('browser', route, window.id); break; }
         case 'open_file': case 'create_file': { const result = await this.agent.fulfill({ operationId: operation.id, capability: intent.type, intent, input: intent, target: `cache/files/${intent.type}` }); if (!result.ok) throw new Error(result.message); break; }
         case 'search_apps': break;
@@ -60,6 +60,7 @@ export class OperatingSystemRuntime {
   private updateWindowRoute(id: string, route: string) { const window = this.state.windows.find(item => item.id === id); if (window) { window.route = route; this.emit({ type: 'window', window }); } }
   private focus(id: string) { this.state.windows = this.state.windows.map(window => ({ ...window, focused: window.id === id })); this.emit({ type: 'snapshot', snapshot: this.snapshot() }); }
   private changeWindow(id: string, state: WindowModel['state']) { const window = this.state.windows.find(item => item.id === id); if (window) window.state = state; this.emit({ type: 'snapshot', snapshot: this.snapshot() }); }
+  private toggleMaximize(id: string) { const window = this.state.windows.find(item => item.id === id); if (window) window.state = window.state === 'maximized' ? 'normal' : 'maximized'; this.emit({ type: 'snapshot', snapshot: this.snapshot() }); }
   private moveWindow(id: string, x: number, y: number) { const window = this.state.windows.find(item => item.id === id); if (window) window.position = { x: Math.max(0, x), y: Math.max(42, y) }; this.emit({ type: 'snapshot', snapshot: this.snapshot() }); }
   private resizeWindow(id: string, width: number, height: number) { const window = this.state.windows.find(item => item.id === id); if (window) window.size = { width: Math.max(360, width), height: Math.max(260, height) }; this.emit({ type: 'snapshot', snapshot: this.snapshot() }); }
   private finish(operation: Operation) { operation.state = 'ready'; this.persist(); this.emit({ type: 'operation', operation }); return operation; }

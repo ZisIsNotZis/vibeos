@@ -56,6 +56,23 @@ test('navigates within an app window instead of opening another window', async (
   assert.equal(runtime.snapshot().windows.length, 1);
   assert.equal(runtime.snapshot().windows[0]?.route, '/play');
 });
+test('window geometry operations update the runtime model', async () => {
+  const runtime = new OperatingSystemRuntime(new FakeAgent(), { send() {} });
+  await runtime.dispatch({ type: 'open_app', appId: 'app-tetris' }); const id = runtime.snapshot().windows[0]!.id;
+  await runtime.dispatch({ type: 'move_window', windowId: id, x: 220, y: 120 });
+  await runtime.dispatch({ type: 'resize_window', windowId: id, width: 900, height: 620 });
+  await runtime.dispatch({ type: 'maximize_window', windowId: id });
+  assert.deepEqual(runtime.snapshot().windows[0], { ...runtime.snapshot().windows[0], state: 'maximized', position: { x: 220, y: 120 }, size: { width: 900, height: 620 } });
+});
+test('control activation follows the generated control intent instead of fabricating a route', async () => {
+  const runtime = new OperatingSystemRuntime(new FakeAgent(), { send() {} });
+  await runtime.dispatch({ type: 'open_surface', appId: 'app-tetris', route: '/play' });
+  const surface = runtime.snapshot().surfaces.find(item => item.appId === 'app-tetris' && item.route === '/play')!;
+  const start = surface.content.controls.find(control => control.id === 'start')!;
+  await runtime.dispatch({ type: 'activate_control', appId: 'app-tetris', surfaceId: surface.id, controlId: start.id });
+  assert.equal(runtime.snapshot().windows.length, 1);
+  assert.equal(runtime.snapshot().windows[0]?.route, '/play/game');
+});
 test('installs an arbitrary app without generating it', async () => {
   const runtime = new OperatingSystemRuntime(new FakeAgent(), { send() {} });
   await runtime.dispatch({ type: 'install_app', app: { id: 'app-music', name: 'Music Studio', description: 'A studio', icon: 'music' } });

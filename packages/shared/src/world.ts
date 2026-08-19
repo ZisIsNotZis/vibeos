@@ -8,5 +8,5 @@ export type WorldNode = {
   icon?: string;
   parentId?: NodeId;
   children: Array<{ id: NodeId; title: string; kind: string; path: string }>;
-  surface?: { heading: string; body: string; controls: Array<{ id: string; label: string; intent: unknown }> };
+  surface?: { heading: string; body: string; controls: Array<{ id: string; label: string; intent: unknown }>; fields?: Array<{ id: string; label: string; placeholder?: string; value?: string }>; board?: { columns: number; rows: number; activePiece?: string; nextPiece?: string; score?: number; lines?: number; level?: number; state?: string } };
 };

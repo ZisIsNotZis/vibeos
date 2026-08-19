@@ -1,0 +1,24 @@
+{
+  "id": "google.com",
+  "title": "Google",
+  "kind": "surface",
+  "status": "ready",
+  "surface": {
+    "heading": "Google",
+    "body": "Search the imagined web from a familiar local search page. Results stay inside VibeOS.",
+    "fields": [
+      { "id": "search", "label": "Search Google", "placeholder": "Search the imagined web" }
+    ],
+    "controls": [
+      {
+        "label": "Return to browser start",
+        "intent": {
+          "type": "open_surface",
+          "appId": "browser",
+          "route": "/"
+        }
+      }
+    ]
+  },
+  "children": []
+}

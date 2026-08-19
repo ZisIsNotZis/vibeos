@@ -1,1 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96"><rect width="96" height="96" rx="24" fill="#7ed7bb"/><circle cx="48" cy="48" r="27" fill="none" stroke="#172b32" stroke-width="6"/><path d="M21 48h54M48 21c10 12 10 42 0 54M48 21c-10 12-10 42 0 54" fill="none" stroke="#172b32" stroke-width="4"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+  <title id="title">Browser</title>
+  <desc id="desc">A browser window with a blue globe and navigation bar</desc>
+  <rect x="7" y="9" width="50" height="46" rx="5" fill="#f8fafc" stroke="#1e293b" stroke-width="3"/>
+  <path d="M8.5 21.5h47" stroke="#1e293b" stroke-width="3"/>
+  <circle cx="15" cy="15.5" r="2" fill="#ef4444"/>
+  <circle cx="22" cy="15.5" r="2" fill="#f59e0b"/>
+  <circle cx="29" cy="15.5" r="2" fill="#22c55e"/>
+  <circle cx="33" cy="38" r="12" fill="#2563eb"/>
+  <path d="M21 38h24M33 26c3.2 3.3 4.8 7.3 4.8 12S36.2 46.7 33 50M33 26c-3.2 3.3-4.8 7.3-4.8 12s1.6 8.7 4.8 12M23.5 31.5c5.8 2 13.2 2 19 0M23.5 44.5c5.8-2 13.2-2 19 0" fill="none" stroke="#bfdbfe" stroke-width="1.7" stroke-linecap="round"/>
+</svg>
