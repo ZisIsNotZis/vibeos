@@ -1,6 +1,6 @@
 # VibeOS Design: An Imagined Operating System
 
-Status: proposed — review before implementation
+Status: implementation in progress — core runtime, tracked world tree, logging, Assistant request seam, and E2E smoke coverage are implemented. The remaining work is to remove legacy app-specific frontend renderers and make generated artifacts load back from the tracked world tree.
 
 ## 0. Architectural rule: core mechanism, generated meaning
 
@@ -29,6 +29,54 @@ cache/apps/<app-id>/
 ```
 
 Seeded apps are fixtures in this cache, not special runtime implementations. This separation is the primary extensibility seam: adding an app should add cache data or generate a cache entry, without modifying core code.
+
+### Recursive world tree
+
+The world is not a fixed `apps → pages` hierarchy. It is a recursive tree. Each node knows only its direct children; the OS does not need to know the tree’s total depth or global meanings.
+
+```text
+world/
+  apps/
+    tetris/
+      node.json
+      icon.svg
+      children/home/
+      children/game/
+    virtual-machine/
+      node.json
+      children/apps/
+        node.json
+        children/...
+```
+
+An app may contain pages, a virtual machine may contain apps, and those apps may contain further trees. All are generic `WorldNode` records. Parents define the meaning of their direct children; core code provides traversal, selection, persistence, windows, and rendering.
+
+```ts
+type WorldNode = {
+  id: string;
+  title: string;
+  kind: string;
+  parentId?: string;
+  children: NodeRef[];
+  surface?: SurfaceModel;
+};
+```
+
+Entering a node loads it and its immediate children. Descendants remain lazy until selected. The tracked `world/` tree is the durable cache: generated artifacts are committed with core code, survive `npm run dev`, and remain reviewable as ordinary project changes. No separate database is required initially.
+
+### Assistant app
+
+Assistant is a normal world-tree app with a core-provided context capability. It receives the selected node, parent chain, selected window, recent operations, runtime errors, and relevant log entries.
+
+```text
+world/apps/assistant/
+  node.json
+  icon.svg
+  children/home/
+  children/conversations/
+```
+
+An Assistant request contains a natural-language complaint and runtime context. Codex diagnoses the issue, edits the smallest affected subtree or core seam, validates it, reloads the affected node, and reports the result in Assistant. The user always has a place to explain what is wrong.
 
 ## 1. Product premise
 
@@ -256,7 +304,7 @@ These logs are for the developer operating the local runtime. They are not sent 
 
 ### Phase 1 — Runtime seams and persistence
 
-Implement typed OS/world models, intent journal, surface registry, capability keys, operation replay, and a deterministic in-memory store with a file-backed adapter. Remove fixed app branches from core and represent seeded apps as cache fixtures.
+Implement typed OS/world models, recursive node traversal, intent journal, surface registry, capability keys, operation replay, and direct tracked `world/` file loading. Remove fixed app branches from core and represent seeded apps as world-tree fixtures.
 
 Completion criterion: tests can dispatch an absent surface, observe a pending operation, install a generated result, and observe exactly one resumed action.
 
@@ -268,7 +316,7 @@ Completion criterion: calculator opens and closes; browser accepts a URL and cha
 
 ### Phase 3 — App Shop and placeholders
 
-Implement local semantic app search, install metadata, launcher registration, placeholder entry surfaces, and app workspace creation.
+Implement local semantic app search, install metadata, launcher registration, placeholder entry nodes, nested world-tree creation, and the Assistant repair surface.
 
 Completion criterion: arbitrary app search → install → launcher entry works without generation.
 

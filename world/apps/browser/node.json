@@ -1,0 +1,8 @@
+{
+  "id": "browser",
+  "title": "Browser",
+  "kind": "app",
+  "icon": "icon.svg",
+  "children": [],
+  "surface": { "heading": "Where to?", "body": "Imagine any website locally. Nothing leaves VibeOS.", "controls": [] }
+}

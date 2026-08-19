@@ -1,4 +1,4 @@
-import { appendFileSync, mkdirSync } from 'node:fs';
+import { appendFileSync, mkdirSync, readFileSync } from 'node:fs';
 import { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -8,4 +8,7 @@ export function log(scope: string, message: string, detail?: unknown) {
   const line = `${new Date().toISOString()} [${scope}] ${message}${detail === undefined ? '' : ` ${JSON.stringify(detail)}`}\n`;
   process.stdout.write(line);
   try { appendFileSync(file, line); } catch (error) { process.stderr.write(`[logging] unable to write ${file}: ${String(error)}\n`); }
+}
+export function recentLog(lines = 80) {
+  try { return readFileSync(file, 'utf8').split('\n').filter(Boolean).slice(-lines).join('\n'); } catch { return ''; }
 }

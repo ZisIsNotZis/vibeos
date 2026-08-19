@@ -1,0 +1,14 @@
+{
+  "id": "assistant",
+  "title": "Assistant",
+  "kind": "app",
+  "icon": "icon.svg",
+  "children": [
+    { "id": "home", "title": "Assistant Home", "kind": "surface", "path": "children/home/node.json" }
+  ],
+  "surface": {
+    "heading": "How can I help?",
+    "body": "Tell Assistant what feels wrong in your VibeOS world.",
+    "controls": []
+  }
+}

@@ -1,31 +1,23 @@
-import type { AgentResult, AgentTask, AppRecord, Intent, Operation, RuntimeEvent, RuntimeSnapshot, Surface, WindowModel } from '@vibeos/shared';
-import { log } from './logging.js';
+import type { AgentResult, AgentTask, AppRecord, Intent, Operation, RuntimeEvent, RuntimeSnapshot, Surface, WindowModel, RuntimeIntent } from '@vibeos/shared';
+import { log, recentLog } from './logging.js';
+import { loadWorld } from './world-loader.js';
+import { join } from 'node:path';
 export interface AgentAdapter { fulfill(task: AgentTask): Promise<AgentResult>; }
 export interface RuntimePort { send(event: RuntimeEvent): void; }
 export interface WorldStore { load(): RuntimeSnapshot; save(snapshot: RuntimeSnapshot): void; }
-const seedApps: AppRecord[] = [
-  { id: 'browser', name: 'Browser', description: 'Explore imagined websites locally', icon: 'globe', category: 'System', installed: true, status: 'available' },
-  { id: 'shop', name: 'App Shop', description: 'Find something new to imagine', icon: 'store', category: 'System', installed: true, status: 'available' },
-  { id: 'calculator', name: 'Calculator', description: 'Perform quick calculations', icon: 'calculator', category: 'Productivity', installed: true, status: 'available' },
-];
-const seedSurfaces: Surface[] = [{
-  id: 'surface-shop-root', appId: 'shop', route: '/', title: 'App Shop', status: 'ready',
-  content: { heading: 'App Shop', body: 'Find something new to imagine.', controls: [], links: [] },
-}, {
-  id: 'surface-browser-root', appId: 'browser', route: '/', title: 'Browser', status: 'ready',
-  content: { heading: 'Where to?', body: 'Imagine any website, locally.', controls: [], links: [] },
-}, {
-  id: 'surface-calculator-root', appId: 'calculator', route: '/', title: 'Calculator', status: 'ready',
-  content: { heading: 'Calculator', body: 'Perform quick calculations.', controls: [], links: [] },
-}];
+const worldRoot = join(process.cwd(), '../../world');
+const world = loadWorld(worldRoot);
+const seedApps: AppRecord[] = world.apps.length ? world.apps : [{ id: 'assistant', name: 'Assistant', description: 'Repair and shape your VibeOS world', icon: 'icon.svg', category: 'System', installed: true, status: 'available' }];
+const seedSurfaces: Surface[] = world.surfaces;
 export class OperatingSystemRuntime {
   private state: RuntimeSnapshot; private sequence = 0;
   constructor(private readonly agent: AgentAdapter, private readonly port: RuntimePort, private readonly store?: WorldStore) { this.state = store?.load() ?? { windows: [], operations: [], notifications: [], apps: seedApps, surfaces: seedSurfaces }; }
   snapshot() { return structuredClone(this.state); }
-  async dispatch(intent: Intent): Promise<Operation> {
+  async dispatch(intent: RuntimeIntent): Promise<Operation> {
     const operation: Operation = { id: `op-${++this.sequence}`, intent, state: 'pending' }; this.state.operations.push(operation); this.trace(operation.id, `accepted ${intent.type}`); this.emit({ type: 'operation', operation });
     try {
       switch (intent.type) {
+        case 'assistant_request': await this.assistant(operation.id, intent); break;
         case 'open_app': this.openApp(intent.appId); await this.ensureSurface(intent.appId, '/'); break;
         case 'open_surface': this.openApp(intent.appId); await this.ensureSurface(intent.appId, intent.route); break;
         case 'navigate': this.openApp('browser'); await this.ensureSurface('browser', this.route(intent.target)); break;
@@ -41,6 +33,20 @@ export class OperatingSystemRuntime {
       }
       return this.finish(operation);
     } catch (cause) { return this.fail(operation, cause instanceof Error ? cause.message : 'The operation could not be completed.'); }
+  }
+  private async assistant(operationId: string, intent: Extract<RuntimeIntent, { type: 'assistant_request' }>) {
+    const context = { ...intent.context, recentOperations: this.state.operations.slice(-8).map(item => `${item.intent.type}:${item.state}`), recentLog: recentLog() };
+    this.trace(operationId, 'Assistant is preparing a repair');
+    const result = await this.agent.fulfill({ operationId, capability: 'assistant:repair', intent, input: { message: intent.message, context }, target: 'world' });
+    if (!result.ok) throw new Error(result.message);
+    this.trace(operationId, 'Assistant repair handed back to VibeOS');
+    this.reloadWorld();
+  }
+  private reloadWorld() {
+    const next = loadWorld(worldRoot);
+    this.state.apps = next.apps.length ? next.apps : this.state.apps;
+    this.state.surfaces = [...this.state.surfaces.filter(surface => surface.status !== 'ready'), ...next.surfaces];
+    this.emit({ type: 'snapshot', snapshot: this.snapshot() });
   }
   private async ensureSurface(appId: string, route: string) { const current = this.state.surfaces.find(surface => surface.appId === appId && surface.route === route); if (current?.status === 'ready') { this.trace(`surface:${appId}:${route}`, 'cache hit'); return; } const surface: Surface = current ?? { id: `surface-${++this.sequence}`, appId, route, title: this.state.apps.find(app => app.id === appId)?.name ?? appId, status: 'generating', content: { heading: 'Preparing your space', body: 'This place is taking shape.', controls: [] } }; if (!current) this.state.surfaces.push(surface); this.trace(`surface:${appId}:${route}`, 'generation requested'); this.emit({ type: 'surface', surface }); const result = await this.agent.fulfill({ operationId: `surface-${surface.id}`, capability: `surface:${appId}:${route}`, intent: { type: 'open_surface', appId, route }, input: { appId, route }, target: `cache/apps/${appId}/surfaces/${surface.id}` }); if (!result.ok) throw new Error(result.message); surface.status = 'ready'; surface.content = { heading: surface.title, body: `A world imagined for ${surface.appId} at ${surface.route}.`, controls: [{ id: 'explore', kind: 'button', label: 'Explore further', action: { type: 'open_surface', appId, route: `${route}/explore` } }] }; this.trace(`surface:${appId}:${route}`, 'ready'); this.emit({ type: 'surface', surface }); }
   private install(app: AppRecord | import('@vibeos/shared').AppSpec) { log('runtime', 'installing app', app); if (!this.state.apps.some(existing => existing.id === app.id)) this.state.apps.push({ ...app, status: 'placeholder', installed: true }); this.emit({ type: 'snapshot', snapshot: this.snapshot() }); }

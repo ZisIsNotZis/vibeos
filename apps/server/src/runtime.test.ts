@@ -47,3 +47,12 @@ test('fulfills an unavailable capability then resumes the original operation', a
   const operation = await runtime.dispatch({ type: 'open_file', path: '/notes/today.txt' });
   assert.equal(operation.state, 'ready'); assert.equal(agent.tasks[0]?.intent.type, 'open_file'); assert.equal(runtime.snapshot().windows.length, 0);
 });
+test('sends an Assistant repair request with runtime context to the agent', async () => {
+  const agent = new FakeAgent(); const runtime = new OperatingSystemRuntime(agent, { send() {} });
+  const operation = await runtime.dispatch({ type: 'assistant_request', message: 'The Tetris icon is missing.', context: { nodeId: 'app-tetris', windowId: 'window-7' } });
+  assert.equal(operation.state, 'ready');
+  assert.equal(agent.tasks[0]?.capability, 'assistant:repair');
+  assert.equal(agent.tasks[0]?.input && (agent.tasks[0].input as { message: string }).message, 'The Tetris icon is missing.');
+  assert.equal((agent.tasks[0]?.input as { context: { nodeId?: string } }).context.nodeId, 'app-tetris');
+  assert.equal(typeof (agent.tasks[0]?.input as { context: { recentLog?: string } }).context.recentLog, 'string');
+});
