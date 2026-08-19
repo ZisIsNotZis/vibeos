@@ -49,6 +49,13 @@ test('keeps the initial app route when reopening after navigating to a child sur
   await runtime.dispatch({ type: 'open_app', appId: 'app-tetris' });
   assert.equal(runtime.snapshot().windows.at(-1)?.route, '/');
 });
+test('navigates within an app window instead of opening another window', async () => {
+  const runtime = new OperatingSystemRuntime(new FakeAgent(), { send() {} });
+  await runtime.dispatch({ type: 'open_app', appId: 'app-tetris' });
+  await runtime.dispatch({ type: 'open_surface', appId: 'app-tetris', route: '/play' });
+  assert.equal(runtime.snapshot().windows.length, 1);
+  assert.equal(runtime.snapshot().windows[0]?.route, '/play');
+});
 test('installs an arbitrary app without generating it', async () => {
   const runtime = new OperatingSystemRuntime(new FakeAgent(), { send() {} });
   await runtime.dispatch({ type: 'install_app', app: { id: 'app-music', name: 'Music Studio', description: 'A studio', icon: 'music' } });

@@ -8,6 +8,8 @@ export type Intent =
   | { type: 'focus_window'; windowId: string }
   | { type: 'minimize_window'; windowId: string }
   | { type: 'maximize_window'; windowId: string }
+  | { type: 'move_window'; windowId: string; x: number; y: number }
+  | { type: 'resize_window'; windowId: string; width: number; height: number }
   | { type: 'open_surface'; appId: AppId; route: string }
   | { type: 'navigate'; target: string }
   | { type: 'activate_control'; appId: AppId; surfaceId: string; controlId: string; input?: unknown }
@@ -21,10 +23,11 @@ export type AssistantIntent = { type: 'assistant_request'; message: string; cont
 export type RuntimeIntent = Intent | AssistantIntent;
 export type AppSpec = { id: AppId; name: string; description: string; icon: string; category?: string };
 export type AppRecord = AppSpec & { installed: boolean; status: 'placeholder' | 'available' | 'failed' };
-export type WindowModel = { id: string; appId: AppId; title: string; route?: string; state: WindowState; focused: boolean };
+export type WindowModel = { id: string; appId: AppId; title: string; route?: string; state: WindowState; focused: boolean; position: { x: number; y: number }; size: { width: number; height: number } };
 export type ControlModel = { id: string; kind: 'link' | 'button' | 'input' | 'form'; label: string; action: Intent };
 export type SurfaceField = { id: string; label: string; placeholder?: string; value?: string };
-export type SurfaceContent = { heading: string; body: string; controls: ControlModel[]; fields?: SurfaceField[]; links?: Array<{ id: string; label: string; route: string }> };
+export type BoardModel = { columns: number; rows: number; activePiece?: string; nextPiece?: string; score?: number; lines?: number; level?: number; state?: string };
+export type SurfaceContent = { heading: string; body: string; controls: ControlModel[]; fields?: SurfaceField[]; board?: BoardModel; links?: Array<{ id: string; label: string; route: string }> };
 export type Surface = { id: string; appId: AppId; route: string; title: string; status: SurfaceState; content: SurfaceContent };
 export type Operation = { id: string; intent: RuntimeIntent; state: OperationState; message?: string };
 export type RuntimeSnapshot = { windows: WindowModel[]; operations: Operation[]; notifications: string[]; apps: AppRecord[]; surfaces: Surface[] };

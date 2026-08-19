@@ -1,6 +1,6 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
-import type { AppRecord, Surface, WorldNode } from '@vibeos/shared';
+import type { AppRecord, Intent, Surface, WorldNode } from '@vibeos/shared';
 
 export type WorldIndex = { apps: AppRecord[]; surfaces: Surface[]; nodes: WorldNode[] };
 
@@ -30,5 +30,6 @@ function loadChildren(root: string, parentId: string, appId: string, parentRoute
 }
 
 function readNode(path: string): WorldNode | undefined { try { return JSON.parse(readFileSync(path, 'utf8')) as WorldNode; } catch { return undefined; } }
-function toSurface(nodeId: string, appId: string, route: string, title: string, surface: NonNullable<WorldNode['surface']>): Surface { return { id: `${nodeId}-surface`, appId, route, title, status: 'ready', content: { heading: surface.heading, body: surface.body, controls: surface.controls.map(control => ({ id: control.id, kind: 'button', label: control.label, action: control.intent as never })) } }; }
+function toSurface(nodeId: string, appId: string, route: string, title: string, surface: NonNullable<WorldNode['surface']>): Surface { const id = `${nodeId}-surface`; return { id, appId, route, title, status: 'ready', content: { heading: surface.heading, body: surface.body, board: (surface as NonNullable<WorldNode['surface']> & { board?: Surface['content']['board'] }).board, controls: surface.controls.map(control => ({ id: control.id, kind: 'button', label: control.label, action: toIntent(control.intent, appId, id, control.id) })) } }; }
+function toIntent(intent: unknown, appId: string, surfaceId: string, controlId: string): Intent { const candidate = intent as { type?: string }; return candidate?.type === 'control' ? { type: 'activate_control', appId, surfaceId, controlId } : intent as Intent; }
 function statSafe(path: string) { try { return statSync(path).isDirectory(); } catch { return false; } }
