@@ -1,0 +1,27 @@
+{
+  "id": "app-tetris-play",
+  "title": "Tetris — Play",
+  "kind": "surface",
+  "status": "available",
+  "parentId": "app-tetris",
+  "children": ["app-tetris-play-explore", "app-tetris-play-game"],
+  "surface": {
+    "heading": "Tetris — Play",
+    "body": "Guide the falling tetromino, rotate it into the stack, and clear complete rows before the board reaches the top.",
+    "controls": [
+      { "id": "start", "label": "Start game", "intent": { "type": "open_surface", "appId": "app-tetris", "route": "/play/game" } },
+      { "id": "scores", "label": "View high scores", "intent": { "type": "open_surface", "appId": "app-tetris", "route": "/scores" } },
+      { "id": "guide", "label": "How to play", "intent": { "type": "open_surface", "appId": "app-tetris", "route": "/guide" } }
+    ]
+  },
+  "board": {
+    "columns": 10,
+    "rows": 20,
+    "nextPiece": "T",
+    "holdPiece": null,
+    "score": 0,
+    "lines": 0,
+    "level": 1,
+    "state": "ready"
+  }
+}

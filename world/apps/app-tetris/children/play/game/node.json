@@ -1,0 +1,40 @@
+{
+  "id": "app-tetris-play-game",
+  "title": "Tetris — Game",
+  "kind": "surface",
+  "status": "available",
+  "parentId": "app-tetris-play",
+  "children": ["app-tetris-play-game-explore"],
+  "route": "/play/game",
+  "surface": {
+    "heading": "Tetris — Game",
+    "body": "A live 10 × 20 playfield. Move and rotate the falling tetromino, hard-drop it into the stack, and clear complete rows.",
+    "controls": [
+      { "id": "move-left", "label": "Move left", "intent": { "type": "control", "action": "move-left" } },
+      { "id": "move-right", "label": "Move right", "intent": { "type": "control", "action": "move-right" } },
+      { "id": "rotate", "label": "Rotate", "intent": { "type": "control", "action": "rotate" } },
+      { "id": "drop", "label": "Hard drop", "intent": { "type": "control", "action": "hard-drop" } },
+      { "id": "pause", "label": "Pause game", "intent": { "type": "control", "action": "pause" } }
+    ]
+  },
+  "board": {
+    "columns": 10,
+    "rows": 20,
+    "activePiece": "T",
+    "nextPiece": "I",
+    "holdPiece": null,
+    "score": 0,
+    "lines": 0,
+    "level": 1,
+    "state": "playing",
+    "keyboard": {
+      "left": "ArrowLeft",
+      "right": "ArrowRight",
+      "rotate": "ArrowUp",
+      "softDrop": "ArrowDown",
+      "hardDrop": "Space",
+      "hold": "Shift",
+      "pause": "Escape"
+    }
+  }
+}

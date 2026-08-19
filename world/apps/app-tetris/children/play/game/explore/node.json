@@ -1,0 +1,41 @@
+{
+  "id": "app-tetris-play-game-explore",
+  "title": "Tetris — Game Explore",
+  "kind": "surface",
+  "status": "available",
+  "parentId": "app-tetris-play-game",
+  "route": "/play/game/explore",
+  "children": [],
+  "surface": {
+    "heading": "Tetris — Game Explore",
+    "body": "Explore the live playfield with a guided T-piece setup. Read the stack, rotate into the open well, and clear the highlighted row.",
+    "controls": [
+      { "id": "move-left", "label": "Move left", "intent": { "type": "control", "action": "move-left" } },
+      { "id": "move-right", "label": "Move right", "intent": { "type": "control", "action": "move-right" } },
+      { "id": "rotate", "label": "Rotate", "intent": { "type": "control", "action": "rotate" } },
+      { "id": "drop", "label": "Hard drop", "intent": { "type": "control", "action": "hard-drop" } },
+      { "id": "pause", "label": "Pause game", "intent": { "type": "control", "action": "pause" } }
+    ]
+  },
+  "board": {
+    "columns": 10,
+    "rows": 20,
+    "activePiece": "T",
+    "nextPiece": "I",
+    "holdPiece": "O",
+    "score": 120,
+    "lines": 1,
+    "level": 1,
+    "state": "practice",
+    "target": "Complete the highlighted row",
+    "keyboard": {
+      "left": "ArrowLeft",
+      "right": "ArrowRight",
+      "rotate": "ArrowUp",
+      "softDrop": "ArrowDown",
+      "hardDrop": "Space",
+      "hold": "Shift",
+      "pause": "Escape"
+    }
+  }
+}

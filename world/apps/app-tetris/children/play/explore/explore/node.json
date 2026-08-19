@@ -1,0 +1,41 @@
+{
+  "id": "app-tetris-play-explore-explore",
+  "title": "Tetris — Explore Practice",
+  "kind": "surface",
+  "status": "available",
+  "parentId": "app-tetris-play-explore",
+  "children": [],
+  "route": "/play/explore/explore",
+  "surface": {
+    "heading": "Tetris — Explore Practice",
+    "body": "Practice the essential Tetris rhythm: rotate the falling T-piece, fit it into the stack, and complete the highlighted row.",
+    "controls": [
+      {
+        "id": "start-practice",
+        "label": "Start practice",
+        "intent": { "type": "open_surface", "appId": "app-tetris", "route": "/play/game" }
+      },
+      {
+        "id": "guide",
+        "label": "How to play",
+        "intent": { "type": "open_surface", "appId": "app-tetris", "route": "/guide" }
+      },
+      {
+        "id": "scores",
+        "label": "View high scores",
+        "intent": { "type": "open_surface", "appId": "app-tetris", "route": "/scores" }
+      }
+    ]
+  },
+  "board": {
+    "columns": 10,
+    "rows": 20,
+    "nextPiece": "T",
+    "holdPiece": "I",
+    "score": 120,
+    "lines": 1,
+    "level": 1,
+    "state": "practice",
+    "target": "Complete the highlighted row"
+  }
+}

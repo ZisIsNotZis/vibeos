@@ -1,0 +1,29 @@
+{
+  "id": "app-tetris-play-explore",
+  "title": "Tetris — Explore",
+  "kind": "surface",
+  "status": "available",
+  "parentId": "app-tetris-play",
+  "route": "/play/explore",
+  "children": ["app-tetris-play-explore-explore"],
+  "surface": {
+    "heading": "Tetris — Explore",
+    "body": "A focused practice board for learning the rhythm of Tetris. Read the stack, place the T-piece, and clear the marked row to keep the well open.",
+    "controls": [
+      { "id": "start-practice", "label": "Start practice", "intent": { "type": "open_surface", "appId": "app-tetris", "route": "/play/game" } },
+      { "id": "guide", "label": "How to play", "intent": { "type": "open_surface", "appId": "app-tetris", "route": "/guide" } },
+      { "id": "scores", "label": "View high scores", "intent": { "type": "open_surface", "appId": "app-tetris", "route": "/scores" } }
+    ]
+  },
+  "board": {
+    "columns": 10,
+    "rows": 20,
+    "nextPiece": "T",
+    "holdPiece": "I",
+    "score": 120,
+    "lines": 1,
+    "level": 1,
+    "state": "practice",
+    "target": "Complete the highlighted row"
+  }
+}

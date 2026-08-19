@@ -4,6 +4,7 @@ export type WorldNode = {
   title: string;
   kind: string;
   status?: 'placeholder' | 'available' | 'failed';
+  route?: string;
   icon?: string;
   parentId?: NodeId;
   children: Array<{ id: NodeId; title: string; kind: string; path: string }>;

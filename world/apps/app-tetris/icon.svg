@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-labelledby="title desc">
   <title id="title">Tetris icon</title>
-  <desc id="desc">A colorful falling block tile on a dark arcade grid</desc>
+    <desc id="desc">A T-shaped tetromino descending into a structured playfield</desc>
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#14172b"/><stop offset="1" stop-color="#29204a"/></linearGradient>
     <linearGradient id="cyan" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#64e8ff"/><stop offset="1" stop-color="#1eb8e8"/></linearGradient>
@@ -8,11 +8,12 @@
     <linearGradient id="yellow" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ffe875"/><stop offset="1" stop-color="#f1bb35"/></linearGradient>
   </defs>
   <rect width="96" height="96" rx="22" fill="url(#bg)"/>
-  <path d="M19 14v68M38 14v68M57 14v68M76 14v68M14 33h68M14 52h68M14 71h68" stroke="#ffffff" stroke-opacity=".07" stroke-width="2"/>
-  <g stroke="#111429" stroke-width="3" stroke-linejoin="round">
-    <path fill="url(#cyan)" d="M19 17h19v19H19zM38 17h19v19H38zM57 17h19v19H57z"/>
-    <path fill="url(#pink)" d="M38 36h19v19H38zM57 36h19v19H57zM57 55h19v19H57z"/>
-    <path fill="url(#yellow)" d="M19 55h19v19H19zM38 55h19v19H38z"/>
+  <rect x="14" y="12" width="68" height="72" rx="6" fill="#101329" stroke="#526080" stroke-width="2"/>
+  <path d="M23 14v68M32 14v68M41 14v68M50 14v68M59 14v68M68 14v68M77 14v68M14 23h68M14 32h68M14 41h68M14 50h68M14 59h68M14 68h68M14 77h68" stroke="#ffffff" stroke-opacity=".08"/>
+  <g stroke="#111429" stroke-width="1.8" stroke-linejoin="round">
+    <path fill="url(#cyan)" d="M41 15h9v9h-9zM50 15h9v9h-9zM59 15h9v9h-9zM50 24h9v9h-9z"/>
+    <path fill="url(#pink)" d="M23 42h9v9h-9zM32 42h9v9h-9zM41 42h9v9h-9zM32 51h9v9h-9z"/>
+    <path fill="url(#yellow)" d="M14 69h9v9h-9zM23 69h9v9h-9zM32 69h9v9h-9zM41 69h9v9h-9zM50 69h9v9h-9zM59 69h9v9h-9zM68 69h9v9h-9zM77 69h5v9h-5z"/>
   </g>
-  <path d="M22 20h13M41 20h13M60 20h13" stroke="#fff" stroke-opacity=".36" stroke-width="2" stroke-linecap="round"/>
+  <path d="M43 17h5M52 17h5M61 17h5M25 44h5M34 44h5M43 44h5" stroke="#fff" stroke-opacity=".42" stroke-width="1.4" stroke-linecap="round"/>
 </svg>
