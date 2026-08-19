@@ -3,6 +3,7 @@ export type WorldNode = {
   id: NodeId;
   title: string;
   kind: string;
+  status?: 'placeholder' | 'available' | 'failed';
   icon?: string;
   parentId?: NodeId;
   children: Array<{ id: NodeId; title: string; kind: string; path: string }>;
