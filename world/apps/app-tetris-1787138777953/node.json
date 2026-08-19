@@ -1,0 +1,9 @@
+{
+  "id": "app-tetris-1787138777953",
+  "title": "Tetris 1787138777953",
+  "kind": "app",
+  "status": "available",
+  "icon": "icon.svg",
+  "entry": "tetris.html",
+  "children": []
+}

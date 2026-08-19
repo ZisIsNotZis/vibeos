@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Scientific Calculator">
+  <defs>
+    <linearGradient id="case" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#26384d"/><stop offset="1" stop-color="#101923"/></linearGradient>
+    <linearGradient id="screen" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#d7f7df"/><stop offset="1" stop-color="#8fd3a7"/></linearGradient>
+  </defs>
+  <rect x="12" y="7" width="104" height="114" rx="18" fill="url(#case)" stroke="#5d7892" stroke-width="4"/>
+  <rect x="25" y="19" width="78" height="25" rx="5" fill="url(#screen)" stroke="#0c171c" stroke-width="3"/>
+  <path d="M31 35h18l7-10 8 15 7-8h12" fill="none" stroke="#21664b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <g fill="#e9b85d" stroke="#192735" stroke-width="2">
+    <rect x="25" y="53" width="15" height="12" rx="3"/><rect x="45" y="53" width="15" height="12" rx="3"/><rect x="65" y="53" width="15" height="12" rx="3"/><rect x="85" y="53" width="18" height="12" rx="3"/>
+    <rect x="25" y="71" width="15" height="12" rx="3"/><rect x="45" y="71" width="15" height="12" rx="3"/><rect x="65" y="71" width="15" height="12" rx="3"/><rect x="85" y="71" width="18" height="12" rx="3"/>
+    <rect x="25" y="89" width="15" height="12" rx="3"/><rect x="45" y="89" width="15" height="12" rx="3"/><rect x="65" y="89" width="15" height="12" rx="3"/><rect x="85" y="89" width="18" height="30" rx="3" fill="#e37b67"/>
+    <rect x="25" y="107" width="35" height="12" rx="3"/><rect x="65" y="107" width="15" height="12" rx="3"/>
+  </g>
+  <g fill="#173044"><circle cx="32" cy="59" r="2"/><circle cx="52" cy="59" r="2"/><circle cx="72" cy="59" r="2"/><circle cx="94" cy="59" r="2"/><path d="M28 77h9M49 77h7M69 77h7M89 77h10M28 95h9M49 95h7M69 95h7M34 113h17M69 113h7" stroke="#173044" stroke-width="2" stroke-linecap="round"/></g>
+</svg>

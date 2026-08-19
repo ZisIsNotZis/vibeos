@@ -1,0 +1,14 @@
+{
+  "id": "app-firefox-google.com",
+  "title": "Google",
+  "kind": "surface",
+  "status": "available",
+  "route": "/google.com",
+  "surface": {
+    "heading": "Google",
+    "body": "Search the web from a familiar local search page.",
+    "fields": [{ "id": "address", "label": "Search or enter address", "placeholder": "Search the web or enter a URL" }, { "id": "search", "label": "Search Google", "placeholder": "Search Google" }],
+    "controls": [{ "id": "search-submit", "label": "Google Search", "intent": { "type": "navigate_browser", "url": "/google.com/search?q={search}", "mode": "search_results" } }]
+  },
+  "children": []
+}

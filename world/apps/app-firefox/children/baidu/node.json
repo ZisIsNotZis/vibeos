@@ -1,0 +1,14 @@
+{
+  "id": "app-firefox-baidu.com",
+  "title": "Baidu",
+  "kind": "surface",
+  "status": "available",
+  "route": "/baidu.com",
+  "surface": {
+    "heading": "百度一下",
+    "body": "在 VibeOS 内搜索想象中的网页与内容。",
+    "fields": [{ "id": "address", "label": "Search or enter address", "placeholder": "Search the web or enter a URL" }, { "id": "search", "label": "搜索", "placeholder": "输入搜索内容" }],
+    "controls": [{ "id": "search-submit", "label": "百度一下", "intent": { "type": "navigate_browser", "url": "/baidu.com/search?q={search}", "mode": "search_results" } }]
+  },
+  "children": []
+}

@@ -8,18 +8,20 @@
   "route": "/play/game",
   "surface": {
     "heading": "Tetris — Game",
-    "body": "Game in progress. The purple T tetromino is falling in a 10 × 20 well. Fit it beside the cyan stack, then hard-drop to lock it and clear complete rows. Score increases with drops and line clears; the level rises every 10 lines.",
+    "body": "Live playfield: place the falling T tetromino beside the cyan stack, then lock it with a hard drop. Each move, rotation, and drop updates the board state; clear rows to raise your score.",
     "controls": [
-      { "id": "move-left", "label": "Move left", "intent": { "type": "control", "action": "move-left" } },
-      { "id": "move-right", "label": "Move right", "intent": { "type": "control", "action": "move-right" } },
-      { "id": "rotate", "label": "Rotate", "intent": { "type": "control", "action": "rotate" } },
-      { "id": "drop", "label": "Hard drop", "intent": { "type": "control", "action": "hard-drop" } },
-      { "id": "pause", "label": "Pause game", "intent": { "type": "control", "action": "pause" } },
+      { "id": "move-left", "label": "Move left", "intent": { "type": "activate_control", "appId": "app-tetris", "surfaceId": "app-tetris-play-game-surface", "controlId": "move-left" } },
+      { "id": "move-right", "label": "Move right", "intent": { "type": "activate_control", "appId": "app-tetris", "surfaceId": "app-tetris-play-game-surface", "controlId": "move-right" } },
+      { "id": "rotate", "label": "Rotate", "intent": { "type": "activate_control", "appId": "app-tetris", "surfaceId": "app-tetris-play-game-surface", "controlId": "rotate" } },
+      { "id": "drop", "label": "Hard drop", "intent": { "type": "activate_control", "appId": "app-tetris", "surfaceId": "app-tetris-play-game-surface", "controlId": "drop" } },
+      { "id": "pause", "label": "Pause game", "intent": { "type": "activate_control", "appId": "app-tetris", "surfaceId": "app-tetris-play-game-surface", "controlId": "pause" } },
       { "id": "practice", "label": "Open practice board", "intent": { "type": "open_surface", "appId": "app-tetris", "route": "/play/explore" } },
       { "id": "guide", "label": "Open controls guide", "intent": { "type": "open_surface", "appId": "app-tetris", "route": "/guide" } }
     ]
   },
-  "board": {
+  "payload": {
+    "interaction": "Each control is a live board action. Move left/right shifts the active piece, rotate changes its orientation, hard-drop locks it and advances the next piece, pause toggles the game state.",
+    "board": {
     "columns": 10,
     "rows": 20,
     "activePiece": "T",
@@ -44,5 +46,16 @@
       "hold": "Shift",
       "pause": "Escape"
     }
+    }
+  },
+  "board": {
+    "columns": 10,
+    "rows": 20,
+    "activePiece": "T",
+    "nextPiece": "I",
+    "score": 0,
+    "lines": 0,
+    "level": 1,
+    "state": "playing"
   }
 }

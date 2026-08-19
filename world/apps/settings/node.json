@@ -1,0 +1,9 @@
+{
+  "id": "settings",
+  "title": "Settings",
+  "kind": "system",
+  "status": "available",
+  "icon": "icon.svg",
+  "surface": { "heading": "Settings", "body": "Control how VibeOS prepares new pages and applications.", "controls": [] },
+  "children": []
+}

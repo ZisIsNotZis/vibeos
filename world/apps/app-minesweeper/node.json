@@ -1,0 +1,32 @@
+{
+  "id": "app-minesweeper",
+  "title": "Minesweeper",
+  "kind": "app",
+  "status": "available",
+  "icon": "icon.svg",
+  "entry": "generated/minesweeper.html",
+  "surface": {
+    "heading": "Minesweeper",
+    "body": "Clear the field without triggering a mine. Choose a square to begin, then use the numbers to map the hidden hazards.",
+    "controls": [
+      {
+        "id": "new-game",
+        "label": "New game",
+        "intent": { "type": "open_surface", "appId": "app-minesweeper", "route": "/" }
+      },
+      {
+        "id": "begin",
+        "label": "Reveal a square",
+        "intent": { "type": "open_surface", "appId": "app-minesweeper", "route": "/beginner" }
+      }
+    ],
+    "board": {
+      "columns": 9,
+      "rows": 9,
+      "score": 0,
+      "lines": 0,
+      "level": 1,
+      "state": "ready"
+    }
+  }
+}

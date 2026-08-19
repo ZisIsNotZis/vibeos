@@ -1,0 +1,39 @@
+{
+  "id": "aboutprivate",
+  "title": "Private Browsing",
+  "kind": "surface",
+  "status": "ready",
+  "route": "/aboutprivate",
+  "surface": {
+    "heading": "Private browsing",
+    "body": "Browse without saving your history, cookies, or form entries in this session.",
+    "fields": [
+      {
+        "id": "address",
+        "label": "Search or enter website",
+        "placeholder": "Search privately"
+      }
+    ],
+    "controls": [
+      {
+        "id": "start-private-search",
+        "label": "Start private search",
+        "intent": {
+          "type": "open_surface",
+          "appId": "browser",
+          "route": "/google.com"
+        }
+      },
+      {
+        "id": "return-to-browser",
+        "label": "Return to browser",
+        "intent": {
+          "type": "open_surface",
+          "appId": "browser",
+          "route": "/abouthome"
+        }
+      }
+    ]
+  },
+  "children": []
+}

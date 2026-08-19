@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+  <title id="title">芯源微 ERP</title><desc id="desc">蓝色芯片与管理图表标志</desc>
+  <rect width="64" height="64" rx="14" fill="#0b4f9c"/>
+  <path d="M18 18h28v28H18z" fill="#fff" opacity=".96"/>
+  <path d="M24 13v9M32 13v9M40 13v9M24 42v9M32 42v9M40 42v9M13 24h9M13 32h9M13 40h9M42 24h9M42 32h9M42 40h9" stroke="#8dc7ff" stroke-width="3" stroke-linecap="round"/>
+  <path d="M24 37l6-7 5 4 6-9" fill="none" stroke="#0b4f9c" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="24" cy="37" r="2.5" fill="#f59e0b"/><circle cx="30" cy="30" r="2.5" fill="#f59e0b"/><circle cx="35" cy="34" r="2.5" fill="#f59e0b"/><circle cx="41" cy="25" r="2.5" fill="#f59e0b"/>
+</svg>

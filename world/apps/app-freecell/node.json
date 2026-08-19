@@ -1,0 +1,35 @@
+{
+  "id": "app-freecell",
+  "title": "FreeCell",
+  "kind": "app",
+  "status": "available",
+  "icon": "icon.svg",
+  "children": [
+    { "id": "freecell-deal", "title": "Deal", "kind": "surface", "path": "children/deal/node.json" },
+    { "id": "freecell-rules", "title": "How to play", "kind": "surface", "path": "children/rules/node.json" }
+  ],
+  "surface": {
+    "heading": "FreeCell",
+    "body": "A classic solitaire table with four free cells, four foundations, and a full tableau waiting for your next move.",
+    "controls": [
+      {
+        "id": "start-deal",
+        "label": "Start a deal",
+        "intent": { "type": "open_surface", "appId": "app-freecell", "route": "/deal" }
+      },
+      {
+        "id": "learn-rules",
+        "label": "How to play",
+        "intent": { "type": "open_surface", "appId": "app-freecell", "route": "/rules" }
+      }
+    ],
+    "board": {
+      "columns": 8,
+      "rows": 7,
+      "score": 0,
+      "lines": 0,
+      "level": 1,
+      "state": "ready"
+    }
+  }
+}

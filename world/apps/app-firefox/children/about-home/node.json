@@ -1,0 +1,13 @@
+{
+  "id": "app-firefox-about-home",
+  "title": "Firefox Home",
+  "kind": "page",
+  "status": "available",
+  "route": "/about:home",
+  "entry": "entry.html",
+  "surface": {
+    "heading": "Firefox Home",
+    "body": "A calm, private place to search the web.",
+    "controls": []
+  }
+}

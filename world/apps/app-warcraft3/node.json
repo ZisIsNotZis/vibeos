@@ -1,0 +1,13 @@
+{
+  "id": "app-warcraft3",
+  "title": "Warcraft III",
+  "kind": "app",
+  "status": "available",
+  "icon": "icon.svg",
+  "entry": "entry.html",
+  "surface": {
+    "heading": "Warcraft III",
+    "body": "Command an army, gather resources, and conquer the battlefield.",
+    "controls": []
+  }
+}

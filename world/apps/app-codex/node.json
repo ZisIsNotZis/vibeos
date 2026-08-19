@@ -1,0 +1,10 @@
+{
+  "id": "app-codex",
+  "title": "Codex",
+  "kind": "app",
+  "status": "available",
+  "route": "/",
+  "icon": "icon.svg",
+  "entry": "entry.html",
+  "children": []
+}

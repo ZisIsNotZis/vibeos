@@ -4,5 +4,5 @@
   "kind": "app",
   "icon": "icon.svg",
   "children": [],
-  "surface": { "heading": "App Shop", "body": "Find something new to imagine.", "controls": [] }
+  "surface": { "heading": "App Shop", "body": "Find and install applications.", "controls": [] }
 }

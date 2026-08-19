@@ -1,0 +1,13 @@
+{
+  "id": "app-tetris-1787138526939",
+  "title": "Tetris 1787138526939",
+  "kind": "app",
+  "status": "available",
+  "icon": "icon.svg",
+  "entry": "tetris.html",
+  "surface": {
+    "heading": "Tetris 1787138526939",
+    "body": "Stack tetrominoes, clear lines, and keep the well open.",
+    "controls": []
+  }
+}

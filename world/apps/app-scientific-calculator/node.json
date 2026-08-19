@@ -1,0 +1,45 @@
+{
+  "id": "app-scientific-calculator",
+  "title": "Scientific Calculator",
+  "kind": "app",
+  "status": "available",
+  "icon": "icon.svg",
+  "entry": "generated/calculator.html",
+  "surface": {
+    "heading": "Scientific Calculator",
+    "body": "Enter an expression, then build it with the keypad. Trigonometric functions use radians; Ans recalls the previous result.",
+    "fields": [
+      { "id": "expression", "label": "Expression", "placeholder": "0" }
+    ],
+    "controls": [
+      { "id": "clear", "label": "AC", "intent": { "type": "activate_control", "appId": "app-scientific-calculator", "surfaceId": "app-scientific-calculator-surface", "controlId": "clear" } },
+      { "id": "backspace", "label": "⌫", "intent": { "type": "activate_control", "appId": "app-scientific-calculator", "surfaceId": "app-scientific-calculator-surface", "controlId": "backspace" } },
+      { "id": "ans", "label": "Ans", "intent": { "type": "activate_control", "appId": "app-scientific-calculator", "surfaceId": "app-scientific-calculator-surface", "controlId": "ans" } },
+      { "id": "divide", "label": "÷", "intent": { "type": "activate_control", "appId": "app-scientific-calculator", "surfaceId": "app-scientific-calculator-surface", "controlId": "divide" } },
+      { "id": "sin", "label": "sin", "intent": { "type": "activate_control", "appId": "app-scientific-calculator", "surfaceId": "app-scientific-calculator-surface", "controlId": "sin" } },
+      { "id": "cos", "label": "cos", "intent": { "type": "activate_control", "appId": "app-scientific-calculator", "surfaceId": "app-scientific-calculator-surface", "controlId": "cos" } },
+      { "id": "tan", "label": "tan", "intent": { "type": "activate_control", "appId": "app-scientific-calculator", "surfaceId": "app-scientific-calculator-surface", "controlId": "tan" } },
+      { "id": "sqrt", "label": "√", "intent": { "type": "activate_control", "appId": "app-scientific-calculator", "surfaceId": "app-scientific-calculator-surface", "controlId": "sqrt" } },
+      { "id": "log", "label": "log", "intent": { "type": "activate_control", "appId": "app-scientific-calculator", "surfaceId": "app-scientific-calculator-surface", "controlId": "log" } },
+      { "id": "ln", "label": "ln", "intent": { "type": "activate_control", "appId": "app-scientific-calculator", "surfaceId": "app-scientific-calculator-surface", "controlId": "ln" } },
+      { "id": "power", "label": "xʸ", "intent": { "type": "activate_control", "appId": "app-scientific-calculator", "surfaceId": "app-scientific-calculator-surface", "controlId": "power" } },
+      { "id": "pi", "label": "π", "intent": { "type": "activate_control", "appId": "app-scientific-calculator", "surfaceId": "app-scientific-calculator-surface", "controlId": "pi" } },
+      { "id": "e", "label": "e", "intent": { "type": "activate_control", "appId": "app-scientific-calculator", "surfaceId": "app-scientific-calculator-surface", "controlId": "e" } },
+      { "id": "seven", "label": "7", "intent": { "type": "activate_control", "appId": "app-scientific-calculator", "surfaceId": "app-scientific-calculator-surface", "controlId": "seven" } },
+      { "id": "eight", "label": "8", "intent": { "type": "activate_control", "appId": "app-scientific-calculator", "surfaceId": "app-scientific-calculator-surface", "controlId": "eight" } },
+      { "id": "nine", "label": "9", "intent": { "type": "activate_control", "appId": "app-scientific-calculator", "surfaceId": "app-scientific-calculator-surface", "controlId": "nine" } },
+      { "id": "multiply", "label": "×", "intent": { "type": "activate_control", "appId": "app-scientific-calculator", "surfaceId": "app-scientific-calculator-surface", "controlId": "multiply" } },
+      { "id": "four", "label": "4", "intent": { "type": "activate_control", "appId": "app-scientific-calculator", "surfaceId": "app-scientific-calculator-surface", "controlId": "four" } },
+      { "id": "five", "label": "5", "intent": { "type": "activate_control", "appId": "app-scientific-calculator", "surfaceId": "app-scientific-calculator-surface", "controlId": "five" } },
+      { "id": "six", "label": "6", "intent": { "type": "activate_control", "appId": "app-scientific-calculator", "surfaceId": "app-scientific-calculator-surface", "controlId": "six" } },
+      { "id": "subtract", "label": "−", "intent": { "type": "activate_control", "appId": "app-scientific-calculator", "surfaceId": "app-scientific-calculator-surface", "controlId": "subtract" } },
+      { "id": "one", "label": "1", "intent": { "type": "activate_control", "appId": "app-scientific-calculator", "surfaceId": "app-scientific-calculator-surface", "controlId": "one" } },
+      { "id": "two", "label": "2", "intent": { "type": "activate_control", "appId": "app-scientific-calculator", "surfaceId": "app-scientific-calculator-surface", "controlId": "two" } },
+      { "id": "three", "label": "3", "intent": { "type": "activate_control", "appId": "app-scientific-calculator", "surfaceId": "app-scientific-calculator-surface", "controlId": "three" } },
+      { "id": "add", "label": "+", "intent": { "type": "activate_control", "appId": "app-scientific-calculator", "surfaceId": "app-scientific-calculator-surface", "controlId": "add" } },
+      { "id": "zero", "label": "0", "intent": { "type": "activate_control", "appId": "app-scientific-calculator", "surfaceId": "app-scientific-calculator-surface", "controlId": "zero" } },
+      { "id": "decimal", "label": ".", "intent": { "type": "activate_control", "appId": "app-scientific-calculator", "surfaceId": "app-scientific-calculator-surface", "controlId": "decimal" } },
+      { "id": "equals", "label": "=", "intent": { "type": "activate_control", "appId": "app-scientific-calculator", "surfaceId": "app-scientific-calculator-surface", "controlId": "equals" } }
+    ]
+  }
+}

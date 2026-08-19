@@ -7,11 +7,22 @@
     "heading": "Google",
     "body": "Search the imagined web from a familiar local search page. Results stay inside VibeOS.",
     "fields": [
-      { "id": "search", "label": "Search Google", "placeholder": "Search the imagined web" }
+      { "id": "search", "label": "Search Google", "placeholder": "Search Google" }
     ],
     "controls": [
       {
-        "label": "Return to browser start",
+        "id": "search-submit",
+        "label": "Google Search",
+        "intent": {
+          "type": "navigate_browser",
+          "appId": "browser",
+          "url": "/google.com/search?q={search}",
+          "mode": "search_results"
+        }
+      },
+      {
+        "id": "back",
+        "label": "Back to new tab",
         "intent": {
           "type": "open_surface",
           "appId": "browser",

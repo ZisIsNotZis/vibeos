@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Firefox Home</title>
+  <style>
+    :root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, sans-serif; background:#1b1b2b; color:#f6f4ff; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; overflow:auto; background: radial-gradient(circle at 78% 12%, #3e3273 0, transparent 33%), linear-gradient(145deg,#171727,#202344 70%,#30265f); }
+    .page { max-width:900px; margin:auto; padding:38px 34px 54px; }
+    header { display:flex; align-items:center; justify-content:space-between; margin-bottom:70px; }
+    .brand { display:flex; gap:11px; align-items:center; font-weight:750; letter-spacing:.2px; }
+    .mark { width:34px; height:34px; border-radius:50% 50% 48% 42%; background:linear-gradient(135deg,#ffcf45,#f05b42 58%,#9c4bd3); position:relative; box-shadow:0 4px 15px #0005; }
+    .mark:after { content:""; position:absolute; width:21px; height:11px; border:3px solid #fff1; border-top-color:#fff; border-radius:50%; left:6px; top:11px; transform:rotate(-25deg); }
+    .privacy { border:1px solid #ffffff20; background:#ffffff0c; color:#ddd9f3; border-radius:18px; padding:8px 13px; font-size:12px; }
+    main { text-align:center; }
+    h1 { font-size:clamp(30px,5vw,48px); line-height:1.05; margin:0 0 13px; letter-spacing:-1.5px; }
+    .sub { margin:0 auto 29px; color:#b8b5d0; font-size:15px; }
+    form { display:flex; max-width:650px; margin:auto; padding:6px; border-radius:14px; background:#10101b; border:1px solid #ffffff25; box-shadow:0 12px 34px #0004; }
+    input { flex:1; min-width:0; border:0; outline:0; background:transparent; color:#fff; padding:13px 15px; font-size:15px; }
+    input::placeholder { color:#8886a3; }
+    button { cursor:pointer; border:0; color:#fff; font:inherit; }
+    .go { border-radius:10px; padding:0 19px; background:#8557e8; font-weight:700; }
+    .go:hover { background:#9b72f2; }
+    #result { min-height:28px; margin:17px 0 33px; color:#bfb9e5; font-size:13px; }
+    .cards { display:grid; grid-template-columns:repeat(3,1fr); gap:13px; max-width:650px; margin:auto; text-align:left; }
+    .card { border:1px solid #ffffff16; background:#ffffff09; border-radius:14px; padding:18px; min-height:108px; transition:.18s; }
+    .card:hover { transform:translateY(-3px); background:#ffffff13; border-color:#a98cff66; }
+    .card button { width:100%; text-align:left; background:transparent; }
+    .icon { display:grid; place-items:center; width:30px; height:30px; border-radius:9px; margin-bottom:13px; background:#4a3a86; color:#ddd3ff; font-size:16px; }
+    .card:nth-child(2) .icon { background:#244d69; } .card:nth-child(3) .icon { background:#673c68; }
+    .card strong { display:block; font-size:13px; margin-bottom:5px; } .card span { color:#9693b0; font-size:12px; }
+    .note { margin-top:64px; color:#817e9d; font-size:12px; } .note a { color:#aaa0dc; cursor:pointer; text-decoration:underline; }
+    @media (max-width:600px) { .page { padding:25px 18px 40px; } header { margin-bottom:52px; } .cards { grid-template-columns:1fr; } .card { min-height:auto; } }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header><div class="brand"><span class="mark"></span><span>Firefox</span></div><span class="privacy">Private by default</span></header>
+    <main>
+      <h1>Welcome back</h1>
+      <p class="sub">Search the web with a little more privacy.</p>
+      <form id="search"><input id="address" autocomplete="off" autofocus placeholder="Search or enter an address" aria-label="Search or enter an address"><button class="go" type="submit">Search</button></form>
+      <div id="result" aria-live="polite">What will you discover?</div>
+      <section class="cards" aria-label="Shortcuts">
+        <article class="card"><button data-site="Mozilla Support"><span class="icon">?</span><strong>Mozilla Support</strong><span>Helpful answers and guides</span></button></article>
+        <article class="card"><button data-site="Firefox Add-ons"><span class="icon">✦</span><strong>Firefox Add-ons</strong><span>Make Firefox your own</span></button></article>
+        <article class="card"><button data-site="Privacy settings"><span class="icon">◈</span><strong>Privacy settings</strong><span>Review your protections</span></button></article>
+      </section>
+      <p class="note">Your browsing stays yours. <a id="learn">Learn about Firefox privacy</a></p>
+    </main>
+  </div>
+  <script>
+    const input = document.querySelector('#address'), result = document.querySelector('#result');
+    function show(value) { const clean = value.trim(); if (!clean) { result.textContent='Type a search or address to get started.'; input.focus(); return; } result.textContent = clean.includes('.') || clean.startsWith('http') ? 'Opening ' + clean + ' …' : 'Searching the web for “' + clean + '” …'; }
+    document.querySelector('#search').addEventListener('submit', event => { event.preventDefault(); const value = input.value.trim(); if (value) { window.parent.postMessage({ type: 'vibeos:navigate', url: value, appId: 'app-firefox' }, '*'); } show(value); });
+    document.querySelectorAll('[data-site]').forEach(button => button.addEventListener('click', () => { input.value=button.dataset.site; show(button.dataset.site); }));
+    document.querySelector('#learn').addEventListener('click', () => { result.textContent='Firefox blocks trackers and keeps your personal data under your control.'; });
+  </script>
+</body>
+</html>

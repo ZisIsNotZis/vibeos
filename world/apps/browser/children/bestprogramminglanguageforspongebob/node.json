@@ -1,0 +1,15 @@
+{
+  "id": "bestprogramminglanguageforspongebob",
+  "title": "Best programming language for SpongeBob",
+  "kind": "surface",
+  "status": "ready",
+  "route": "/bestprogramminglanguageforspongebob",
+  "entry": "entry.html",
+  "surface": {
+    "heading": "Best programming language for SpongeBob",
+    "body": "Search results and a practical recommendation for building a Bikini Bottom project.",
+    "fields": [{ "id": "search", "label": "Search", "placeholder": "best programming language for spongebob" }],
+    "controls": []
+  },
+  "children": []
+}

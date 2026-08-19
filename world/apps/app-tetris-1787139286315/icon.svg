@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Tetris">
+  <rect x="3" y="3" width="58" height="58" rx="15" fill="#1677ff"/>
+  <path d="M15 17h17v8h9v9h8v15H32v-8h-9v-8h-8V17Z" fill="#fff" opacity=".96"/>
+  <path d="M15 17h17v8H15zM32 25h9v9h-9zM23 34h9v8h-9zM32 42h17v7H32z" fill="#b9d8ff"/>
+</svg>

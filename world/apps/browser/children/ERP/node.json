@@ -1,0 +1,16 @@
+{
+  "id": "ERP",
+  "title": "沈阳芯源微在线ERP系统",
+  "kind": "surface",
+  "status": "ready",
+  "route": "/沈阳芯源微实时ERP系统",
+  "icon": "icon.svg",
+  "entry": "entry.html",
+  "surface": {
+    "heading": "沈阳芯源微在线ERP系统",
+    "body": "企业资源管理工作台，包含订单、库存与生产协同。",
+    "fields": [],
+    "controls": []
+  },
+  "children": []
+}

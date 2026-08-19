@@ -1,0 +1,22 @@
+{
+  "id": "app-firefox",
+  "title": "Firefox",
+  "kind": "app",
+  "status": "available",
+  "icon": "icon.svg",
+  "surface": {
+    "heading": "Firefox",
+    "body": "Browse privately with a clean, focused start page.",
+    "fields": [
+      { "id": "address", "label": "Search or enter address", "placeholder": "Search the web or enter a URL", "value": "" }
+    ],
+  "controls": [
+      { "id": "open", "label": "Open", "intent": { "type": "navigate_browser", "url": "about:home" } },
+      { "id": "private", "label": "New private window", "intent": { "type": "navigate_browser", "url": "about:private" } }
+  ],
+  "children": [
+    { "id": "google.com", "title": "Google", "kind": "surface", "path": "children/google/node.json" },
+    { "id": "baidu.com", "title": "Baidu", "kind": "surface", "path": "children/baidu/node.json" }
+  ]
+}
+}

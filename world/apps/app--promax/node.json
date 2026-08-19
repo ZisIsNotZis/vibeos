@@ -1,0 +1,10 @@
+{
+  "id": "app--promax",
+  "title": "押韵大师ProMax",
+  "kind": "app",
+  "status": "available",
+  "route": "/",
+  "icon": "icon.svg",
+  "entry": "entry.html",
+  "children": []
+}

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-labelledby="t d">
+  <title id="t">Tetris 1787138777953</title><desc id="d">A colorful T tetromino over a gridded playfield</desc>
+  <defs><linearGradient id="g" x2="1" y2="1"><stop stop-color="#30215d"/><stop offset="1" stop-color="#111b38"/></linearGradient><linearGradient id="c" y2="1"><stop stop-color="#67e8f9"/><stop offset="1" stop-color="#168bd0"/></linearGradient></defs>
+  <rect width="96" height="96" rx="22" fill="url(#g)"/><rect x="14" y="12" width="68" height="72" rx="6" fill="#0b1228" stroke="#7080ad" stroke-width="2"/>
+  <path d="M23 14v68M32 14v68M41 14v68M50 14v68M59 14v68M68 14v68M77 14v68M14 23h68M14 32h68M14 41h68M14 50h68M14 59h68M14 68h68M14 77h68" stroke="#9aa8d8" stroke-opacity=".16"/>
+  <g stroke="#0b1228" stroke-width="2"><path fill="url(#c)" d="M41 15h9v9h-9zM50 15h9v9h-9zM59 15h9v9h-9zM50 24h9v9h-9z"/><path fill="#f472b6" d="M23 42h9v9h-9zM32 42h9v9h-9zM41 42h9v9h-9zM32 51h9v9h-9z"/><path fill="#fbbf24" d="M14 69h9v9h-9zM23 69h9v9h-9zM32 69h9v9h-9zM41 69h9v9h-9zM50 69h9v9h-9zM59 69h9v9h-9zM68 69h9v9h-9zM77 69h5v9h-5z"/></g>
+</svg>

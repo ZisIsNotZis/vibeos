@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-labelledby="title desc">
+  <title id="title">Music Studio</title>
+  <desc id="desc">A polished studio console with a musical note and mixing controls</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#251d4a"/><stop offset="1" stop-color="#12162d"/></linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f58acb"/><stop offset="1" stop-color="#8b76ff"/></linearGradient>
+  </defs>
+  <rect width="96" height="96" rx="22" fill="url(#bg)"/>
+  <rect x="14" y="18" width="68" height="59" rx="8" fill="#171a35" stroke="#675b9c" stroke-width="2"/>
+  <path d="M20 31h56M20 43h56M20 55h56M20 67h56" stroke="#ffffff" stroke-opacity=".1"/>
+  <g fill="url(#accent)">
+    <rect x="23" y="34" width="4" height="12" rx="2"/><rect x="30" y="29" width="4" height="22" rx="2"/><rect x="37" y="37" width="4" height="9" rx="2"/>
+    <rect x="44" y="31" width="4" height="19" rx="2"/><rect x="51" y="35" width="4" height="13" rx="2"/><rect x="58" y="27" width="4" height="25" rx="2"/><rect x="65" y="38" width="4" height="8" rx="2"/>
+  </g>
+  <path d="M61 22v35a8 8 0 1 1-5-7V30l18-5v27a8 8 0 1 1-5-7V20z" fill="#f4c86b"/>
+  <circle cx="28" cy="67" r="3" fill="#77e0d2"/><circle cx="40" cy="67" r="3" fill="#77e0d2"/><circle cx="52" cy="67" r="3" fill="#77e0d2"/>
+</svg>

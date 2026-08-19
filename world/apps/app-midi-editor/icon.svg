@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Midi editor icon">
+  <rect width="64" height="64" rx="15" fill="#172033"/>
+  <path d="M14 18h36M14 28h36M14 38h36M14 48h36M20 13v38M30 13v38M40 13v38M50 13v38" stroke="#34445f" stroke-width="2"/>
+  <path d="M16 32h12v8H16zM28 22h12v8H28zM40 12h10v8H40z" fill="#6ee7c1"/>
+  <path d="M16 32h12v8H16zM28 22h12v8H28zM40 12h10v8H40z" fill="none" stroke="#b8ffe8" stroke-width="1"/>
+  <circle cx="50" cy="48" r="5" fill="#ffb86b"/>
+</svg>

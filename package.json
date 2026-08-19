@@ -1,6 +1,7 @@
 {
   "name": "vibeos",
   "private": true,
+  "license": "AGPL-3.0-or-later",
   "version": "0.1.0",
   "type": "module",
   "workspaces": [
@@ -9,7 +10,6 @@
   ],
   "scripts": {
     "dev": "concurrently \"npm run dev --workspace @vibeos/server\" \"npm run dev --workspace @vibeos/web\"",
-    "mcp": "npm run mcp --workspace @vibeos/server",
     "build": "npm run build --workspaces",
     "test": "npm run test --workspace @vibeos/server"
   },

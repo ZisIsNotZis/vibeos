@@ -1,6 +1,6 @@
 # VibeOS Design: An Imagined Operating System
 
-Status: implementation in progress — core runtime, tracked world tree, logging, Assistant request seam, and E2E smoke coverage are implemented. The remaining work is to remove legacy app-specific frontend renderers and make generated artifacts load back from the tracked world tree.
+Status: implementation in progress — VibeOS uses a small OS-owned generated-world envelope and leaves application meaning, descendants, assets, behavior, and cache layout to each generated node.
 
 ## 0. Architectural rule: core mechanism, generated meaning
 
@@ -10,7 +10,7 @@ VibeOS has two strictly separated layers:
 Core VibeOS
   windows · launcher · transport · loading · cache · generation · generic renderer
 
-Generated world cache
+Generated world tree
   app manifests · app surfaces · routes · controls · content · assets
 ```
 
@@ -21,14 +21,23 @@ The launcher reads app records from the registry. It does not own a fixed app li
 The generated cache is the product world. It is data and declarative UI, not core source code:
 
 ```text
-cache/apps/<app-id>/
-  manifest.json
-  surfaces/<surface-id>/surface.json
-  surfaces/<surface-id>/content.json
-  assets/
+world/apps/<app-id>/
+  node.json                 # OS envelope; required
+  icon.svg                  # identity asset for an app node
+  children/<child-id>/      # owned descendants; optional
+  app/                       # node-chosen implementation; optional
+  data/                      # app-scoped mutable state; optional
 ```
 
 Seeded apps are fixtures in this cache, not special runtime implementations. This separation is the primary extensibility seam: adding an app should add cache data or generate a cache entry, without modifying core code.
+
+### Settings and generation policy
+
+Settings is a normal OS app backed by generic runtime state. It defaults to `effort: quality` and `search: none`; both values persist and are injected into every generation and Assistant task.
+
+Effort contracts: `ultrafast` means minimal reasoning and no tests while still producing a coherent usable page; `fast` means brief reasoning plus one focused smoke check; `balanced` means normal reasoning plus focused primary-interaction tests; `quality` means production-quality implementation, self-review, interaction checks, and obvious fixes (the default); `research` means maximum permitted research, TDD, broad self-tests, and edge-case review before delivery.
+
+Search contracts: `none` forbids Internet access and uses supplied/local context only (the default); `online_info` permits researching current facts while keeping the page locally authored; `online_content` permits online content or repositories as building material, including embedded HTML or GitHub projects serving a web app/backend. The worker must not exceed either selected tier. These are execution contracts, not an application-type enum; generated nodes still own their page behavior, descendants, and internal cache layout.
 
 ### Recursive world tree
 
@@ -59,8 +68,15 @@ type WorldNode = {
   parentId?: string;
   children: NodeRef[];
   surface?: SurfaceModel;
+  entry?: string;
+  storage?: string;
+  payload?: unknown;
 };
 ```
+
+The envelope is intentionally general. `kind`, `entry`, `storage`, and `payload` are opaque to the OS except for basic safety and loadability checks. There is no global list of application types. A node may represent a notes editor, game, website, virtual machine, or something not anticipated by VibeOS.
+
+The minimum generated-node contract is stable identity, parent-owned location, a loadable entry or surface, direct children when useful, and no outside-world references unless the user explicitly grants a capability. The node decides its internal file layout and cache keys.
 
 Entering a node loads it and its immediate children. Descendants remain lazy until selected. The tracked `world/` tree is the durable cache: generated artifacts are committed with core code, survive `npm run dev`, and remain reviewable as ordinary project changes. No separate database is required initially.
 
@@ -86,7 +102,7 @@ The user experiences a coherent OS: windows, apps, navigation, files, search, in
 
 The world is lazy. Installing an app creates its identity and a launchable place in the OS. Opening it generates the first usable surface. Interacting with a surface generates the next required capability or page. Existing state remains stable while the missing part is prepared.
 
-The browser never connects to the real Internet for imagined websites. A browser URL is an input to the VibeOS world model. Codex generates a plausible local page for that URL, with links and controls that can request further local generation.
+The browser does not connect to the real Internet by default. A browser URL is resolved to a local production-style page for that address, with links and controls that can request further local loading.
 
 ## 2. User-visible contract
 
@@ -95,7 +111,7 @@ Every user action is treated as a normal OS action, regardless of whether its im
 Examples:
 
 - Clicking Calculator opens a real calculator window immediately.
-- Entering `example.com` in Browser displays a locally imagined page for that address.
+- Entering `example.com` in Browser displays a locally rendered page for that address.
 - Searching App Shop for “music studio” returns an app listing even when no physical package exists.
 - Installing “music studio” adds an app record and launcher entry immediately.
 - Opening the installed app first shows its stable shell, then fills in the generated home page.
@@ -125,7 +141,7 @@ subscribe(listener: (event: RuntimeEvent) => void): Unsubscribe
 snapshot(): WorldSnapshot
 ```
 
-The frontend never calls Codex, MCP, filesystem paths, or generated modules directly.
+The frontend never calls Codex, filesystem paths, or generated modules directly.
 
 ## 4. Intent and resume model
 
@@ -215,21 +231,26 @@ type ControlModel = {
 };
 ```
 
-The frontend renders `SurfaceContent` through a controlled renderer. Generated code does not get to manipulate the desktop, open arbitrary sockets, or bypass the runtime. Generated behavior is represented through declarative controls and semantic intents.
+The frontend renders the optional generic `SurfaceContent` through a controlled renderer. Generated code does not get to manipulate the desktop, open arbitrary sockets, or bypass the runtime. When a node uses the generic renderer, controls map to semantic intents. When a node needs richer behavior, it may provide its own entrypoint behind the same node seam and use the OS bridge. The core does not treat prose as implementation: the primary user action must be usable before the node is marked ready.
 
-Each app has a predictable workspace layout:
+There is no mandatory internal app layout. A generated node owns its workspace and may choose a layout such as:
 
 ```text
 world/apps/<app-id>/
-  manifest.json
-  app-model.json
-  surfaces/<surface-id>/surface.json
-  surfaces/<surface-id>/content.json
-  assets/
-  generation-log.jsonl
+  node.json
+  app/entry.html
+  app/entry.js
+  children/<app-owned-key>/node.json
+  data/state.json
 ```
 
-The agent receives the exact target surface path and a compact contract for its parent app, neighboring surfaces, available control types, and acceptance checks. It must modify only that surface slice unless the runtime explicitly requests a manifest or shared-model change.
+The agent receives the exact target node path, parent context, existing sibling/child context, available OS primitives, a few quality examples, and acceptance checks. It may modify the target node’s owned subtree. It must not invent OS fields or modify core code for an ordinary generated-world task.
+
+### Persistent local state and external capabilities
+
+Every generated node may use an app-scoped persistent storage namespace. The default is local and survives reloads and development restarts. Generated code chooses its data shape and migration strategy; VibeOS owns namespacing, persistence, and isolation. User data is mutable state and is kept conceptually separate from generated source/cache.
+
+Internet, host filesystem, clipboard, and device access are off by default. A node may request an explicit capability when the user asks for it. VibeOS mediates the request rather than silently granting ambient access.
 
 This location rule is the main protection against global hallucinated rewrites: one user action maps to one capability key and one structured generation location.
 
@@ -246,6 +267,8 @@ world://browser/https/example.com/
 The browser first checks the local surface registry. If absent, it creates a page placeholder and asks Codex to generate the page model and content. The generated page may contain local links, forms, and buttons. Those controls map to new world routes or app intents; they never perform real network requests.
 
 Navigation history, back, forward, reload, address editing, and route persistence are browser-owned OS state. A generated page owns only its content and declared controls.
+
+Search and destination navigation are distinct. A search form first opens a stable search-results surface owned by the search page, preserving the query, shell, tabs, and result list. Only an explicit result activation may navigate to a result site's destination surface; a matching cached site must never replace the results page merely because its title matches the query.
 
 ## 8. Window manager
 
@@ -264,11 +287,9 @@ resizeWindow(windowId: string, size: Size): void
 
 The close button must dispatch `close_window` and remove the window from the runtime snapshot. App contents must not own window lifecycle.
 
-## 9. Codex adapter and MCP relationship
+## 9. Codex adapter
 
-For the browser workflow, the backend is the MCP host/client-side integration point and launches Codex directly through the local `codex exec` process adapter. The browser does not register VibeOS as a Codex MCP server.
-
-The separate VibeOS MCP server is an optional external automation interface. It is not used in the normal browser → backend → Codex path, because registering it with Codex would create a circular architecture.
+The backend launches the local `codex exec` process adapter directly. The browser communicates only with the VibeOS WebSocket runtime; it does not register tools with Codex or use an intermediary protocol.
 
 The generation adapter has one narrow interface:
 
@@ -294,7 +315,7 @@ These logs are for the developer operating the local runtime. They are not sent 
 ## 10. Failure and recovery
 
 - Codex unavailable: retain the placeholder and show a normal retryable loading/error state.
-- Invalid generated model: reject the result, preserve the prior surface, and log the validation failure.
+- Invalid generated envelope: reject the result, preserve the prior surface, and return a compact repair request to the same generation job. Validation checks only OS invariants; unfamiliar app semantics are valid.
 - Agent timeout: mark the generation job failed without losing the original intent.
 - Browser refresh: restore OS state, installed apps, surfaces, and unfinished jobs from the local store; reconnect running jobs where possible.
 - Duplicate activation: deduplicate by capability key and replay the intent once generation is ready.

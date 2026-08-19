@@ -1,0 +1,9 @@
+{
+  "id": "app-poetry",
+  "title": "Poetry House",
+  "kind": "app",
+  "status": "available",
+  "icon": "icon.svg",
+  "entry": "poetry.html",
+  "children": []
+}

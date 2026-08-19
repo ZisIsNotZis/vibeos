@@ -1,0 +1,37 @@
+{
+  "id": "beginner",
+  "title": "Beginner Field",
+  "kind": "surface",
+  "parentId": "app-minesweeper",
+  "status": "available",
+  "route": "/beginner",
+  "entry": "generated/minesweeper.html",
+  "surface": {
+    "heading": "Beginner Field",
+    "body": "Clear the field by revealing safe squares and flagging suspected mines. The upper-left square is already safe.",
+    "controls": [
+      { "id": "reveal", "label": "Reveal square", "intent": { "type": "activate_control", "appId": "app-minesweeper", "surfaceId": "beginner-surface", "controlId": "reveal" } },
+      { "id": "flag", "label": "Flag mine", "intent": { "type": "activate_control", "appId": "app-minesweeper", "surfaceId": "beginner-surface", "controlId": "flag" } },
+      { "id": "new-game", "label": "New game", "intent": { "type": "open_surface", "appId": "app-minesweeper", "route": "/" } }
+    ],
+    "board": {
+      "columns": 9,
+      "rows": 9,
+      "score": 1,
+      "lines": 0,
+      "level": 1,
+      "state": "in-progress",
+      "activePiece": "1",
+      "nextPiece": "8 mines",
+      "target": "Reveal 72 safe squares"
+    }
+  },
+  "payload": {
+    "game": "minesweeper",
+    "difficulty": "beginner",
+    "mines": 10,
+    "revealed": 1,
+    "flags": 0,
+    "controls": { "reveal": "Reveal a covered square", "flag": "Mark or unmark a suspected mine" }
+  }
+}

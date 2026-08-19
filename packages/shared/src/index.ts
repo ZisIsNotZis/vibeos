@@ -17,22 +17,49 @@ export type Intent =
   | { type: 'search_apps'; query: string }
   | { type: 'open_file'; path: string }
   | { type: 'create_file'; path: string; content?: string }
-  | { type: 'navigate_browser'; url: string };
+  | { type: 'navigate_browser'; url: string; appId?: AppId; mode?: 'search_results' | 'destination' }
+  | { type: 'run_action'; appId: AppId; surfaceId: string; action: string; input?: Record<string, unknown> };
+export type StorageIntent =
+  | { type: 'storage_read'; appId: AppId; key: string }
+  | { type: 'storage_write'; appId: AppId; key: string; value: unknown };
+export type EffortLevel = 'ultrafast' | 'fast' | 'balanced' | 'quality' | 'research';
+export type SearchLevel = 'none' | 'online_info' | 'online_content';
+export type AppearanceMode = 'light' | 'dark';
+export type BackgroundMode = 'stretch' | 'fill' | 'pad';
+export type DockPosition = 'bottom' | 'left';
+export type VibeOSSettings = {
+  effort: EffortLevel;
+  search: SearchLevel;
+  appearance: {
+    mode: AppearanceMode;
+    backgroundImage?: string;
+    backgroundMode: BackgroundMode;
+    autoHideChromeOnMaximize: boolean;
+    dockPosition: DockPosition;
+  };
+};
+export type SettingsIntent =
+  | { type: 'set_setting'; key: 'effort'; value: EffortLevel }
+  | { type: 'set_setting'; key: 'search'; value: SearchLevel }
+  | { type: 'set_appearance'; key: 'mode'; value: AppearanceMode }
+  | { type: 'set_appearance'; key: 'backgroundMode'; value: BackgroundMode }
+  | { type: 'set_appearance'; key: 'autoHideChromeOnMaximize'; value: boolean }
+  | { type: 'set_appearance'; key: 'dockPosition'; value: DockPosition }
+  | { type: 'set_appearance'; key: 'backgroundImage'; value?: string };
 export type AssistantContext = { nodeId?: string; windowId?: string; recentOperations?: string[]; recentLog?: string };
 export type AssistantIntent = { type: 'assistant_request'; message: string; context?: AssistantContext };
-export type RuntimeIntent = Intent | AssistantIntent;
+export type RuntimeIntent = Intent | AssistantIntent | StorageIntent | SettingsIntent;
 export type AppSpec = { id: AppId; name: string; description: string; icon: string; category?: string };
 export type AppRecord = AppSpec & { installed: boolean; status: 'placeholder' | 'available' | 'failed' };
 export type WindowModel = { id: string; appId: AppId; title: string; route?: string; state: WindowState; focused: boolean; position: { x: number; y: number }; size: { width: number; height: number } };
 export type ControlModel = { id: string; kind: 'link' | 'button' | 'input' | 'form'; label: string; action: Intent };
-export type SurfaceField = { id: string; label: string; placeholder?: string; value?: string };
+export type SurfaceField = { id: string; label: string; placeholder?: string; value?: string; type?: 'text' | 'search' | 'number' | 'checkbox' | 'radio' };
 export type BoardModel = { columns: number; rows: number; activePiece?: string; nextPiece?: string; score?: number; lines?: number; level?: number; state?: string };
-export type SurfaceContent = { heading: string; body: string; controls: ControlModel[]; fields?: SurfaceField[]; board?: BoardModel; links?: Array<{ id: string; label: string; route: string }> };
-export type Surface = { id: string; appId: AppId; route: string; title: string; status: SurfaceState; content: SurfaceContent };
+export type SurfaceContent = { heading: string; body: string; controls: ControlModel[]; fields?: SurfaceField[]; board?: BoardModel; links?: Array<{ id: string; label: string; route: string }>; payload?: unknown; entry?: string };
+export type Surface = { id: string; appId: AppId; route: string; title: string; status: SurfaceState; content: SurfaceContent; entry?: string };
 export type Operation = { id: string; intent: RuntimeIntent; state: OperationState; message?: string };
-export type RuntimeSnapshot = { windows: WindowModel[]; operations: Operation[]; notifications: string[]; apps: AppRecord[]; surfaces: Surface[] };
+export type RuntimeSnapshot = { windows: WindowModel[]; operations: Operation[]; notifications: string[]; apps: AppRecord[]; surfaces: Surface[]; settings: VibeOSSettings };
 export type RuntimeEvent = { type: 'snapshot'; snapshot: RuntimeSnapshot } | { type: 'operation'; operation: Operation } | { type: 'window'; window: WindowModel } | { type: 'surface'; surface: Surface } | { type: 'notification'; message: string } | { type: 'trace'; operationId?: string; message: string };
-export type AgentTask = { operationId: string; capability: string; intent: RuntimeIntent; input: unknown; target: string };
+export type AgentTask = { operationId: string; capability: string; intent: RuntimeIntent; input: unknown; target: string; context?: { parent?: unknown; node?: unknown; siblings?: unknown[]; existingFiles?: string[]; acceptance?: string[]; settings?: VibeOSSettings } };
 export type AgentResult = { ok: true; capability: string; files?: string[] } | { ok: false; message: string };
-export type McpToolCall = { jsonrpc: '2.0'; id: string | number; method: 'tools/call'; params: { name: string; arguments?: Record<string, unknown> } };
 export * from './world.js';

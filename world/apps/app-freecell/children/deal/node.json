@@ -1,0 +1,20 @@
+{
+  "id": "freecell-deal",
+  "title": "FreeCell Deal",
+  "kind": "surface",
+  "route": "/deal",
+  "entry": "generated/freecell.html",
+  "surface": {
+    "heading": "FreeCell · Deal 1",
+    "body": "Deal 1 is ready. Select a card, then select its destination: build down in alternating colors, or send cards upward to their suit foundations.",
+    "controls": [
+      { "id": "new-deal", "label": "New deal", "intent": { "type": "open_surface", "appId": "app-freecell", "route": "/deal" } },
+      { "id": "rules", "label": "How to play", "intent": { "type": "open_surface", "appId": "app-freecell", "route": "/rules" } }
+    ],
+    "fields": [
+      { "id": "selected-card", "label": "Selected card", "placeholder": "Choose a card from the tableau" },
+      { "id": "destination", "label": "Destination", "placeholder": "Choose a free cell, tableau column, or foundation" }
+    ],
+    "board": { "columns": 8, "rows": 7, "activePiece": "52-card tableau", "nextPiece": "A♥ · A♦ · A♣ · A♠", "score": 0, "lines": 0, "level": 1, "state": "in-progress" }
+  }
+}

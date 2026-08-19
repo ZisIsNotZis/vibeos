@@ -2,7 +2,31 @@
   "id": "browser",
   "title": "Browser",
   "kind": "app",
+  "route": "/abouthome",
   "icon": "icon.svg",
-  "children": [],
-  "surface": { "heading": "Where to?", "body": "Imagine any website locally. Nothing leaves VibeOS.", "controls": [] }
+  "children": [
+    { "id": "google.com", "title": "Google", "kind": "surface", "path": "children/google.com/node.json" },
+    { "id": "baidu.com", "title": "Baidu", "kind": "surface", "path": "children/baidu.com/node.json" },
+    { "id": "aboutprivate", "title": "Private Browsing", "kind": "surface", "path": "children/aboutprivate/node.json" }
+    ,{ "id": "bestprogramminglanguageforspongebob", "title": "Best programming language for SpongeBob", "kind": "surface", "path": "children/bestprogramminglanguageforspongebob/node.json" }
+  ],
+  "surface": {
+    "heading": "Where to?",
+    "body": "Search the web or enter a site address.",
+    "fields": [
+      { "id": "address", "label": "Search or enter website", "placeholder": "Search or enter website" }
+    ],
+    "controls": [
+      {
+        "id": "google",
+        "label": "Open Google",
+        "intent": { "type": "open_surface", "appId": "browser", "route": "/google.com" }
+      },
+      {
+        "id": "baidu",
+        "label": "Open Baidu",
+        "intent": { "type": "open_surface", "appId": "browser", "route": "/baidu.com" }
+      }
+    ]
+  }
 }

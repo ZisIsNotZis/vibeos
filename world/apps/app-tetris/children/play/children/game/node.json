@@ -1,0 +1,33 @@
+{
+  "id": "app-tetris-play-game",
+  "title": "Tetris — Game",
+  "kind": "surface",
+  "status": "available",
+  "parentId": "app-tetris-play",
+  "route": "/play/game",
+  "entry": "generated/tetris.html",
+  "children": [],
+  "surface": {
+    "heading": "Tetris — Game",
+    "body": "Live playfield: place the falling T tetromino beside the cyan stack, then lock it with a hard drop. Each move, rotation, and drop updates the board state; clear rows to raise your score.",
+    "controls": [
+      { "id": "move-left", "label": "Move left", "intent": { "type": "activate_control", "appId": "app-tetris", "surfaceId": "app-tetris-play-game-surface", "controlId": "move-left" } },
+      { "id": "move-right", "label": "Move right", "intent": { "type": "activate_control", "appId": "app-tetris", "surfaceId": "app-tetris-play-game-surface", "controlId": "move-right" } },
+      { "id": "rotate", "label": "Rotate", "intent": { "type": "activate_control", "appId": "app-tetris", "surfaceId": "app-tetris-play-game-surface", "controlId": "rotate" } },
+      { "id": "drop", "label": "Hard drop", "intent": { "type": "activate_control", "appId": "app-tetris", "surfaceId": "app-tetris-play-game-surface", "controlId": "drop" } },
+      { "id": "pause", "label": "Pause game", "intent": { "type": "activate_control", "appId": "app-tetris", "surfaceId": "app-tetris-play-game-surface", "controlId": "pause" } },
+      { "id": "practice", "label": "Open practice board", "intent": { "type": "open_surface", "appId": "app-tetris", "route": "/play/explore" } },
+      { "id": "guide", "label": "Open controls guide", "intent": { "type": "open_surface", "appId": "app-tetris", "route": "/guide" } }
+    ]
+  },
+  "board": {
+    "columns": 10,
+    "rows": 20,
+    "activePiece": "T",
+    "nextPiece": "I",
+    "score": 0,
+    "lines": 0,
+    "level": 1,
+    "state": "playing"
+  }
+}

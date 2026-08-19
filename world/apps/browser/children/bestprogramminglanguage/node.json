@@ -1,0 +1,17 @@
+{
+  "id": "bestprogramminglanguage",
+  "title": "Best programming language",
+  "kind": "surface",
+  "status": "ready",
+  "route": "/bestprogramminglanguage",
+  "entry": "entry.html",
+  "surface": {
+    "heading": "Best programming language",
+    "body": "Compare popular programming languages by the work you want to do.",
+    "fields": [
+      { "id": "search", "label": "Search", "placeholder": "best programming language" }
+    ],
+    "controls": []
+  },
+  "children": []
+}
