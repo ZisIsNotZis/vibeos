@@ -1,0 +1,21 @@
+{
+  "name": "vibeos",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev --workspace @vibeos/server\" \"npm run dev --workspace @vibeos/web\"",
+    "mcp": "npm run mcp --workspace @vibeos/server",
+    "build": "npm run build --workspaces",
+    "test": "npm run test --workspace @vibeos/server"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "concurrently": "^9.1.2"
+  }
+}
