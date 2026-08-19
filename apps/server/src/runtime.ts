@@ -3,10 +3,11 @@ import { log, recentLog } from './logging.js';
 import { loadWorld } from './world-loader.js';
 import { join } from 'node:path';
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 export interface AgentAdapter { fulfill(task: AgentTask): Promise<AgentResult>; }
 export interface RuntimePort { send(event: RuntimeEvent): void; }
 export interface WorldStore { load(): RuntimeSnapshot; save(snapshot: RuntimeSnapshot): void; }
-const worldRoot = join(process.cwd(), '../../world');
+export const worldRoot = process.env.VIBEOS_WORLD_ROOT ?? fileURLToPath(new URL('../../../world', import.meta.url));
 const world = loadWorld(worldRoot);
 const seedApps: AppRecord[] = world.apps.length ? world.apps : [{ id: 'assistant', name: 'Assistant', description: 'Repair and shape your VibeOS world', icon: 'icon.svg', category: 'System', installed: true, status: 'available' }];
 const seedSurfaces: Surface[] = world.surfaces;
