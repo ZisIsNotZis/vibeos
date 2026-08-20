@@ -1,8 +1,1 @@
-{
-  "id": "home",
-  "title": "Assistant Home",
-  "kind": "surface",
-  "parentId": "assistant",
-  "children": [],
-  "surface": { "heading": "Describe the problem", "body": "Assistant can inspect recent VibeOS activity and repair the affected world node.", "controls": [] }
-}
+{"id":"home","title":"Assistant Home","kind":"surface","parentId":"assistant","children":[],"entry":"../../index.html"}

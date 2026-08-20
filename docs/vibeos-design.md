@@ -1,6 +1,6 @@
-# VibeOS Design: An Imagined Operating System
+# VibeOS Design: A Generative Operating System
 
-Status: implementation in progress — VibeOS uses a small OS-owned generated-world envelope and leaves application meaning, descendants, assets, behavior, and cache layout to each generated node.
+Status: implementation in progress — this document describes the target architecture. Some containment, operation-bridge, validation, and generation-profile work below is not implemented yet.
 
 ## 0. Architectural rule: core mechanism, generated meaning
 
@@ -14,7 +14,7 @@ Generated world tree
   app manifests · app surfaces · routes · controls · content · assets
 ```
 
-The core defines mechanisms; generated apps define meaning. The core must not contain app-specific branches such as `if appId === 'browser'`, `if appId === 'app-store'`, or special renderers for Calculator, Browser, Files, or Settings. Those are ordinary apps whose manifests and surfaces may be seeded in the cache.
+The core defines mechanisms; generated apps define meaning. The core must not contain app-identity branches such as `if appId === 'browser'`, `if appId === 'app-store'`, or special renderers for Calculator, Browser, Files, Settings, App Shop, or Assistant. Those may be seeded apps, but they use the same operation bridge as any user-created replacement.
 
 The launcher reads app records from the registry. It does not own a fixed app list. A window hosts a generic surface renderer. It does not switch on app IDs to select hardcoded React views. A missing app, home surface, route, or control is a cache miss handled by the generation coordinator.
 
@@ -31,11 +31,43 @@ world/apps/<app-id>/
 
 Seeded apps are fixtures in this cache, not special runtime implementations. This separation is the primary extensibility seam: adding an app should add cache data or generate a cache entry, without modifying core code.
 
+### Open OS operations, contained execution
+
+VibeOS does not use a traditional privileged-app model. A user may build another Settings, Assistant, App Shop, desktop shell, or application manager. App identity never grants authority and seeded apps are not trusted merely because they shipped with VibeOS.
+
+The core instead exposes typed, app-agnostic OS operations:
+
+```text
+settings.get / settings.set
+apps.list / apps.install / apps.remove
+world.inspect / world.generate / world.repair
+windows.open / windows.close / windows.update
+storage.read / storage.write
+```
+
+Every app may invoke these operations through the same bridge. Validation protects structural invariants, path ownership, transactionality, and host containment; it does not decide that one Settings app is legitimate and another is not. Operations that cross out of VibeOS into the real Internet, host filesystem, clipboard, camera, microphone, or devices remain explicit external-world interactions.
+
+This yields two independent rules:
+
+- **Application power is open.** Apps may reshape the VibeOS world through typed operations.
+- **Execution authority is contained.** App code and workers never receive ambient authority over the host environment.
+
 ### Settings and generation policy
 
-Settings is a normal OS app backed by generic runtime state. It defaults to `effort: quality` and `search: none`; both values persist and are injected into every generation and Assistant task.
+Settings is a normal replaceable app backed by generic `settings.*` operations. It defaults to `effort: quality` and `search: none`; both values persist and are injected into every generation and repair task.
 
-Effort contracts: `ultrafast` means minimal reasoning and no tests while still producing a coherent usable page; `fast` means brief reasoning plus one focused smoke check; `balanced` means normal reasoning plus focused primary-interaction tests; `quality` means production-quality implementation, self-review, interaction checks, and obvious fixes (the default); `research` means maximum permitted research, TDD, broad self-tests, and edge-case review before delivery.
+Effort is an execution contract enforced by worker model choice, native reasoning effort, scope, validation, and repair budget—not prompt wording alone:
+
+| VibeOS effort | Model | Native effort | Required delivery contract |
+| --- | --- | --- | --- |
+| `ultrafast` | `gh/gpt-5.6-terra` | `low` | Smallest coherent usable vertical slice; no worker-authored tests; deterministic platform checks still run |
+| `fast` | `gh/gpt-5.6-terra` | `low` | Complete primary interaction loop plus one focused smoke scenario |
+| `balanced` | `gh/gpt-5.6-terra` | `medium` | Complete current workflow, meaningful local state, and focused interaction tests |
+| `quality` | `gh/gpt-5.6-sol` | `high` | Production-style vertical slice, self-review, browser interaction checks, visual inspection, and repair of discovered defects; default |
+| `research` | `gh/gpt-5.6-sol` | `max` | TDD where useful, permitted research, broad interaction/state/edge-case checks, visual review, and multiple repair opportunities |
+| `ultra` | `gh/gpt-5.6-sol` | `ultra` | Largest sensible coherent slice, automatic delegation where available, adversarial review, comprehensive validation, and repeated repair within budget |
+
+The exact model identifiers include the required `gh/` prefix because VibeOS uses the OmniRoute provider. Model routing is explicit and testable; no worker may silently drop the prefix or substitute a different family. `ultra` is an engineering-assurance tier, while `research` emphasizes evidence and investigation. Both remain bounded by the selected search policy.
 
 Search contracts: `none` forbids Internet access and uses supplied/local context only (the default); `online_info` permits researching current facts while keeping the page locally authored; `online_content` permits online content or repositories as building material, including embedded HTML or GitHub projects serving a web app/backend. The worker must not exceed either selected tier. These are execution contracts, not an application-type enum; generated nodes still own their page behavior, descendants, and internal cache layout.
 
@@ -76,13 +108,13 @@ type WorldNode = {
 
 The envelope is intentionally general. `kind`, `entry`, `storage`, and `payload` are opaque to the OS except for basic safety and loadability checks. There is no global list of application types. A node may represent a notes editor, game, website, virtual machine, or something not anticipated by VibeOS.
 
-The minimum generated-node contract is stable identity, parent-owned location, a loadable entry or surface, direct children when useful, and no outside-world references unless the user explicitly grants a capability. The node decides its internal file layout and cache keys.
+The minimum generated-node contract is stable identity, parent-owned location, a loadable entry or surface, direct children when useful, and no undeclared outside-world references. The node decides its internal file layout and cache keys.
 
 Entering a node loads it and its immediate children. Descendants remain lazy until selected. The tracked `world/` tree is the durable cache: generated artifacts are committed with core code, survive `npm run dev`, and remain reviewable as ordinary project changes. No separate database is required initially.
 
-### Assistant app
+### Assistant and world repair
 
-Assistant is a normal world-tree app with a core-provided context capability. It receives the selected node, parent chain, selected window, recent operations, runtime errors, and relevant log entries.
+Assistant is a normal replaceable world-tree app using `world.inspect`, `world.generate`, and `world.repair`. Any other app may provide the same workflow. A repair request receives the selected node, parent chain, selected window, recent operations, runtime errors, relevant log entries, screenshot, generated-frame console errors, and the prompt/profile revision that produced the artifact.
 
 ```text
 world/apps/assistant/
@@ -92,7 +124,7 @@ world/apps/assistant/
   children/conversations/
 ```
 
-An Assistant request contains a natural-language complaint and runtime context. Codex diagnoses the issue, edits the smallest affected subtree or core seam, validates it, reloads the affected node, and reports the result in Assistant. The user always has a place to explain what is wrong.
+An Assistant request contains a natural-language complaint and runtime context. A world-only repair uses the ordinary isolated generation pipeline. A repository repair uses a disposable Git worktree or repository copy, may edit any VibeOS-owned file inside it, validates the complete diff and test results, and publishes transactionally. Neither profile writes directly to the live checkout or outside its isolated workspace.
 
 ## 1. Product premise
 
@@ -100,7 +132,7 @@ VibeOS is a browser-hosted operating system whose world is generated on demand b
 
 The user experiences a coherent OS: windows, apps, navigation, files, search, installation, and interaction. The user does not experience a developer tool, code-generation dashboard, or collection of disconnected mockups.
 
-The world is lazy. Installing an app creates its identity and a launchable place in the OS. Opening it generates the first usable surface. Interacting with a surface generates the next required capability or page. Existing state remains stable while the missing part is prepared.
+The world is lazy. Installing an app creates its identity and a launchable place in the OS. Opening it generates the first experientially complete capability. Interacting with it generates a child capability only when the interaction crosses into a genuinely new coherent destination. Existing state remains stable while a missing capability is prepared.
 
 The browser does not connect to the real Internet by default. A browser URL is resolved to a local production-style page for that address, with links and controls that can request further local loading.
 
@@ -115,11 +147,11 @@ Examples:
 - Searching App Shop for “music studio” returns an app listing even when no physical package exists.
 - Installing “music studio” adds an app record and launcher entry immediately.
 - Opening the installed app first shows its stable shell, then fills in the generated home page.
-- Clicking a generated button produces the next page or capability in the same app and preserves the original action while generation runs.
+- Clicking a local control updates the current experience immediately; entering a genuinely new destination generates or loads its child capability and preserves the original action while generation runs.
 
 Generation latency is represented as ordinary OS latency: a page/app surface may show a neutral loading state, skeleton, or disabled control. The UI does not expose prompts, token streams, source files, agent phases, or implementation terminology.
 
-The only developer-facing generation trace is written to the backend terminal running `npm run dev`.
+Developer-facing generation traces are written to structured job records and the backend terminal running `npm run dev`. They are not exposed as implementation terminology in normal app UI.
 
 ## 3. Runtime model
 
@@ -168,16 +200,16 @@ The runtime follows this sequence:
 4. If ready, execute it locally.
 5. If absent, create a generation job and preserve the intent.
 6. Render a neutral pending state in the affected surface.
-7. Ask Codex to implement only the missing slice.
+7. Ask Codex to implement the missing experientially complete capability.
 8. Validate and register the result.
 9. Replay the preserved intent exactly once.
 10. Emit normal OS/world events so the browser continues naturally.
 
 Generation is idempotent by capability key. Repeated clicks while a job is running join the same job rather than starting duplicate work.
 
-## 5. App Shop and lazy installation
+## 5. App registry and lazy installation
 
-App Shop is an ordinary generated app backed by the world catalog. The core exposes generic app-registry operations; the App Shop surface chooses to present search and install controls. The core does not render or special-case an App Shop.
+An App Shop is an ordinary replaceable app backed by `apps.*` operations and the world catalog. Its surface chooses how to present search, installation, updates, or removal. The core does not render or special-case an App Shop, and a user-created replacement receives the same operation interface.
 
 An app record is metadata, not an implementation bundle:
 
@@ -203,11 +235,13 @@ Install performs only these immediate actions:
 - create an app workspace namespace;
 - mark its entry surface as `placeholder`.
 
-Install does not ask Codex to build the whole app. First launch requests generation of the entry surface only.
+Install does not ask Codex to build the whole app. First launch requests the smallest experientially complete entry capability.
 
-## 6. Surfaces, pages, and structured generation
+## 6. Capabilities, surfaces, and structured generation
 
-Every generated experience is a tree of addressable surfaces. A surface is the unit of lazy generation.
+Every generated experience is a tree of addressable capabilities. A surface is an addressable presentation location; it is not necessarily the generation boundary. A capability is the unit of lazy generation and may own one surface, many internal screens, a realtime loop, substantial assets, simulation logic, and persistent state.
+
+The boundary rule is: generate the smallest experientially complete vertical slice. Local controls, same-experience state transitions, forms, tabs, dialogs, editor operations, game loops, and prerequisites for the advertised primary goal are implemented together. Only a genuinely separate coherent destination or independently useful workflow becomes a lazy child.
 
 ```ts
 type SurfaceRef = { appId: string; surfaceId: string; route: string };
@@ -231,7 +265,7 @@ type ControlModel = {
 };
 ```
 
-The frontend renders the optional generic `SurfaceContent` through a controlled renderer. Generated code does not get to manipulate the desktop, open arbitrary sockets, or bypass the runtime. When a node uses the generic renderer, controls map to semantic intents. When a node needs richer behavior, it may provide its own entrypoint behind the same node seam and use the OS bridge. The core does not treat prose as implementation: the primary user action must be usable before the node is marked ready.
+The frontend renders optional generic `SurfaceContent` through a controlled renderer. Rich entries run in opaque-origin sandboxed frames and use a typed, versioned OS bridge. They cannot manipulate the desktop DOM, open the runtime WebSocket, share ambient storage, or bypass operation validation. The core does not treat prose as implementation: the capability's primary user goal and all visible local controls must be usable before it is marked ready.
 
 There is no mandatory internal app layout. A generated node owns its workspace and may choose a layout such as:
 
@@ -244,15 +278,17 @@ world/apps/<app-id>/
   data/state.json
 ```
 
-The agent receives the exact target node path, parent context, existing sibling/child context, available OS primitives, a few quality examples, and acceptance checks. It may modify the target node’s owned subtree. It must not invent OS fields or modify core code for an ordinary generated-world task.
+The worker receives a staged, self-contained work order: exact intent and input, requested coherent outcome, read-only current node and parent/child context, versioned framework kit, typed OS bridge, theme contract, schemas, relevant examples, and executable acceptance checks. It may write only the staged output candidate. It does not inspect or modify the live repository for an ordinary generated-world task.
+
+A substantial application is allowed to be substantial. For example, a playable strategy-game skirmish capability may need setup, battlefield rendering, input, simulation, units, opponent behavior, audio, persistence, and victory/defeat in the same generated slice. Campaigns, additional maps, multiplayer, or an editor may remain lazy children. Effort changes ambition, fidelity, asset sophistication, and verification; it never excuses dead visible controls.
 
 ### Persistent local state and external capabilities
 
-Every generated node may use an app-scoped persistent storage namespace. The default is local and survives reloads and development restarts. Generated code chooses its data shape and migration strategy; VibeOS owns namespacing, persistence, and isolation. User data is mutable state and is kept conceptually separate from generated source/cache.
+Every generated node may use a node-scoped persistent storage namespace through the OS bridge. The default is local and survives reloads and development restarts. Generated code chooses its data shape and migration strategy; VibeOS owns namespacing, persistence, and isolation. User data is mutable state and remains separate from generated source/cache and Git-tracked artifacts.
 
-Internet, host filesystem, clipboard, and device access are off by default. A node may request an explicit capability when the user asks for it. VibeOS mediates the request rather than silently granting ambient access.
+Internet, host filesystem, clipboard, and device access are outside-world operations rather than app privileges. They are off by default and mediated explicitly when the user asks for them. No generated frame or worker receives ambient host access.
 
-This location rule is the main protection against global hallucinated rewrites: one user action maps to one capability key and one structured generation location.
+This staged location rule is the main protection against global hallucinated rewrites: one user action maps to one capability key, one isolated job, one validated publication target, and a rollbackable transaction.
 
 ## 7. Imagined Browser
 
@@ -287,77 +323,69 @@ resizeWindow(windowId: string, size: Size): void
 
 The close button must dispatch `close_window` and remove the window from the runtime snapshot. App contents must not own window lifecycle.
 
-## 9. Codex adapter
+## 9. Generation harness and Codex adapter
 
 The backend launches the local `codex exec` process adapter directly. The browser communicates only with the VibeOS WebSocket runtime; it does not register tools with Codex or use an intermediary protocol.
 
-The generation adapter has one narrow interface:
+The generation coordinator is a deep module with one narrow interface:
 
 ```ts
-generate(request: GenerationRequest): Promise<GenerationResult>
+prepare(request: CapabilityRequest): Promise<PublishedCapability>
 ```
 
-`GenerationRequest` includes the capability key, target path, current surface model, user intent, acceptance checks, and workspace restrictions. Codex is instructed to finish the smallest complete slice quickly, run checks, write the structured result, and return a machine-readable ready marker.
+The coordinator owns cache lookup, deduplication, staging, model/profile selection, the Codex subprocess, verification, repair attempts, transactional publication, rollback, and exact-once resume. `CapabilityRequest` includes the capability key, original intent/input, parent context, requested coherent outcome, execution settings, and executable acceptance contract.
+
+Ordinary jobs run in isolated staged directories containing read-only input/framework material and a writable output directory. Codex runs with `workspace-write` and approval policy `never`, not `--dangerously-bypass-approvals-and-sandbox`. The worker environment excludes host secrets and applies external process, time, memory, file, output, concurrency, and network limits. Search `none` disables network outside the prompt; higher search modes enable only their configured behavior.
+
+Repository repair jobs run in a disposable Git worktree or repository copy and may change any VibeOS-owned file there, but never the live checkout or host environment. Their complete diff and tests are validated before transactional publication.
+
+The Codex adapter selects explicit OmniRoute model identifiers and native reasoning effort from the effort table in section 0. It uses `gh/gpt-5.6-terra` for ultrafast through balanced and `gh/gpt-5.6-sol` for quality through ultra. The `gh/` prefix is mandatory. Structured output uses `codex exec --output-schema`; `--json` provides machine-readable trajectory events. A textual ready sentinel is not the handoff contract.
 
 Backend stdout/stderr shows tagged trajectory logs:
 
 ```text
 [generation] queued job=...
-[codex] starting job=...
+[codex] starting job=... model=gh/gpt-5.6-sol effort=high
 [codex] <stdout>
 [codex:err] <stderr>
-[generation] validated job=...
+[verification] scenario=... result=...
+[generation] published job=... revision=...
 [generation] resumed operation=...
 ```
 
-These logs are for the developer operating the local runtime. They are not sent to the browser.
+Each job also has a durable record containing original intent, settings, exact model/profile, framework and prompt revisions, structured events, changed files, verification evidence, screenshots, repair attempts, publication revision, and final state. These diagnostics are available to Assistant and developers but are not normal application UI.
+
+### Verification and repair
+
+The generated envelope is only the first validation layer. Before publication, effort-dependent verification checks observable behavior: loadability, primary scenarios, visible-control outcomes, console errors, broken assets, accidental overflow, theme and viewport behavior, persistence/reload semantics, keyboard/pointer interaction, and declared lazy exits.
+
+Failures produce a compact repair packet with the failed scenario, expected and actual observations, console output, screenshot, and relevant staged files. Repairs modify the staged candidate. The previous published capability remains active until the candidate passes and publication completes.
 
 ## 10. Failure and recovery
 
 - Codex unavailable: retain the placeholder and show a normal retryable loading/error state.
-- Invalid generated envelope: reject the result, preserve the prior surface, and return a compact repair request to the same generation job. Validation checks only OS invariants; unfamiliar app semantics are valid.
+- Invalid generated envelope or failed acceptance scenario: reject the candidate, preserve the prior capability, and use the effort tier's compact repair budget.
 - Agent timeout: mark the generation job failed without losing the original intent.
 - Browser refresh: restore OS state, installed apps, surfaces, and unfinished jobs from the local store; reconnect running jobs where possible.
 - Duplicate activation: deduplicate by capability key and replay the intent once generation is ready.
 - Unsafe generated action: reject controls that are not in the allowed declarative control vocabulary.
+- Worker escape attempt or unexpected path/type/size: reject the complete staged candidate and retain forensic job evidence.
+- Publication failure: roll back to the previous capability revision and keep the original intent retryable.
 
-## 11. Implementation order
+## 11. Implementation roadmap
 
-### Phase 1 — Runtime seams and persistence
+The detailed executable roadmap is maintained in [`generation-harness-plan.md`](generation-harness-plan.md). Its order is intentional:
 
-Implement typed OS/world models, recursive node traversal, intent journal, surface registry, capability keys, operation replay, and direct tracked `world/` file loading. Remove fixed app branches from core and represent seeded apps as world-tree fixtures.
+1. Make tests hermetic so harness work cannot pollute the tracked world.
+2. Introduce generic typed OS operations so seeded and user-created system-style apps use the same interface.
+3. Stage workers and publication transactionally before removing unrestricted execution.
+4. Add structured work orders, explicit `gh/` model routing, native effort controls, and structured results.
+5. Sandbox generated frames behind the typed bridge.
+6. Add executable browser verification and repair loops.
+7. Move generation boundaries from shallow pages to coherent capabilities and benchmark complex experiences.
+8. Optimize scheduling, diagnostics, cache hits, and tier-specific latency using measurements.
 
-Completion criterion: tests can dispatch an absent surface, observe a pending operation, install a generated result, and observe exactly one resumed action.
-
-### Phase 2 — Correct OS primitives
-
-Implement real window close/focus/minimize/maximize behavior, generic controlled inputs and intent dispatch, navigation history, and stable app lifecycle. Browser behavior is supplied by its generated cache surface.
-
-Completion criterion: calculator opens and closes; browser accepts a URL and changes route without network access; refresh restores the session.
-
-### Phase 3 — App Shop and placeholders
-
-Implement local semantic app search, install metadata, launcher registration, placeholder entry nodes, nested world-tree creation, and the Assistant repair surface.
-
-Completion criterion: arbitrary app search → install → launcher entry works without generation.
-
-### Phase 4 — Structured generation
-
-Implement the Codex generation adapter, target-surface prompt, workspace restrictions, model validation, generation logs, and job deduplication.
-
-Completion criterion: opening an installed placeholder causes only its entry surface to be generated and then displayed.
-
-### Phase 5 — Imagined browser and recursive lazy surfaces
-
-Implement browser world keys, generated local pages, declarative controls, route generation, and intent replay for nested interactions.
-
-Completion criterion: type a URL → see generated local page → click a generated link → see the next generated page without network access.
-
-### Phase 6 — End-to-end polish
-
-Add skeleton states, retry/cancel, notifications, generated-content caching, browser history, app persistence, and developer diagnostics.
-
-Completion criterion: a fresh user can install an imaginary app and explore two generated surfaces without seeing implementation details or losing an action.
+No phase may temporarily grant workers direct write access to the live repository as a shortcut.
 
 ## 12. Test strategy
 
@@ -365,18 +393,25 @@ Tests cross the runtime interfaces, not private implementation details.
 
 - Window seam: open, focus, close, minimize, maximize, and z-order.
 - Input seam: address-bar editing and submit dispatch the expected intent.
-- App Shop seam: arbitrary query, install, launcher registration, and persistence.
+- App-registry seam: arbitrary query, install, launcher registration, removal, and persistence from any app UI.
 - Generation seam: request construction, target path, job deduplication, validation, and ready handoff.
+- Containment seam: staged writes cannot escape to sibling nodes, live repository files, or host paths.
+- Worker-profile seam: each effort tier selects the documented `gh/` model, native reasoning effort, search behavior, and repair budget.
 - Replay seam: original intent is preserved and executed once after generation.
 - Browser seam: URL canonicalization, local-only navigation, generated links, and history.
 - Recovery seam: refresh and agent failure retain stable OS/world state.
-- End-to-end browser test: install imaginary app → open placeholder → generate entry surface → activate generated control → generate next surface.
+- Generated-host seam: frame cannot access the desktop DOM or another node's storage; typed operations still work.
+- Acceptance seam: visible primary controls are exercised, console/assets/layout are checked, and failed candidates are not published.
+- End-to-end browser test: install an application → open placeholder → generate a coherent entry capability → exercise its primary workflow → enter and generate a genuinely separate child capability.
 
 ## 13. Explicit non-goals
 
-- Real Internet access for imagined browser pages.
+- Unrequested live Internet access for imagined browser pages.
 - Treating generated source code as the frontend’s public contract.
 - Building an entire app during installation.
 - Exposing Codex trajectory or prompts as normal OS UI.
 - Allowing generated content to directly control windows or server resources.
+- Reserving Settings, App Shop, Assistant, or world-changing operations for blessed app identities.
+- Treating a page, button, modal, or route as the mandatory generation boundary.
+- Giving any worker ambient authority over the host environment.
 - Remote multi-user collaboration, production authentication, and arbitrary native process execution in the browser.

@@ -1,0 +1,14 @@
+{
+  "id": "app-sublime-text",
+  "title": "Sublime Text",
+  "kind": "app",
+  "status": "ready",
+  "icon": "icon.svg",
+  "children": [],
+  "surface": {
+    "heading": "Sublime Text",
+    "body": "A focused code editor workspace",
+    "controls": [],
+    "entry": "index.html"
+  }
+}

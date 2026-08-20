@@ -6,7 +6,7 @@
       "title": "Browser",
       "route": "/baidu.com",
       "state": "normal",
-      "focused": true,
+      "focused": false,
       "position": {
         "x": 1183,
         "y": 1294
@@ -17,51 +17,19 @@
       }
     },
     {
-      "id": "window-26",
-      "appId": "app-firefox",
-      "title": "Firefox",
-      "route": "/baidu.com",
-      "state": "normal",
-      "focused": false,
-      "position": {
-        "x": 176,
-        "y": 120
-      },
-      "size": {
-        "width": 760,
-        "height": 500
-      }
-    },
-    {
-      "id": "window-30",
-      "appId": "shop",
-      "title": "App Shop",
+      "id": "window-2",
+      "appId": "app-sublime-text",
+      "title": "Sublime Text",
       "route": "/",
       "state": "normal",
-      "focused": false,
+      "focused": true,
       "position": {
         "x": 176,
         "y": 120
       },
       "size": {
-        "width": 760,
-        "height": 500
-      }
-    },
-    {
-      "id": "window-34",
-      "appId": "settings",
-      "title": "Settings",
-      "route": "/",
-      "state": "normal",
-      "focused": false,
-      "position": {
-        "x": 176,
-        "y": 120
-      },
-      "size": {
-        "width": 760,
-        "height": 500
+        "width": 1129,
+        "height": 726
       }
     }
   ],
@@ -14486,7 +14454,8 @@
           "icon": "sparkles"
         }
       },
-      "state": "pending"
+      "state": "cancelled",
+      "message": "Interrupted when VibeOS stopped."
     },
     {
       "id": "op-4",
@@ -14656,7 +14625,8 @@
           "icon": "sparkles"
         }
       },
-      "state": "pending"
+      "state": "cancelled",
+      "message": "Interrupted when VibeOS stopped."
     },
     {
       "id": "op-4",
@@ -14807,6 +14777,3259 @@
         "url": "baidu.com"
       },
       "state": "ready"
+    },
+    {
+      "id": "op-1",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-34"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-2",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-34"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-3",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-30"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-4",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-30"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-1",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-30"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-2",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-30"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-1",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-30"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-2",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-30"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-1",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-30"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-1",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-30"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-2",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-30"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-1",
+      "intent": {
+        "type": "open_app",
+        "appId": "settings"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-3",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-4",
+      "intent": {
+        "type": "set_setting",
+        "key": "effort",
+        "value": "quality"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-5",
+      "intent": {
+        "type": "set_setting",
+        "key": "effort",
+        "value": "quality"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-6",
+      "intent": {
+        "type": "set_setting",
+        "key": "effort",
+        "value": "quality"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-7",
+      "intent": {
+        "type": "set_setting",
+        "key": "effort",
+        "value": "quality"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-8",
+      "intent": {
+        "type": "set_setting",
+        "key": "effort",
+        "value": "balanced"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-9",
+      "intent": {
+        "type": "set_setting",
+        "key": "effort",
+        "value": "balanced"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-10",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-11",
+      "intent": {
+        "type": "set_setting",
+        "key": "effort",
+        "value": "quality"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-12",
+      "intent": {
+        "type": "set_setting",
+        "key": "effort",
+        "value": "quality"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-13",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-14",
+      "intent": {
+        "type": "set_setting",
+        "key": "effort",
+        "value": "balanced"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-15",
+      "intent": {
+        "type": "set_setting",
+        "key": "effort",
+        "value": "balanced"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-16",
+      "intent": {
+        "type": "set_setting",
+        "key": "effort",
+        "value": "balanced"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-17",
+      "intent": {
+        "type": "set_setting",
+        "key": "effort",
+        "value": "fast"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-18",
+      "intent": {
+        "type": "set_setting",
+        "key": "effort",
+        "value": "fast"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-19",
+      "intent": {
+        "type": "set_setting",
+        "key": "effort",
+        "value": "fast"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-20",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-21",
+      "intent": {
+        "type": "set_setting",
+        "key": "search",
+        "value": "none"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-22",
+      "intent": {
+        "type": "set_setting",
+        "key": "search",
+        "value": "none"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-23",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-24",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-25",
+      "intent": {
+        "type": "open_app",
+        "appId": "settings"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-27",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-26"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-28",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-26"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-29",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-26"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-30",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-26"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-31",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-26"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-32",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-26"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-33",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-26"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-34",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-26"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-35",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-26"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-36",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-26"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-37",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-26"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-38",
+      "intent": {
+        "type": "open_app",
+        "appId": "settings"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-1",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-39"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-2",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-39"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-3",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-30"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-4",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-30"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-5",
+      "intent": {
+        "type": "open_app",
+        "appId": "settings"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-7",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-6"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-8",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-6"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-1",
+      "intent": {
+        "type": "open_app",
+        "appId": "app-scientific-calculator"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-3",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-4",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-5",
+      "intent": {
+        "type": "open_app",
+        "appId": "shop"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-7",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-6"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-8",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-6"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-9",
+      "intent": {
+        "type": "install_app",
+        "app": {
+          "id": "app-sublime-text",
+          "name": "sublime text",
+          "description": "Imagine and explore sublime text",
+          "icon": "sparkles"
+        }
+      },
+      "state": "cancelled",
+      "message": "Interrupted when VibeOS stopped."
+    },
+    {
+      "id": "op-10",
+      "intent": {
+        "type": "open_app",
+        "appId": "settings"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-12",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-11"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-13",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-11",
+        "x": 353,
+        "y": 191
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-14",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-11",
+        "x": 391,
+        "y": 208
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-15",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-11",
+        "x": 514,
+        "y": 235
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-16",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-11",
+        "x": 597,
+        "y": 259
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-17",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-11",
+        "x": 664,
+        "y": 276
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-18",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-11",
+        "x": 696,
+        "y": 286
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-19",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-11",
+        "x": 724,
+        "y": 296
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-20",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-11",
+        "x": 732,
+        "y": 303
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-21",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-11",
+        "x": 741,
+        "y": 308
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-22",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-11",
+        "x": 776,
+        "y": 320
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-23",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-11",
+        "x": 820,
+        "y": 331
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-24",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-11",
+        "x": 854,
+        "y": 342
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-25",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-11",
+        "x": 889,
+        "y": 359
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-26",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-11",
+        "x": 939,
+        "y": 387
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-27",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-11",
+        "x": 949,
+        "y": 396
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-28",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-11",
+        "x": 965,
+        "y": 411
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-29",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-11",
+        "x": 972,
+        "y": 417
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-30",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-11",
+        "x": 988,
+        "y": 426
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-31",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-11",
+        "x": 995,
+        "y": 431
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-32",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-11",
+        "x": 997,
+        "y": 432
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-33",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-11",
+        "x": 998,
+        "y": 433
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-1",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-11"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-2",
+      "intent": {
+        "type": "set_setting",
+        "key": "model",
+        "value": "luna"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-3",
+      "intent": {
+        "type": "set_setting",
+        "key": "model",
+        "value": "luna"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-4",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-11"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-5",
+      "intent": {
+        "type": "set_setting",
+        "key": "reasoning",
+        "value": "medium"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-6",
+      "intent": {
+        "type": "set_setting",
+        "key": "reasoning",
+        "value": "medium"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-7",
+      "intent": {
+        "type": "set_setting",
+        "key": "reasoning",
+        "value": "low"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-8",
+      "intent": {
+        "type": "set_setting",
+        "key": "reasoning",
+        "value": "low"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-9",
+      "intent": {
+        "type": "uninstall_app",
+        "appId": "app-sublime-text"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-10",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-6"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-11",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-6"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-1",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-6"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-2",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-6"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-3",
+      "intent": {
+        "type": "install_app",
+        "app": {
+          "id": "app-sublime-text",
+          "name": "sublime text",
+          "description": "Imagine and explore sublime text",
+          "icon": "sparkles"
+        }
+      },
+      "state": "failed",
+      "message": "Generated world rejected: node.title must be a non-empty string"
+    },
+    {
+      "id": "op-4",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-6"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-5",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-6"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-1",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-11"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-2",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-11"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-3",
+      "intent": {
+        "type": "uninstall_app",
+        "appId": "app-sublime-text"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-4",
+      "intent": {
+        "type": "open_app",
+        "appId": "shop"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-6",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-5"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-7",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-5"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-1",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-5"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-2",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-5"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-3",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-5"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-4",
+      "intent": {
+        "type": "install_app",
+        "app": {
+          "id": "app-sublime-text",
+          "name": "sublime text",
+          "description": "Imagine and explore sublime text",
+          "icon": "sparkles"
+        }
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-1",
+      "intent": {
+        "type": "open_app",
+        "appId": "app-sublime-text"
+      },
+      "state": "cancelled",
+      "message": "Interrupted when VibeOS stopped."
+    },
+    {
+      "id": "op-4",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-5",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 427,
+        "y": 180
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-6",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 514,
+        "y": 240
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-7",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 662,
+        "y": 298
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-8",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 758,
+        "y": 326
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-9",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 812,
+        "y": 336
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-10",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 936,
+        "y": 390
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-11",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 975,
+        "y": 419
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-12",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 995,
+        "y": 435
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-13",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 1007,
+        "y": 443
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-14",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 1047,
+        "y": 477
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-15",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 1051,
+        "y": 479
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-16",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 1052,
+        "y": 479
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-17",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 1054,
+        "y": 482
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-18",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 1055,
+        "y": 482
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-19",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 1056,
+        "y": 482
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-1",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-2",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-1",
+      "intent": {
+        "type": "open_app",
+        "appId": "app-sublime-text"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-3",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-4",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-5",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-6",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-7",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-8",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-9",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 424,
+        "y": 175
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-10",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 449,
+        "y": 193
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-11",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 527,
+        "y": 229
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-12",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 551,
+        "y": 237
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-13",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 655,
+        "y": 271
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-14",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 751,
+        "y": 293
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-15",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 815,
+        "y": 301
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-16",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 873,
+        "y": 309
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-17",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 941,
+        "y": 329
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-18",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 959,
+        "y": 339
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-19",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 1009,
+        "y": 365
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-20",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 1040,
+        "y": 378
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-21",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 1041,
+        "y": 380
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-22",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-23",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-24",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-1",
+      "intent": {
+        "type": "open_app",
+        "appId": "assistant"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-3",
+      "intent": {
+        "type": "open_app",
+        "appId": "assistant"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-4",
+      "intent": {
+        "type": "open_app",
+        "appId": "settings"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-6",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-5"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-7",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-5"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-8",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-5"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-9",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-5"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-10",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-5"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-11",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-5"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-12",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-5"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-13",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-5"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-14",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-5"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-15",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-5"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-16",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-5"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-17",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-5"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-18",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-5"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-19",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-5"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-20",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-5"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-21",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-5"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-22",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-5"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-23",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-5"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-24",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-25",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-26",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-27",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 277,
+        "y": 168
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-28",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 287,
+        "y": 178
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-29",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 309,
+        "y": 207
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-30",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 317,
+        "y": 217
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-31",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 337,
+        "y": 237
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-32",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 366,
+        "y": 277
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-33",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 387,
+        "y": 332
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-34",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 394,
+        "y": 352
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-35",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 400,
+        "y": 371
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-36",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 407,
+        "y": 403
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-37",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 408,
+        "y": 419
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-38",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 411,
+        "y": 434
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-39",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 412,
+        "y": 439
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-40",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 414,
+        "y": 452
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-41",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 418,
+        "y": 465
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-42",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 425,
+        "y": 485
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-43",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 433,
+        "y": 509
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-44",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 442,
+        "y": 534
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-45",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 454,
+        "y": 564
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-46",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 461,
+        "y": 578
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-47",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 482,
+        "y": 630
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-48",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 485,
+        "y": 642
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-49",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 490,
+        "y": 658
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-50",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 491,
+        "y": 662
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-51",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 491,
+        "y": 663
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-52",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 491,
+        "y": 664
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-53",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 490,
+        "y": 664
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-54",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 487,
+        "y": 667
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-55",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 486,
+        "y": 668
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-56",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 481,
+        "y": 677
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-57",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 472,
+        "y": 691
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-58",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 466,
+        "y": 699
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-59",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 464,
+        "y": 703
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-60",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 458,
+        "y": 708
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-61",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 455,
+        "y": 708
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-62",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 454,
+        "y": 708
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-63",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 451,
+        "y": 708
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-64",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 448,
+        "y": 707
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-65",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 446,
+        "y": 707
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-66",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 445,
+        "y": 707
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-67",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-68",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 359,
+        "y": 168
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-69",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 372,
+        "y": 173
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-70",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 388,
+        "y": 179
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-71",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 405,
+        "y": 184
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-72",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 431,
+        "y": 189
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-73",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 472,
+        "y": 193
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-74",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 550,
+        "y": 193
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-75",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 622,
+        "y": 195
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-76",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 659,
+        "y": 197
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-77",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 691,
+        "y": 199
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-78",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 706,
+        "y": 200
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-79",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 715,
+        "y": 201
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-80",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 719,
+        "y": 202
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-81",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 719,
+        "y": 203
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-82",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 720,
+        "y": 203
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-83",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 729,
+        "y": 206
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-84",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 777,
+        "y": 209
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-85",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 823,
+        "y": 217
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-86",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 877,
+        "y": 223
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-87",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 925,
+        "y": 225
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-88",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 947,
+        "y": 228
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-89",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 986,
+        "y": 228
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-90",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 986,
+        "y": 227
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-91",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 988,
+        "y": 227
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-92",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 1002,
+        "y": 230
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-93",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 1062,
+        "y": 233
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-94",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 1103,
+        "y": 233
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-95",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 1115,
+        "y": 230
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-96",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 1116,
+        "y": 230
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-97",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-2",
+        "x": 1117,
+        "y": 230
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-98",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-99",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-100",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-5"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-101",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-5"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-102",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-5"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-103",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-5"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-104",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-5"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-105",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-5"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-106",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-5"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-107",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-5"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-108",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-5"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-109",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-5"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-110",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-5"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-111",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-5"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-112",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-5"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-113",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-5"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-114",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-5"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-115",
+      "intent": {
+        "type": "open_app",
+        "appId": "assistant"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-117",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-116"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-118",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-116",
+        "x": 188,
+        "y": 118
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-119",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-116",
+        "x": 193,
+        "y": 123
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-120",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-116",
+        "x": 206,
+        "y": 130
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-121",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-116",
+        "x": 216,
+        "y": 137
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-122",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-116",
+        "x": 233,
+        "y": 151
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-123",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-116",
+        "x": 252,
+        "y": 169
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-124",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-116",
+        "x": 296,
+        "y": 212
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-125",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-116",
+        "x": 324,
+        "y": 246
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-126",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-116",
+        "x": 354,
+        "y": 303
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-127",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-116",
+        "x": 360,
+        "y": 325
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-128",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-116",
+        "x": 365,
+        "y": 347
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-129",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-116",
+        "x": 371,
+        "y": 367
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-130",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-116",
+        "x": 376,
+        "y": 402
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-131",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-116",
+        "x": 381,
+        "y": 426
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-132",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-116",
+        "x": 386,
+        "y": 454
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-133",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-116",
+        "x": 390,
+        "y": 474
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-134",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-116",
+        "x": 395,
+        "y": 504
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-135",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-116",
+        "x": 401,
+        "y": 523
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-136",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-116",
+        "x": 408,
+        "y": 545
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-137",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-116",
+        "x": 413,
+        "y": 559
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-138",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-116",
+        "x": 413,
+        "y": 572
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-139",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-116",
+        "x": 413,
+        "y": 576
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-140",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-116",
+        "x": 413,
+        "y": 580
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-141",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-116",
+        "x": 412,
+        "y": 584
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-142",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-116",
+        "x": 411,
+        "y": 591
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-143",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-116",
+        "x": 411,
+        "y": 597
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-144",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-116",
+        "x": 411,
+        "y": 601
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-145",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-116",
+        "x": 411,
+        "y": 608
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-146",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-116",
+        "x": 411,
+        "y": 611
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-147",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-116",
+        "x": 410,
+        "y": 613
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-148",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-116",
+        "x": 409,
+        "y": 613
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-149",
+      "intent": {
+        "type": "move_window",
+        "windowId": "window-116",
+        "x": 407,
+        "y": 614
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-150",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-116"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-151",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-116"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-152",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-116"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-153",
+      "intent": {
+        "type": "assistant_request",
+        "message": "The \"command palette\" in sublime text cannot close. After I press anything it still exists, and does not close when I clicked gray-ed out area outside that palette",
+        "context": {
+          "windowId": "window-116"
+        }
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-154",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-155",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-156",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-157",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-158",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-159",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-160",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-161",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-162",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-163",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-164",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-165",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-166",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-167",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-168",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-116"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-169",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-116"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-170",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-171",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-172",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-173",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-174",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-175",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-176",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-177",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-178",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-179",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-180",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-181",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-182",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-183",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-184",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-185",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-186",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-187",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-188",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-189",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-190",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-191",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-192",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-193",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-194",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-195",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-2"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-196",
+      "intent": {
+        "type": "focus_window",
+        "windowId": "window-5"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-1",
+      "intent": {
+        "type": "open_app",
+        "appId": "app-sublime-text"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-3",
+      "intent": {
+        "type": "resize_window",
+        "windowId": "window-2",
+        "width": 761,
+        "height": 502
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-4",
+      "intent": {
+        "type": "resize_window",
+        "windowId": "window-2",
+        "width": 766,
+        "height": 507
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-5",
+      "intent": {
+        "type": "resize_window",
+        "windowId": "window-2",
+        "width": 872,
+        "height": 575
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-6",
+      "intent": {
+        "type": "resize_window",
+        "windowId": "window-2",
+        "width": 894,
+        "height": 587
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-7",
+      "intent": {
+        "type": "resize_window",
+        "windowId": "window-2",
+        "width": 955,
+        "height": 632
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-8",
+      "intent": {
+        "type": "resize_window",
+        "windowId": "window-2",
+        "width": 970,
+        "height": 641
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-9",
+      "intent": {
+        "type": "resize_window",
+        "windowId": "window-2",
+        "width": 993,
+        "height": 648
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-10",
+      "intent": {
+        "type": "resize_window",
+        "windowId": "window-2",
+        "width": 1026,
+        "height": 662
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-11",
+      "intent": {
+        "type": "resize_window",
+        "windowId": "window-2",
+        "width": 1037,
+        "height": 670
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-12",
+      "intent": {
+        "type": "resize_window",
+        "windowId": "window-2",
+        "width": 1056,
+        "height": 681
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-13",
+      "intent": {
+        "type": "resize_window",
+        "windowId": "window-2",
+        "width": 1076,
+        "height": 695
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-14",
+      "intent": {
+        "type": "resize_window",
+        "windowId": "window-2",
+        "width": 1126,
+        "height": 729
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-15",
+      "intent": {
+        "type": "resize_window",
+        "windowId": "window-2",
+        "width": 1131,
+        "height": 731
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-16",
+      "intent": {
+        "type": "resize_window",
+        "windowId": "window-2",
+        "width": 1129,
+        "height": 726
+      },
+      "state": "ready"
     }
   ],
   "notifications": [
@@ -14819,9 +18042,28 @@
     "spawn E2BIG",
     "spawn E2BIG",
     "spawn E2BIG",
-    "spawn E2BIG"
+    "spawn E2BIG",
+    "Generated world rejected: node.title must be a non-empty string"
   ],
   "apps": [
+    {
+      "id": "app--promax",
+      "name": "押韵大师ProMax",
+      "description": "",
+      "icon": "icon.svg",
+      "category": "app",
+      "installed": true,
+      "status": "available"
+    },
+    {
+      "id": "app-codex",
+      "name": "Codex",
+      "description": "",
+      "icon": "icon.svg",
+      "category": "app",
+      "installed": true,
+      "status": "available"
+    },
     {
       "id": "app-command-conquer-red-alert-3",
       "name": "Command & Conquer: Red Alert 3",
@@ -14850,6 +18092,15 @@
       "status": "available"
     },
     {
+      "id": "app-midi-editor",
+      "name": "Midi editor",
+      "description": "",
+      "icon": "icon.svg",
+      "category": "app",
+      "installed": true,
+      "status": "available"
+    },
+    {
       "id": "app-minesweeper",
       "name": "Minesweeper",
       "description": "Clear the field without triggering a mine. Choose a square to begin, then use the numbers to map the hidden hazards.",
@@ -14865,7 +18116,7 @@
       "icon": "icon.svg",
       "category": "app",
       "installed": true,
-      "status": "placeholder"
+      "status": "available"
     },
     {
       "id": "app-poetry",
@@ -14874,7 +18125,7 @@
       "icon": "icon.svg",
       "category": "app",
       "installed": true,
-      "status": "placeholder"
+      "status": "available"
     },
     {
       "id": "app-scientific-calculator",
@@ -14884,6 +18135,15 @@
       "category": "app",
       "installed": true,
       "status": "available"
+    },
+    {
+      "id": "app-sublime-text",
+      "name": "Sublime Text",
+      "description": "A focused code editor workspace",
+      "icon": "icon.svg",
+      "category": "app",
+      "installed": true,
+      "status": "ready"
     },
     {
       "id": "app-tetris",
@@ -14906,7 +18166,7 @@
     {
       "id": "assistant",
       "name": "Assistant",
-      "description": "Describe a problem and Assistant will help repair it.",
+      "description": "",
       "icon": "icon.svg",
       "category": "app",
       "installed": true,
@@ -14938,41 +18198,37 @@
       "category": "app",
       "installed": true,
       "status": "available"
-    },
-    {
-      "id": "app-codex",
-      "name": "Codex",
-      "description": "Imagine and explore codex",
-      "icon": "icon.svg",
-      "status": "placeholder",
-      "installed": true
-    },
-    {
-      "id": "app--promax",
-      "name": "押韵大师ProMax",
-      "description": "Imagine and explore 押韵大师ProMax",
-      "icon": "icon.svg",
-      "status": "available",
-      "installed": true
-    },
-    {
-      "id": "app-midi-editor",
-      "name": "Midi editor",
-      "description": "Imagine and explore Midi editor",
-      "icon": "icon.svg",
-      "status": "available",
-      "installed": true
-    },
-    {
-      "id": "app-tetris-1787140710730",
-      "name": "Tetris 1787140710730",
-      "description": "Imagine and explore Tetris 1787140710730",
-      "icon": "sparkles",
-      "status": "placeholder",
-      "installed": true
     }
   ],
   "surfaces": [
+    {
+      "id": "app--promax-surface",
+      "appId": "app--promax",
+      "route": "/",
+      "title": "押韵大师ProMax",
+      "status": "ready",
+      "entry": "entry.html",
+      "content": {
+        "heading": "押韵大师ProMax",
+        "body": "",
+        "entry": "entry.html",
+        "controls": []
+      }
+    },
+    {
+      "id": "app-codex-surface",
+      "appId": "app-codex",
+      "route": "/",
+      "title": "Codex",
+      "status": "ready",
+      "entry": "entry.html",
+      "content": {
+        "heading": "Codex",
+        "body": "",
+        "entry": "entry.html",
+        "controls": []
+      }
+    },
     {
       "id": "app-command-conquer-red-alert-3-surface",
       "appId": "app-command-conquer-red-alert-3",
@@ -15040,6 +18296,78 @@
         "body": "A calm, private place to search the web.",
         "entry": "children/about-home/entry.html",
         "controls": []
+      }
+    },
+    {
+      "id": "app-firefox-baidu.com-surface",
+      "appId": "app-firefox",
+      "route": "/baidu.com",
+      "title": "Baidu",
+      "status": "ready",
+      "content": {
+        "heading": "百度一下",
+        "body": "在 VibeOS 内搜索想象中的网页与内容。",
+        "fields": [
+          {
+            "id": "address",
+            "label": "Search or enter address",
+            "placeholder": "Search the web or enter a URL"
+          },
+          {
+            "id": "search",
+            "label": "搜索",
+            "placeholder": "输入搜索内容"
+          }
+        ],
+        "controls": [
+          {
+            "id": "search-submit",
+            "kind": "button",
+            "label": "百度一下",
+            "action": {
+              "type": "navigate_browser",
+              "url": "/baidu.com/search?q={search}",
+              "mode": "search_results",
+              "appId": "app-firefox"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "app-firefox-google.com-surface",
+      "appId": "app-firefox",
+      "route": "/google.com",
+      "title": "Google",
+      "status": "ready",
+      "content": {
+        "heading": "Google",
+        "body": "Search the web from a familiar local search page.",
+        "fields": [
+          {
+            "id": "address",
+            "label": "Search or enter address",
+            "placeholder": "Search the web or enter a URL"
+          },
+          {
+            "id": "search",
+            "label": "Search Google",
+            "placeholder": "Search Google"
+          }
+        ],
+        "controls": [
+          {
+            "id": "search-submit",
+            "kind": "button",
+            "label": "Google Search",
+            "action": {
+              "type": "navigate_browser",
+              "url": "/google.com/search?q={search}",
+              "mode": "search_results",
+              "appId": "app-firefox"
+            }
+          }
+        ]
       }
     },
     {
@@ -15173,6 +18501,20 @@
       }
     },
     {
+      "id": "app-midi-editor-surface",
+      "appId": "app-midi-editor",
+      "route": "/",
+      "title": "Midi editor",
+      "status": "ready",
+      "entry": "editor.html",
+      "content": {
+        "heading": "Midi editor",
+        "body": "",
+        "entry": "editor.html",
+        "controls": []
+      }
+    },
+    {
       "id": "app-minesweeper-surface",
       "appId": "app-minesweeper",
       "route": "/",
@@ -15282,6 +18624,34 @@
             }
           }
         ]
+      }
+    },
+    {
+      "id": "app-music-surface",
+      "appId": "app-music",
+      "route": "/",
+      "title": "Music Studio",
+      "status": "ready",
+      "entry": "studio.html",
+      "content": {
+        "heading": "Music Studio",
+        "body": "",
+        "entry": "studio.html",
+        "controls": []
+      }
+    },
+    {
+      "id": "app-poetry-surface",
+      "appId": "app-poetry",
+      "route": "/",
+      "title": "Poetry House",
+      "status": "ready",
+      "entry": "poetry.html",
+      "content": {
+        "heading": "Poetry House",
+        "body": "",
+        "entry": "poetry.html",
+        "controls": []
       }
     },
     {
@@ -15615,6 +18985,20 @@
       }
     },
     {
+      "id": "app-sublime-text-surface",
+      "appId": "app-sublime-text",
+      "route": "/",
+      "title": "Sublime Text",
+      "status": "ready",
+      "entry": "index.html",
+      "content": {
+        "heading": "Sublime Text",
+        "body": "A focused code editor workspace",
+        "entry": "index.html",
+        "controls": []
+      }
+    },
+    {
       "id": "app-tetris-surface",
       "appId": "app-tetris",
       "route": "/",
@@ -15791,6 +19175,255 @@
       }
     },
     {
+      "id": "app-tetris-1787137351571-surface",
+      "appId": "app-tetris-1787137351571",
+      "route": "/",
+      "title": "Tetris 1787137351571",
+      "status": "ready",
+      "entry": "entry.html",
+      "content": {
+        "heading": "Tetris 1787137351571",
+        "body": "Stack falling tetrominoes, clear lines, and chase your best score.",
+        "entry": "entry.html",
+        "controls": [
+          {
+            "id": "play",
+            "kind": "button",
+            "label": "Play game",
+            "action": {
+              "type": "open_entry",
+              "entry": "entry.html"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "app-tetris-1787137763252-surface",
+      "appId": "app-tetris-1787137763252",
+      "route": "/",
+      "title": "Tetris 1787137763252",
+      "status": "ready",
+      "entry": "entry.html",
+      "content": {
+        "heading": "Tetris 1787137763252",
+        "body": "Stack tetrominoes, clear lines, and chase your best score.",
+        "entry": "entry.html",
+        "controls": [
+          {
+            "id": "play",
+            "kind": "button",
+            "label": "Play game",
+            "action": {
+              "type": "open_entry",
+              "entry": "entry.html"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "app-tetris-1787137802979-surface",
+      "appId": "app-tetris-1787137802979",
+      "route": "/",
+      "title": "Tetris 1787137802979",
+      "status": "ready",
+      "entry": "tetris.html",
+      "content": {
+        "heading": "Tetris 1787137802979",
+        "body": "Stack tetrominoes, clear lines, and keep the well open.",
+        "entry": "tetris.html",
+        "controls": []
+      }
+    },
+    {
+      "id": "app-tetris-1787138495630-surface",
+      "appId": "app-tetris-1787138495630",
+      "route": "/",
+      "title": "Tetris 1787138495630",
+      "status": "ready",
+      "entry": "entry.html",
+      "content": {
+        "heading": "Tetris 1787138495630",
+        "body": "Stack falling tetrominoes, clear lines, and chase a new high score.",
+        "entry": "entry.html",
+        "controls": [
+          {
+            "id": "start",
+            "kind": "button",
+            "label": "Start game",
+            "action": {
+              "type": "open_surface",
+              "appId": "app-tetris-1787138495630",
+              "route": "/"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "app-tetris-1787138526939-surface",
+      "appId": "app-tetris-1787138526939",
+      "route": "/",
+      "title": "Tetris 1787138526939",
+      "status": "ready",
+      "entry": "tetris.html",
+      "content": {
+        "heading": "Tetris 1787138526939",
+        "body": "Stack tetrominoes, clear lines, and keep the well open.",
+        "entry": "tetris.html",
+        "controls": []
+      }
+    },
+    {
+      "id": "app-tetris-1787138777953-surface",
+      "appId": "app-tetris-1787138777953",
+      "route": "/",
+      "title": "Tetris 1787138777953",
+      "status": "ready",
+      "entry": "tetris.html",
+      "content": {
+        "heading": "Tetris 1787138777953",
+        "body": "",
+        "entry": "tetris.html",
+        "controls": []
+      }
+    },
+    {
+      "id": "app-tetris-1787138829755-surface",
+      "appId": "app-tetris-1787138829755",
+      "route": "/",
+      "title": "Tetris 1787138829755",
+      "status": "ready",
+      "entry": "entry.html",
+      "content": {
+        "heading": "Tetris 1787138829755",
+        "body": "",
+        "entry": "entry.html",
+        "controls": []
+      }
+    },
+    {
+      "id": "app-tetris-1787138855446-surface",
+      "appId": "app-tetris-1787138855446",
+      "route": "/",
+      "title": "Tetris 1787138855446",
+      "status": "ready",
+      "entry": "entry.html",
+      "content": {
+        "heading": "Tetris 1787138855446",
+        "body": "Stack tetrominoes, clear lines, and chase your best score.",
+        "entry": "entry.html",
+        "controls": [
+          {
+            "id": "start",
+            "kind": "button",
+            "label": "Start game",
+            "action": {
+              "type": "open_surface",
+              "appId": "app-tetris-1787138855446",
+              "route": "/"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "app-tetris-1787139286315-surface",
+      "appId": "app-tetris-1787139286315",
+      "route": "/",
+      "title": "Tetris 1787139286315",
+      "status": "ready",
+      "entry": "entry.html",
+      "content": {
+        "heading": "Tetris 1787139286315",
+        "body": "Stack tetrominoes, clear lines, and chase your best score.",
+        "entry": "entry.html",
+        "controls": [
+          {
+            "id": "start",
+            "kind": "button",
+            "label": "Start game",
+            "action": {
+              "type": "open_surface",
+              "appId": "app-tetris-1787139286315",
+              "route": "/"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "app-tetris-1787139826148-surface",
+      "appId": "app-tetris-1787139826148",
+      "route": "/",
+      "title": "Tetris 1787139826148",
+      "status": "ready",
+      "entry": "tetris.html",
+      "content": {
+        "heading": "Tetris 1787139826148",
+        "body": "",
+        "entry": "tetris.html",
+        "controls": []
+      }
+    },
+    {
+      "id": "app-tetris-1787140356154-surface",
+      "appId": "app-tetris-1787140356154",
+      "route": "/",
+      "title": "Tetris 1787140356154",
+      "status": "ready",
+      "entry": "entry.html",
+      "content": {
+        "heading": "Tetris 1787140356154",
+        "body": "Stack tetrominoes, clear lines, and chase your best score.",
+        "entry": "entry.html",
+        "controls": []
+      }
+    },
+    {
+      "id": "app-tetris-1787140388266-surface",
+      "appId": "app-tetris-1787140388266",
+      "route": "/",
+      "title": "Tetris 1787140388266",
+      "status": "ready",
+      "entry": "tetris.html",
+      "content": {
+        "heading": "Tetris 1787140388266",
+        "body": "",
+        "entry": "tetris.html",
+        "controls": []
+      }
+    },
+    {
+      "id": "app-tetris-1787140506826-surface",
+      "appId": "app-tetris-1787140506826",
+      "route": "/",
+      "title": "Tetris 1787140506826",
+      "status": "ready",
+      "entry": "tetris.html",
+      "content": {
+        "heading": "Tetris 1787140506826",
+        "body": "",
+        "entry": "tetris.html",
+        "controls": []
+      }
+    },
+    {
+      "id": "app-tetris-1787140639644-surface",
+      "appId": "app-tetris-1787140639644",
+      "route": "/",
+      "title": "Tetris 1787140639644",
+      "status": "ready",
+      "entry": "tetris.html",
+      "content": {
+        "heading": "Tetris 1787140639644",
+        "body": "",
+        "entry": "tetris.html",
+        "controls": []
+      }
+    },
+    {
       "id": "app-warcraft3-surface",
       "appId": "app-warcraft3",
       "route": "/",
@@ -15810,9 +19443,11 @@
       "route": "/",
       "title": "Assistant",
       "status": "ready",
+      "entry": "index.html",
       "content": {
-        "heading": "How can I help?",
-        "body": "Describe a problem and Assistant will help repair it.",
+        "heading": "Assistant",
+        "body": "",
+        "entry": "index.html",
         "controls": []
       }
     },
@@ -15822,9 +19457,11 @@
       "route": "/home",
       "title": "Assistant Home",
       "status": "ready",
+      "entry": "index.html",
       "content": {
-        "heading": "Describe the problem",
-        "body": "Assistant can inspect recent VibeOS activity and repair the affected world node.",
+        "heading": "Assistant Home",
+        "body": "",
+        "entry": "index.html",
         "controls": []
       }
     },
@@ -16069,153 +19706,13 @@
         "body": "Find and install applications.",
         "controls": []
       }
-    },
-    {
-      "id": "app-music-surface",
-      "appId": "app-music",
-      "route": "/",
-      "title": "Music Studio",
-      "status": "ready",
-      "entry": "studio.html",
-      "content": {
-        "heading": "Music Studio",
-        "body": "",
-        "entry": "studio.html",
-        "controls": []
-      }
-    },
-    {
-      "id": "app-poetry-surface",
-      "appId": "app-poetry",
-      "route": "/",
-      "title": "Poetry House",
-      "status": "ready",
-      "entry": "poetry.html",
-      "content": {
-        "heading": "Poetry House",
-        "body": "",
-        "entry": "poetry.html",
-        "controls": []
-      }
-    },
-    {
-      "id": "app-codex-surface",
-      "appId": "app-codex",
-      "route": "/",
-      "title": "Codex",
-      "status": "ready",
-      "entry": "entry.html",
-      "content": {
-        "heading": "Codex",
-        "body": "",
-        "entry": "entry.html",
-        "controls": []
-      }
-    },
-    {
-      "id": "app--promax-surface",
-      "appId": "app--promax",
-      "route": "/",
-      "title": "押韵大师ProMax",
-      "status": "ready",
-      "entry": "entry.html",
-      "content": {
-        "heading": "押韵大师ProMax",
-        "body": "",
-        "entry": "entry.html",
-        "controls": []
-      }
-    },
-    {
-      "id": "app-midi-editor-surface",
-      "appId": "app-midi-editor",
-      "route": "/",
-      "title": "Midi editor",
-      "status": "ready",
-      "entry": "editor.html",
-      "content": {
-        "heading": "Midi editor",
-        "body": "",
-        "entry": "editor.html",
-        "controls": []
-      }
-    },
-    {
-      "id": "app-firefox-baidu.com-surface",
-      "appId": "app-firefox",
-      "route": "/baidu.com",
-      "title": "Baidu",
-      "status": "ready",
-      "content": {
-        "heading": "百度一下",
-        "body": "在 VibeOS 内搜索想象中的网页与内容。",
-        "fields": [
-          {
-            "id": "address",
-            "label": "Search or enter address",
-            "placeholder": "Search the web or enter a URL"
-          },
-          {
-            "id": "search",
-            "label": "搜索",
-            "placeholder": "输入搜索内容"
-          }
-        ],
-        "controls": [
-          {
-            "id": "search-submit",
-            "kind": "button",
-            "label": "百度一下",
-            "action": {
-              "type": "navigate_browser",
-              "url": "/baidu.com/search?q={search}",
-              "mode": "search_results",
-              "appId": "app-firefox"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "id": "app-firefox-google.com-surface",
-      "appId": "app-firefox",
-      "route": "/google.com",
-      "title": "Google",
-      "status": "ready",
-      "content": {
-        "heading": "Google",
-        "body": "Search the web from a familiar local search page.",
-        "fields": [
-          {
-            "id": "address",
-            "label": "Search or enter address",
-            "placeholder": "Search the web or enter a URL"
-          },
-          {
-            "id": "search",
-            "label": "Search Google",
-            "placeholder": "Search Google"
-          }
-        ],
-        "controls": [
-          {
-            "id": "search-submit",
-            "kind": "button",
-            "label": "Google Search",
-            "action": {
-              "type": "navigate_browser",
-              "url": "/google.com/search?q={search}",
-              "mode": "search_results",
-              "appId": "app-firefox"
-            }
-          }
-        ]
-      }
     }
   ],
   "settings": {
-    "effort": "research",
-    "search": "online_info",
+    "model": "luna",
+    "reasoning": "low",
+    "effort": "quality",
+    "search": "none",
     "appearance": {
       "mode": "light",
       "backgroundMode": "pad",

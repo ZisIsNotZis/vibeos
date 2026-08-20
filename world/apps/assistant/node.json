@@ -6,9 +6,5 @@
   "children": [
     { "id": "home", "title": "Assistant Home", "kind": "surface", "path": "children/home/node.json" }
   ],
-  "surface": {
-    "heading": "How can I help?",
-    "body": "Describe a problem and Assistant will help repair it.",
-    "controls": []
-  }
+  "entry": "index.html"
 }

@@ -34,8 +34,12 @@ function loadChildren(root: string, parentId: string, appId: string, parentRoute
 function readNode(path: string): WorldNode | undefined { try { return JSON.parse(readFileSync(path, 'utf8')) as WorldNode; } catch { return undefined; } }
 function toSurface(nodeId: string, appId: string, route: string, title: string, surface: NonNullable<WorldNode['surface']>, node?: WorldNode, nodeRoot?: string, appRoot?: string): Surface {
   const id = `${nodeId}-surface`;
-  const entry = node?.entry && nodeRoot && appRoot ? relative(appRoot, join(nodeRoot, node.entry)) : node?.entry;
-  return { id, appId, route, title, status: 'ready', entry, content: { heading: surface.heading, body: surface.body, fields: surface.fields, board: surface.board, payload: node?.payload, entry, controls: surface.controls.map(control => ({ id: control.id, kind: 'button', label: control.label, action: toIntent(control.intent, appId, id, control.id) })) } };
+  // Older workers occasionally put the entrypoint inside surface. Accept it
+  // as a compatibility form while new prompts continue to require node.entry.
+  const rawEntry = node?.entry ?? (surface as { entry?: string }).entry;
+  const entry = rawEntry && nodeRoot && appRoot ? relative(appRoot, join(nodeRoot, rawEntry)) : rawEntry;
+  const controls = Array.isArray(surface.controls) ? surface.controls : [];
+  return { id, appId, route, title, status: 'ready', entry, content: { heading: surface.heading, body: surface.body, fields: surface.fields, board: surface.board, payload: node?.payload, entry, controls: controls.map(control => ({ id: control.id, kind: 'button', label: control.label, action: toIntent(control.intent, appId, id, control.id) })) } };
 }
 function toIntent(intent: unknown, appId: string, surfaceId: string, controlId: string): Intent { const candidate = intent as { type?: string; appId?: string; surfaceId?: string }; if (candidate?.type === 'control' || (candidate?.type === 'activate_control' && candidate.appId === appId && candidate.surfaceId === surfaceId)) return { type: 'run_action', appId, surfaceId, action: controlId }; if (candidate?.type === 'navigate_browser' && !candidate.appId) return { ...(intent as Intent), appId } as Intent; return intent as Intent; }
 function statSafe(path: string) { try { return statSync(path).isDirectory(); } catch { return false; } }

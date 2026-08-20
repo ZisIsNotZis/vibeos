@@ -2,10 +2,20 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import type { AgentTask, RuntimeEvent } from '@vibeos/shared';
 import { OperatingSystemRuntime, type AgentAdapter } from './runtime.js';
+import { mkdtempSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 
 class FakeAgent implements AgentAdapter { tasks: AgentTask[] = []; async fulfill(task: AgentTask) { this.tasks.push(task); return { ok: true as const, capability: 'editor' }; } }
 class DelayedAgent extends FakeAgent { async fulfill(task: AgentTask) { this.tasks.push(task); await new Promise(resolve => setTimeout(resolve, 20)); return { ok: true as const, capability: task.capability }; } }
-class MemoryStore { value: any; load() { return this.value ?? { windows: [], operations: [], notifications: [], apps: [], surfaces: [], settings: { effort: 'quality', search: 'none' } }; } save(snapshot: any) { this.value = structuredClone(snapshot); } }
+class MemoryStore { value: any; constructor(public root?: string) {} load() { return this.value ?? { windows: [], operations: [], notifications: [], apps: [], surfaces: [], settings: { model: 'terra', reasoning: 'high', effort: 'quality', search: 'none' } }; } save(snapshot: any) { this.value = structuredClone(snapshot); } }
+test('recovers interrupted operations instead of exposing them as active after restart', () => {
+  const store = new MemoryStore();
+  store.value = { windows: [], operations: [{ id: 'op-old', intent: { type: 'open_app', appId: 'calculator' }, state: 'pending' }], notifications: [], apps: [], surfaces: [], settings: { model: 'terra', reasoning: 'high', effort: 'quality', search: 'none' } };
+  const runtime = new OperatingSystemRuntime(new FakeAgent(), { send() {} }, store);
+  assert.equal(runtime.snapshot().operations[0]?.state, 'cancelled');
+  assert.match(runtime.snapshot().operations[0]?.message ?? '', /Interrupted/);
+});
 test('opens an app generically and focuses the new window', async () => {
   const events: RuntimeEvent[] = []; const runtime = new OperatingSystemRuntime(new FakeAgent(), { send: e => events.push(e) });
   const operation = await runtime.dispatch({ type: 'open_app', appId: 'calculator' });
@@ -35,6 +45,13 @@ test('opens the browser root surface immediately', async () => {
   assert.equal(runtime.snapshot().windows[0]?.appId, 'browser');
   assert.equal(runtime.snapshot().surfaces.find(surface => surface.appId === 'browser' && surface.route === '/')?.status, 'ready');
   assert.equal(agent.tasks.length, 0);
+});
+test('hydrates durable cached surfaces when persisted runtime surfaces are empty', () => {
+  const store = new MemoryStore();
+  store.value = { windows: [], operations: [], notifications: [], apps: [], surfaces: [], settings: { model: 'terra', reasoning: 'high', effort: 'quality', search: 'none' } };
+  const runtime = new OperatingSystemRuntime(new FakeAgent(), { send() {} }, store);
+  assert.equal(runtime.snapshot().surfaces.some(surface => surface.appId === 'browser' && surface.route === '/'), true);
+  assert.equal(runtime.snapshot().surfaces.some(surface => surface.appId === 'app-firefox' && surface.route === '/google.com'), true);
 });
 test('browser-like apps reuse cached Google and Baidu destinations', async () => {
   const runtime = new OperatingSystemRuntime(new FakeAgent(), { send() {} });
@@ -131,11 +148,12 @@ test('fulfills an unavailable capability then resumes the original operation', a
   const operation = await runtime.dispatch({ type: 'open_file', path: '/notes/today.txt' });
   assert.equal(operation.state, 'ready'); assert.equal(agent.tasks[0]?.intent.type, 'open_file'); assert.equal(runtime.snapshot().windows.length, 0);
 });
-test('sends an Assistant repair request with runtime context to the agent', async () => {
+test('sends an Assistant repair request with runtime context to the isolated app subtree', async () => {
   const agent = new FakeAgent(); const runtime = new OperatingSystemRuntime(agent, { send() {} });
   const operation = await runtime.dispatch({ type: 'assistant_request', message: 'The Tetris icon is missing.', context: { nodeId: 'app-tetris', windowId: 'window-7' } });
   assert.equal(operation.state, 'ready');
-  assert.equal(agent.tasks[0]?.capability, 'assistant:repair');
+  assert.equal(agent.tasks[0]?.capability, 'repair:app-tetris');
+  assert.match(agent.tasks[0]?.target ?? '', /world\/apps\/app-tetris$/);
   assert.equal(agent.tasks[0]?.input && (agent.tasks[0].input as { message: string }).message, 'The Tetris icon is missing.');
   assert.equal((agent.tasks[0]?.input as { context: { nodeId?: string } }).context.nodeId, 'app-tetris');
   assert.equal(typeof (agent.tasks[0]?.input as { context: { recentLog?: string } }).context.recentLog, 'string');
@@ -146,19 +164,36 @@ test('passes open-ended parent context to generated-world work', async () => {
   assert.equal(agent.tasks.at(-1)?.context?.acceptance?.includes('primary user action is usable'), true);
   assert.equal(Array.isArray(agent.tasks.at(-1)?.context?.existingFiles), true);
 });
+test('generated bridge keeps storage in the calling app namespace and returns a correlated result', async () => {
+  const root = mkdtempSync(join(tmpdir(), 'vibeos-storage-test-'));
+  try {
+    const events: RuntimeEvent[] = []; const runtime = new OperatingSystemRuntime(new FakeAgent(), { send: event => events.push(event) }, new MemoryStore(root));
+    await runtime.dispatch({ type: 'bridge_request', requestId: 'request-1', appId: 'app-tetris', operation: { type: 'storage.write', key: 'score', value: 42 } });
+    await runtime.dispatch({ type: 'bridge_request', requestId: 'request-2', appId: 'app-tetris', operation: { type: 'storage.read', key: 'score' } });
+    assert.deepEqual(events.find(event => event.type === 'bridge_result' && event.requestId === 'request-2'), { type: 'bridge_result', requestId: 'request-2', ok: true, value: 42 });
+  } finally { rmSync(root, { recursive: true, force: true }); }
+});
+test('generated bridge binds navigation and dispatched app operations to the calling app', async () => {
+  const runtime = new OperatingSystemRuntime(new FakeAgent(), { send() {} });
+  await runtime.dispatch({ type: 'bridge_request', requestId: 'navigate', appId: 'app-firefox', operation: { type: 'navigate', url: 'google.com' } });
+  assert.equal(runtime.snapshot().windows.at(-1)?.appId, 'app-firefox');
+  assert.equal(runtime.snapshot().windows.at(-1)?.route, '/google.com');
+  const rejected = await runtime.dispatch({ type: 'bridge_request', requestId: 'spoof', appId: 'app-firefox', operation: { type: 'dispatch', intent: { type: 'open_surface', appId: 'browser', route: '/baidu.com' } } });
+  assert.equal(rejected.state, 'failed');
+});
 test('settings default to quality and none, update, persist, and reach generation', async () => {
   const agent = new FakeAgent(); const store = new MemoryStore(); const runtime = new OperatingSystemRuntime(agent, { send() {} }, store);
-  assert.deepEqual(runtime.snapshot().settings, { effort: 'quality', search: 'none', appearance: { mode: 'dark', backgroundMode: 'fill', autoHideChromeOnMaximize: false, dockPosition: 'bottom' } });
-  await runtime.dispatch({ type: 'set_setting', key: 'effort', value: 'research' });
+  assert.deepEqual(runtime.snapshot().settings, { model: 'terra', reasoning: 'high', effort: 'quality', search: 'none', appearance: { mode: 'dark', backgroundMode: 'fill', autoHideChromeOnMaximize: false, dockPosition: 'bottom' } });
+  await runtime.dispatch({ type: 'set_setting', key: 'effort', value: 'ultra' });
   await runtime.dispatch({ type: 'set_setting', key: 'search', value: 'online_info' });
-  assert.deepEqual(runtime.snapshot().settings, { effort: 'research', search: 'online_info', appearance: { mode: 'dark', backgroundMode: 'fill', autoHideChromeOnMaximize: false, dockPosition: 'bottom' } });
+  assert.deepEqual(runtime.snapshot().settings, { model: 'terra', reasoning: 'high', effort: 'ultra', search: 'online_info', appearance: { mode: 'dark', backgroundMode: 'fill', autoHideChromeOnMaximize: false, dockPosition: 'bottom' } });
   const restored = new OperatingSystemRuntime(agent, { send() {} }, store);
-  assert.deepEqual(restored.snapshot().settings, { effort: 'research', search: 'online_info', appearance: { mode: 'dark', backgroundMode: 'fill', autoHideChromeOnMaximize: false, dockPosition: 'bottom' } });
+  assert.deepEqual(restored.snapshot().settings, { model: 'terra', reasoning: 'high', effort: 'ultra', search: 'online_info', appearance: { mode: 'dark', backgroundMode: 'fill', autoHideChromeOnMaximize: false, dockPosition: 'bottom' } });
   await restored.dispatch({ type: 'open_surface', appId: 'app-future', route: '/settings-check' });
-  assert.deepEqual(agent.tasks.at(-1)?.context?.settings, { effort: 'research', search: 'online_info', appearance: { mode: 'dark', backgroundMode: 'fill', autoHideChromeOnMaximize: false, dockPosition: 'bottom' } });
+  assert.deepEqual(agent.tasks.at(-1)?.context?.settings, { model: 'terra', reasoning: 'high', effort: 'ultra', search: 'online_info', appearance: { mode: 'dark', backgroundMode: 'fill', autoHideChromeOnMaximize: false, dockPosition: 'bottom' } });
 });
 test('migrates old settings and persists appearance changes', async () => {
-  const agent = new FakeAgent(); const store = new MemoryStore(); store.value = { windows: [], operations: [], notifications: [], apps: [], surfaces: [], settings: { effort: 'fast', search: 'none' } };
+  const agent = new FakeAgent(); const store = new MemoryStore(); store.value = { windows: [], operations: [], notifications: [], apps: [], surfaces: [], settings: { model: 'terra', reasoning: 'high', effort: 'balanced', search: 'none' } };
   const runtime = new OperatingSystemRuntime(agent, { send() {} }, store);
   assert.deepEqual(runtime.snapshot().settings.appearance, { mode: 'dark', backgroundMode: 'fill', autoHideChromeOnMaximize: false, dockPosition: 'bottom' });
   await runtime.dispatch({ type: 'set_appearance', key: 'mode', value: 'light' });
@@ -169,7 +204,7 @@ test('migrates old settings and persists appearance changes', async () => {
   assert.equal(restored.snapshot().settings.appearance.mode, 'light');
 });
 test('repairs stale persisted icon tokens from world manifests on startup', () => {
-  const store = new MemoryStore(); store.value = { windows: [], operations: [], notifications: [], apps: [{ id: 'app-music', name: 'Music Studio', description: '', icon: 'music', installed: true, status: 'placeholder' }, { id: 'app-poetry', name: 'Poetry House', description: '', icon: '', installed: true, status: 'placeholder' }], surfaces: [], settings: { effort: 'quality', search: 'none' } };
+  const store = new MemoryStore(); store.value = { windows: [], operations: [], notifications: [], apps: [{ id: 'app-music', name: 'Music Studio', description: '', icon: 'music', installed: true, status: 'placeholder' }, { id: 'app-poetry', name: 'Poetry House', description: '', icon: '', installed: true, status: 'placeholder' }], surfaces: [], settings: { model: 'terra', reasoning: 'high', effort: 'quality', search: 'none' } };
   const runtime = new OperatingSystemRuntime(new FakeAgent(), { send() {} }, store);
   assert.equal(runtime.snapshot().apps.find(app => app.id === 'app-music')?.icon, 'icon.svg');
   assert.equal(runtime.snapshot().apps.find(app => app.id === 'app-poetry')?.icon, 'icon.svg');

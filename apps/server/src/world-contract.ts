@@ -1,5 +1,5 @@
 import { existsSync, readFileSync, statSync } from 'node:fs';
-import { join, relative, resolve } from 'node:path';
+import { join, relative, resolve, sep } from 'node:path';
 import type { AgentTask } from '@vibeos/shared';
 import { loadWorld } from './world-loader.js';
 
@@ -19,18 +19,28 @@ export function validateGeneratedWorld(root: string, task: AgentTask): ContractR
   if (typeof node.id !== 'string' || !node.id) return { ok: false, errors: ['node.id must be a stable non-empty string'] };
   if (typeof node.title !== 'string' || !node.title) return { ok: false, errors: ['node.title must be a non-empty string'] };
   if (typeof node.kind !== 'string' || !node.kind) return { ok: false, errors: ['node.kind must be a non-empty string'] };
+  const surfaceEntry = node.surface && typeof node.surface === 'object' && typeof (node.surface as { entry?: unknown }).entry === 'string' ? (node.surface as { entry: string }).entry : undefined;
+  const entry = typeof node.entry === 'string' ? node.entry : surfaceEntry;
   if (node.entry !== undefined && (typeof node.entry !== 'string' || node.entry.startsWith('/') || node.entry.includes('..'))) return { ok: false, errors: ['node.entry must be a relative path inside the node'] };
-  if (typeof node.entry === 'string' && !existsSync(join(appRoot, node.entry))) return { ok: false, errors: [`node.entry does not exist: ${node.entry}`] };
-  if (typeof node.entry === 'string' && !/\.(html?|js|mjs|css)$/.test(node.entry)) return { ok: false, errors: ['node.entry must point to a browser-loadable html/js/css file'] };
+  if (surfaceEntry && (surfaceEntry.startsWith('/') || surfaceEntry.includes('..'))) return { ok: false, errors: ['surface.entry must be a relative path inside the node'] };
+  if (entry) {
+    const entryPath = resolve(appRoot, entry);
+    if (!entryPath.startsWith(`${resolve(appRoot)}${sep}`)) return { ok: false, errors: ['node.entry must remain inside the app'] };
+    if (!existsSync(entryPath)) return { ok: false, errors: [`node entry does not exist: ${entry}`] };
+  }
+  if (entry && !/\.(html?|js|mjs|css)$/.test(entry)) return { ok: false, errors: ['node entry must point to a browser-loadable html/js/css file'] };
   if (task.capability === 'app:identity') {
     const icon = join(appRoot, 'icon.svg');
-    if (!existsSync(icon) || !readFileSync(icon, 'utf8').includes('<svg')) return { ok: false, errors: ['app identity requires a valid icon.svg'] };
+    if (!existsSync(icon)) return { ok: false, errors: ['app identity requires a valid icon.svg'] };
+    const svg = readFileSync(icon, 'utf8');
+    if (!/<svg\b[^>]*viewBox=/i.test(svg) || !/<(?:path|rect|circle|polygon|g)\b/i.test(svg)) return { ok: false, errors: ['app identity icon.svg must be a drawable SVG with viewBox and visible geometry'] };
+    if (/sparkles|lucide|placeholder|generic/i.test(svg)) return { ok: false, errors: ['app identity icon.svg appears generic; create a recognizable app-specific mark'] };
   }
   if (task.capability.startsWith('surface:')) {
     const [, appId, ...routeParts] = task.capability.split(':');
     const route = routeParts.join(':');
     const found = loadWorld(root).surfaces.some(surface => surface.appId === appId && surface.route === route);
-    if (!found) return { ok: false, errors: [`generated surface route is missing: ${route}`] };
+    if (!found) return { ok: false, errors: [`generated surface route is missing: ${route}; expose it through node.json (for /, the app-root node must define surface or a valid local entry)`] };
   }
   return { ok: true };
 }

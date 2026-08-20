@@ -1,6 +1,8 @@
 import { test } from '@playwright/test';
 import type { Page } from '@playwright/test';
 
+test.skip(process.env.UPDATE_README_SCREENSHOTS !== '1', 'Run with UPDATE_README_SCREENSHOTS=1 to refresh tracked documentation images.');
+
 const shot = { animations: 'disabled' as const, caret: 'hide' as const };
 
 async function openLauncher(page: Page) {
