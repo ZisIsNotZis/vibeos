@@ -173,6 +173,44 @@ Traditional software asks developers to implement the whole product before users
 
 Generated apps can use persistent state and storage, scoped AI commands, state patches, child navigation, recursive world growth, global command registration, notifications, typed questions, context menus, screenshots, browser-native downloads, semantic themes and typography, global shortcuts, window lifecycle, and the built-in Chinese IME.
 
+## 🧩 Core runtime and generated-app API
+
+Generated surfaces receive a small `window.vibeOS` bridge. It is the boundary between replaceable world content and the host-owned runtime: apps own their meaning and UI, while the bridge provides generic persistence, navigation, communication, and extensibility.
+
+| API | Purpose |
+|---|---|
+| `vibeOS.notify(message, options?)` | Show a transient OS notification with an optional level and duration. |
+| `vibeOS.navigate(url, mode?)` | Continue to another generated destination or search-results route. |
+| `vibeOS.storage.read(key)` / `write(key, value)` | Read and write app-scoped durable storage for files, preferences, and user work. |
+| `vibeOS.state.read()` / `write(state, revision?)` / `subscribe(listener)` | Read revisioned app state, apply a whole-state update, and refresh when another action changes it. |
+| `vibeOS.ai.command(command, options?)` | Ask Codex to perform open-ended work with an `app`, `descendants`, `world`, or explicit app scope. |
+| `vibeOS.dispatch(intent)` | Send a generic runtime intent exposed by the shared contract. |
+| `vibeOS.commands.register(command)` / `setContext(provider)` | Add app commands and live context to the global `Ctrl/Cmd+K` palette. |
+| `vibeOS.contextMenu.open(items, point?)` | Ask the core to render a native-feeling context menu at an app-defined point. |
+| `vibeOS.request(operation)` | Use the low-level typed bridge for a supported operation when a higher-level helper is not enough. |
+| `vibeOS.request({ type: 'process.run', ... })` | Request an approved interpreter inside the calling app workspace when a page genuinely needs host computation. |
+
+For exports, generated apps should prefer browser-native mechanisms such as `Blob` plus an `<a download>` link. The host owns window lifecycle and geometry, focus, global shortcuts, command palette, themes and semantic design tokens, typography and display scale, notifications, typed agent questions, capture/screenshot functionality, and the built-in Chinese IME. These are core mechanisms—not app-name-specific behavior—and are available consistently to generated content.
+
+```js
+const state = await window.vibeOS.state.read();
+const next = { ...state.state, draft: editor.value };
+await window.vibeOS.state.write(next, state.revision);
+
+window.vibeOS.commands.register({
+  id: 'summarize-selection',
+  title: 'Summarize selection'
+});
+window.vibeOS.commands.setContext(() => ({ selection: editor.value }));
+
+await window.vibeOS.notify('Saved', { level: 'success' });
+await window.vibeOS.ai.command('Continue this workflow', {
+  scope: 'app', context: { selection: editor.value }, output: 'modify'
+});
+```
+
+The bridge is intentionally generic. A generated app can define new pages, commands, state fields, child worlds, and persistence rules without a new core special case; deterministic behavior stays in the page, while open-ended changes can hand off to the AI command surface.
+
 ## 🔭 Where it can go
 
 The long-term direction is not a larger hard-coded app catalog. It is a more capable substrate for generated worlds:

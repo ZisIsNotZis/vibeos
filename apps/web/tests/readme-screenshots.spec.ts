@@ -43,6 +43,23 @@ async function captureApp(page: Page, name: string) {
   await window.screenshot({ path: `../../docs/screenshots/apps/${snapshotName(name)}.png`, ...shot });
 }
 
+async function captureDota2Match(page: Page) {
+  await page.goto('/');
+  await page.waitForSelector('.os');
+  await closeWindows(page);
+  await openApp(page, 'DOTA2');
+  const frame = page.frameLocator('iframe[title="DOTA2"]');
+  await frame.getByRole('button', { name: 'Start game' }).first().click();
+  await expect(frame.getByLabel('DOTA2 skirmish match')).toBeVisible();
+  await expect(frame.getByLabel('Playable 3D battlefield')).toBeVisible();
+  // Capture the OS window, not the responsive iframe viewport. This keeps the
+  // product-tour asset at the same 760×500 dimensions as the app gallery and
+  // includes the real window frame around the playable match.
+  const window = page.locator('.window.focused').filter({ has: page.locator('iframe[title="DOTA2"]') }).last();
+  await expect(window).toBeVisible();
+  await window.screenshot({ path: '../../docs/screenshots/dota2.png', ...shot });
+}
+
 test('capture README product screenshots', async ({ page }) => {
   test.setTimeout(120_000);
   await page.goto('/');
@@ -61,6 +78,11 @@ test('capture README product screenshots', async ({ page }) => {
 
   await openApp(page, 'Browser');
   await page.screenshot({ path: '../../docs/screenshots/browser.png', fullPage: true, ...shot });
+});
+
+test('capture README serious-software screenshot', async ({ page }) => {
+  test.setTimeout(60_000);
+  await captureDota2Match(page);
 });
 
 test('capture README app gallery snapshots', async ({ page }) => {
