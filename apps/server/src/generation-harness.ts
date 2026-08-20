@@ -147,7 +147,8 @@ const workerResultSchema = {
   required: ['status', 'summary'],
   properties: {
     status: { type: 'string', enum: ['ready'] },
-    summary: { type: 'string', minLength: 1 }, value: {}
+    summary: { type: 'string', minLength: 1 },
+    value: { type: 'object', additionalProperties: false, properties: { updatedContent: { type: 'string' } } }
   }
 };
 function coherentOutcome(task: AgentTask) { return task.capability === 'app:identity' ? 'A recognizable, launchable app identity with a serious app-specific SVG icon.' : 'A polished, usable vertical slice whose primary workflow and every visible local control work.'; }
