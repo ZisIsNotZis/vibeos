@@ -4,6 +4,7 @@ import { loadWorld } from './world-loader.js';
 import { dirname, join } from 'node:path';
 import { existsSync, mkdirSync, writeFileSync, readdirSync, readFileSync, rmSync } from 'node:fs';
 import { worldRoot } from './paths.js';
+import { patchAppState, readAppState, writeAppState } from './app-state.js';
 export interface AgentAdapter { fulfill(task: AgentTask): Promise<AgentResult>; }
 export interface RuntimePort { send(event: RuntimeEvent): void; }
 export interface WorldStore { root?: string; load(): RuntimeSnapshot; save(snapshot: RuntimeSnapshot): void; }
@@ -126,7 +127,9 @@ export class OperatingSystemRuntime {
     if (Buffer.byteLength(JSON.stringify(intent.operation)) > 64 * 1024) throw new Error('Bridge request is too large.');
     try {
       let value: unknown; const operation = intent.operation;
-      if (operation.type === 'storage.read') value = this.readStorage(intent.appId, operation.key);
+      if (operation.type === 'state.read') value = readAppState(worldRoot, intent.appId);
+      else if (operation.type === 'state.write') { const next = writeAppState(worldRoot, intent.appId, operation.state, operation.revision); this.emit({ type: 'state_changed', ...next }); value = next; }
+      else if (operation.type === 'storage.read') value = this.readStorage(intent.appId, operation.key);
       else if (operation.type === 'storage.write') { this.writeStorage(intent.appId, operation.key, operation.value); value = true; }
       else if (operation.type === 'navigate') value = await this.dispatch({ type: 'navigate_browser', appId: intent.appId, url: operation.url, mode: operation.mode });
       else if (operation.type === 'ai.command') value = await this.aiCommand(intent.appId, operation);
@@ -141,8 +144,14 @@ export class OperatingSystemRuntime {
     const targets = scope === 'world' ? index.nodes.filter(node => node.kind === 'app').map(node => node.id) : scope === 'descendants' ? descendants(index.nodes, appId) : [targetApp];
     const changedApps: string[] = []; let result: AgentResult | undefined;
     for (const target of targets) {
-      result = await this.agent.fulfill({ operationId: `ai-${appId}-${Date.now()}-${target}`, capability: `ai:command:${appId}`, intent: { type: 'assistant_request', message: request.command, context: { nodeId: target } }, input: { command: request.command, scope, context: request.context, output: request.output }, target: join(worldRoot, 'apps', target), context: { ...this.generationContext(target, '/'), settings: this.state.settings, acceptance: ['complete the command or create an explicit deferred action'] } });
+      const appState = readAppState(worldRoot, target);
+      result = await this.agent.fulfill({ operationId: `ai-${appId}-${Date.now()}-${target}`, capability: `ai:command:${appId}`, intent: { type: 'assistant_request', message: request.command, context: { nodeId: target } }, input: { command: request.command, scope, context: request.context, state: appState, world: index.apps.map(app => ({ id: app.id, name: app.name, revision: readAppState(worldRoot, app.id).revision })), output: request.output }, target: join(worldRoot, 'apps', target), context: { ...this.generationContext(target, '/'), settings: this.state.settings, acceptance: ['complete the command or create an explicit deferred action'] } });
       if (!result.ok) throw new Error(result.message); changedApps.push(target);
+      for (const mutation of result.result?.statePatches ?? []) {
+        if (!index.apps.some(app => app.id === mutation.appId)) throw new Error('AI command returned a state patch for an unknown app.');
+        const next = patchAppState(worldRoot, mutation.appId, mutation.patch, mutation.revision); this.emit({ type: 'state_changed', ...next });
+        if (!changedApps.includes(mutation.appId)) changedApps.push(mutation.appId);
+      }
     }
     if (!result?.ok) throw new Error('AI command produced no result.');
     this.reloadWorld(changedApps);

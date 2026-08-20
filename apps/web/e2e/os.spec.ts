@@ -41,7 +41,7 @@ test('settings changes persist through a websocket snapshot', async ({ page }) =
 test('Sublime command palette submits the complete selection context', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: /open app launcher/i }).click();
-  const sublime = page.getByRole('button', { name: /Sublime Text/i });
+  const sublime = page.getByRole('button', { name: 'Sublime Text', exact: true });
   if (await sublime.count()) {
     await sublime.click();
     await expect(page.getByLabel('Code editor')).toBeVisible();
@@ -55,6 +55,7 @@ test('Sublime command palette submits the complete selection context', async ({ 
 
 test('keyboard shortcuts open and close the launcher', async ({ page }) => {
   await page.goto('/');
+  await page.locator('.topbar').click();
   await page.keyboard.press('Control+k');
   await expect(page.getByPlaceholder('Search apps')).toBeVisible();
   await page.keyboard.press('Escape');

@@ -26,10 +26,14 @@ export type StorageIntent =
 export type BridgeOperation =
   | { type: 'storage.read'; key: string }
   | { type: 'storage.write'; key: string; value: unknown }
+  | { type: 'state.read' }
+  | { type: 'state.write'; state: unknown; revision?: number }
   | { type: 'navigate'; url: string; mode?: 'search_results' | 'destination' }
   | { type: 'dispatch'; intent: Intent | SettingsIntent | AssistantIntent }
   | { type: 'ai.command'; command: string; scope?: AiScope; context?: unknown; output?: 'result' | 'modify' | 'navigate' | 'generate' };
 export type AiScope = 'app' | 'descendants' | 'world' | { appId: AppId };
+export type JsonPatchOperation = { op: 'add' | 'replace' | 'remove'; path: string; value?: unknown };
+export type AppStateSnapshot = { appId: AppId; revision: number; state: unknown };
 export type AiCommandResult = { status: 'completed' | 'deferred'; summary: string; changedApps?: AppId[]; routes?: string[]; value?: unknown };
 export type BridgeIntent = { type: 'bridge_request'; requestId: string; appId: AppId; operation: BridgeOperation };
 export type ModelLevel = 'luna' | 'terra' | 'sol';
@@ -75,7 +79,7 @@ export type SurfaceContent = { heading: string; body: string; controls: ControlM
 export type Surface = { id: string; appId: AppId; route: string; title: string; status: SurfaceState; content: SurfaceContent; entry?: string };
 export type Operation = { id: string; intent: RuntimeIntent; state: OperationState; message?: string };
 export type RuntimeSnapshot = { windows: WindowModel[]; operations: Operation[]; notifications: string[]; apps: AppRecord[]; surfaces: Surface[]; settings: VibeOSSettings };
-export type RuntimeEvent = { type: 'snapshot'; snapshot: RuntimeSnapshot } | { type: 'operation'; operation: Operation } | { type: 'window'; window: WindowModel } | { type: 'surface'; surface: Surface } | { type: 'world_changed'; apps: AppId[]; routes?: string[] } | { type: 'notification'; message: string } | { type: 'trace'; operationId?: string; message: string } | { type: 'bridge_result'; requestId: string; ok: boolean; value?: unknown; error?: string };
+export type RuntimeEvent = { type: 'snapshot'; snapshot: RuntimeSnapshot } | { type: 'operation'; operation: Operation } | { type: 'window'; window: WindowModel } | { type: 'surface'; surface: Surface } | { type: 'world_changed'; apps: AppId[]; routes?: string[] } | { type: 'state_changed'; appId: AppId; revision: number; state: unknown } | { type: 'notification'; message: string } | { type: 'trace'; operationId?: string; message: string } | { type: 'bridge_result'; requestId: string; ok: boolean; value?: unknown; error?: string };
 export type AgentTask = { operationId: string; capability: string; intent: RuntimeIntent; input: unknown; target: string; context?: { parent?: unknown; node?: unknown; siblings?: unknown[]; existingFiles?: string[]; acceptance?: string[]; settings?: VibeOSSettings } };
-export type AgentResult = { ok: true; capability: string; files?: string[]; result?: { status?: 'ready' | 'deferred'; summary?: string; changedApps?: AppId[]; routes?: string[]; value?: unknown } } | { ok: false; message: string };
+export type AgentResult = { ok: true; capability: string; files?: string[]; result?: { status?: 'ready' | 'deferred'; summary?: string; changedApps?: AppId[]; routes?: string[]; statePatches?: Array<{ appId: AppId; patch: JsonPatchOperation[]; revision?: number }>; value?: unknown } } | { ok: false; message: string };
 export * from './world.js';

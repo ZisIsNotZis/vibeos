@@ -7,6 +7,8 @@ test("injects the VibeOS bridge into generated HTML without trusting app identit
   assert.match(html, /window\.vibeOS/);
   assert.match(html, /vibeos:ready/);
   assert.match(html, /vibeos:request/);
+  assert.match(html, /state\.read/);
+  assert.match(html, /subscribe:listener/);
   assert.match(html, /operation timed out/);
   assert.equal((html.match(/data-vibeos-frame-bridge/g) ?? []).length, 1);
   assert.equal(injectFrameBridge(html), html);
