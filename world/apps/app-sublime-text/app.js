@@ -15,12 +15,6 @@ document.querySelector('#paletteInput').addEventListener('keydown',async e=>{
   if(e.key!=='Enter'||!e.target.value.trim())return;
   e.preventDefault();e.stopImmediatePropagation();
   const command=e.target.value.trim();
-  const normalized=command.toLowerCase();
-  if(normalized==='to upper case'||normalized==='uppercase'||normalized==='upper case'){
-    const start=editor.selectionStart,end=editor.selectionEnd;
-    editor.value=start!==end?editor.value.slice(0,start)+editor.value.slice(start,end).toUpperCase()+editor.value.slice(end):editor.value.toUpperCase();
-    files[current]=editor.value;renderLines();document.querySelector('#status').textContent='Uppercase applied';e.target.value='';palette.classList.add('hidden');editor.focus();return;
-  }
   document.querySelector('#status').textContent='Running command…';
   try{
     if(!window.vibeOS?.ai?.command)throw new Error('AI commands are unavailable while the system is disconnected.');
