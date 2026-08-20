@@ -81,7 +81,7 @@ function buildPrompt(task: AgentTask, search: SearchLevel) {
     `Settings: model=${settings?.model ?? 'terra'}, reasoning=${settings?.reasoning ?? 'high'}, effort=${settings?.effort ?? 'quality'}, search=${settings?.search ?? search}.`,
     settings?.effort === 'fast' ? 'Effort fast: keep scope focused, but still implement a reasonable functioning page and do one primary-workflow smoke check.' : settings?.effort === 'balanced' ? 'Effort balanced: implement the complete page workflow and test its primary interactions.' : settings?.effort === 'ultra' ? 'Effort ultra: use maximum diligence, research if allowed, self-test broadly, inspect edge cases, and repair quality issues before delivery.' : 'Effort quality: prioritize production-quality UI and behavior over speed; self-review and smoke-test the primary workflow before delivery.',
     search === 'none' ? 'Do not browse or fetch online content.' : search === 'online_info' ? 'You may research factual information, but author the experience locally.' : 'You may use permitted online content or repositories as building material, vendor it locally, and record provenance/licenses where relevant.',
-    'Do not access paths outside this staged job. Return only the structured result required by input/result.schema.json after the files are actually complete.'
+    'For output=modify, return value.updatedContent when the command changes a live document or selection so the app can apply it immediately. Do not access paths outside this staged job. Return only the structured result required by input/result.schema.json after the files are actually complete.'
   ].join('\n');
 }
 

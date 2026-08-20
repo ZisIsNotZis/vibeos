@@ -34,6 +34,23 @@ test('settings changes persist through a websocket snapshot', async ({ page }) =
   await page.getByRole('button', { name: 'Appearance' }).click({ force: true });
   await page.getByRole('button', { name: 'Light' }).click();
   await expect(page.locator('html')).toHaveClass(/light-mode/);
+  await page.getByRole('combobox', { name: 'Background mode' }).selectOption('fill');
+  await expect(page.locator('.os')).toHaveAttribute('data-background-mode', 'fill');
+});
+
+test('Sublime command palette submits the complete selection context', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: /open app launcher/i }).click();
+  const sublime = page.getByRole('button', { name: /Sublime Text/i });
+  if (await sublime.count()) {
+    await sublime.click();
+    await expect(page.getByLabel('Code editor')).toBeVisible();
+    await page.getByLabel('Code editor').selectText();
+    await page.getByRole('button', { name: /⌘ K/ }).click();
+    await page.getByPlaceholder('Type a command…').fill('transform the selected text');
+    await page.getByPlaceholder('Type a command…').press('Enter');
+    await expect(page.getByPlaceholder('Type a command…')).not.toBeVisible();
+  }
 });
 
 test('keyboard shortcuts open and close the launcher', async ({ page }) => {

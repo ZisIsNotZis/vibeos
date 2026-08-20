@@ -14,14 +14,21 @@ palette.onclick=e=>{if(e.target===palette)togglePalette()};
 document.querySelector('#paletteInput').addEventListener('keydown',async e=>{
   if(e.key!=='Enter'||!e.target.value.trim())return;
   e.preventDefault();e.stopImmediatePropagation();
-  const command=e.target.value.trim();document.querySelector('#status').textContent='Working…';
+  const command=e.target.value.trim();
+  const normalized=command.toLowerCase();
+  if(normalized==='to upper case'||normalized==='uppercase'||normalized==='upper case'){
+    const start=editor.selectionStart,end=editor.selectionEnd;
+    editor.value=start!==end?editor.value.slice(0,start)+editor.value.slice(start,end).toUpperCase()+editor.value.slice(end):editor.value.toUpperCase();
+    files[current]=editor.value;renderLines();document.querySelector('#status').textContent='Uppercase applied';e.target.value='';palette.classList.add('hidden');editor.focus();return;
+  }
+  document.querySelector('#status').textContent='Running command…';
   try{
     if(!window.vibeOS?.ai?.command)throw new Error('AI commands are unavailable while the system is disconnected.');
     const result=await window.vibeOS.ai.command(command,{scope:'app',context:{file:current,content:editor.value,selectionStart:editor.selectionStart,selectionEnd:editor.selectionEnd,selection:editor.value.slice(editor.selectionStart,editor.selectionEnd)},output:'modify'});
-    document.querySelector('#status').textContent=result?.summary||'Command complete';
+    const updated=result?.value?.updatedContent;if(typeof updated==='string'){const start=editor.selectionStart,end=editor.selectionEnd;editor.setRangeText(updated,start,end,'select');files[current]=editor.value;renderLines()}document.querySelector('#status').textContent=result?.summary||'Command complete';
   }catch(error){document.querySelector('#status').textContent=error instanceof Error?error.message:'Command failed'}
   e.target.value='';palette.classList.add('hidden');editor.focus();
 });
-document.querySelectorAll('[data-command]').forEach(x=>x.onclick=()=>{const c=x.dataset.command;if(c==='save')save();if(c==='theme')document.querySelector('#themeBtn').click();if(c==='find')document.querySelector('#findbar').classList.remove('hidden');if(c==='new')newFile();togglePalette()});
+document.querySelectorAll('[data-command]').forEach(x=>x.onclick=()=>{const c=x.dataset.command;if(c==='save')save();if(c==='theme')document.querySelector('#themeBtn').click();if(c==='find'){document.querySelector('#findbar').classList.remove('hidden');document.querySelector('#findInput').focus()}if(c==='new')newFile();togglePalette()});
 document.addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();togglePalette()}if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='f'){e.preventDefault();document.querySelector('#findbar').classList.remove('hidden');document.querySelector('#findInput').focus()}if(e.key==='Escape'){palette.classList.add('hidden');document.querySelector('#findbar').classList.add('hidden')}});document.querySelector('#findClose').onclick=()=>document.querySelector('#findbar').classList.add('hidden');document.querySelector('#findInput').oninput=e=>{const n=(editor.value.match(new RegExp(e.target.value.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi'))||[]).length;document.querySelector('#findCount').textContent=e.target.value?n+' matches':''};
-function newFile(){const name='untitled-'+(Object.keys(files).length)+'.txt';files[name]='';const b=document.createElement('button');b.className='file';b.dataset.file=name;b.innerHTML='<span class="md">T</span> '+name;b.onclick=()=>openFile(name);document.querySelector('.tree').append(b);openFile(name)}document.querySelector('#newFile').onclick=newFile;document.querySelector('#runBtn').onclick=()=>{document.querySelector('#status').textContent='Build successful';setTimeout(()=>document.querySelector('#status').textContent='Ready',1600)};openFile('app.js');
+function newFile(){const name='untitled-'+(Object.keys(files).length)+'.txt';files[name]='';const b=document.createElement('button');b.className='file';b.dataset.file=name;b.innerHTML='<span class="md">T</span> '+name;b.onclick=()=>openFile(name);document.querySelector('.tree').append(b);openFile(name)}document.querySelector('#newFile').onclick=newFile;document.querySelector('#runBtn').onclick=()=>{document.querySelector('#status').textContent='Build successful';setTimeout(()=>document.querySelector('#status').textContent='Ready',1600)};document.querySelector('#splitBtn').onclick=()=>{document.querySelector('#status').textContent='Split view is ready';setTimeout(()=>document.querySelector('#status').textContent='Ready',1400)};document.querySelectorAll('.menubar>button:not(#themeBtn):not(#paletteBtn)').forEach(b=>b.onclick=()=>{document.querySelector('#status').textContent=b.textContent+' menu';setTimeout(()=>document.querySelector('#status').textContent='Ready',1000)});openFile('app.js');

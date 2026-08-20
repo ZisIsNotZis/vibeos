@@ -115,9 +115,9 @@ export function publishCandidate(candidate: string, liveTarget: string, validate
 }
 
 export function readStructuredWorkerResult(path: string) {
-  const value = JSON.parse(readFileSync(path, 'utf8')) as { status?: unknown; summary?: unknown };
+  const value = JSON.parse(readFileSync(path, 'utf8')) as { status?: unknown; summary?: unknown; value?: unknown };
   if (value.status !== 'ready' || typeof value.summary !== 'string') throw new Error('Worker did not return a valid structured result.');
-  return { status: 'ready' as const, summary: value.summary };
+  return value.value === undefined ? { status: 'ready' as const, summary: value.summary } : { status: 'ready' as const, summary: value.summary, value: value.value };
 }
 
 function resolveOwnedAppTarget(target: string, worldRoot: string) {
@@ -147,7 +147,7 @@ const workerResultSchema = {
   required: ['status', 'summary'],
   properties: {
     status: { type: 'string', enum: ['ready'] },
-    summary: { type: 'string', minLength: 1 }
+    summary: { type: 'string', minLength: 1 }, value: {}
   }
 };
 function coherentOutcome(task: AgentTask) { return task.capability === 'app:identity' ? 'A recognizable, launchable app identity with a serious app-specific SVG icon.' : 'A polished, usable vertical slice whose primary workflow and every visible local control work.'; }
