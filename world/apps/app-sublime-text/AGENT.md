@@ -1,0 +1,3 @@
+- Python Run sends the active source to the host process bridge with explicit app context and displays stdout, stderr, and exit status.
+- If execution is unavailable, the output panel gives the exact terminal command needed to finish the run.
+- Editor keyboard behavior: Tab inserts a language-aware indent, Shift+Tab outdents selected lines, Enter continues Python/HTML/braced blocks, and Backspace removes one indent unit.

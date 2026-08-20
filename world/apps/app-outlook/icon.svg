@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+  <title id="title">Outlook</title>
+  <desc id="desc">A blue envelope with a structured O mark</desc>
+  <defs>
+    <linearGradient id="field" x1="16" y1="12" x2="112" y2="116" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1768B3"/>
+      <stop offset="1" stop-color="#0D3E78"/>
+    </linearGradient>
+    <linearGradient id="paper" x1="47" y1="30" x2="108" y2="98" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F8FCFF"/>
+      <stop offset="1" stop-color="#D7E9F8"/>
+    </linearGradient>
+  </defs>
+  <rect x="8" y="8" width="112" height="112" rx="24" fill="url(#field)"/>
+  <path d="M23 39.5c0-4.7 3.8-8.5 8.5-8.5h61c4.7 0 8.5 3.8 8.5 8.5v48c0 4.7-3.8 8.5-8.5 8.5h-61c-4.7 0-8.5-3.8-8.5-8.5v-48Z" fill="url(#paper)" opacity=".98"/>
+  <path d="m25.5 39 36.3 28.2a4 4 0 0 0 4.9 0L103.5 39" fill="none" stroke="#3985C6" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="m25.5 87 27.2-24.1m49.8 24.1L75.3 62.9" fill="none" stroke="#86B7DF" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="38" cy="76" r="25" fill="#0D477F" stroke="#8AC3ED" stroke-width="3"/>
+  <path d="M39 61c-7.7 0-12.5 5.7-12.5 15s4.8 15 12.5 15 12.5-5.7 12.5-15S46.7 61 39 61Zm0 5.8c4.2 0 6.6 3.4 6.6 9.2s-2.4 9.2-6.6 9.2-6.6-3.4-6.6-9.2 2.4-9.2 6.6-9.2Z" fill="#fff"/>
+</svg>

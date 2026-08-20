@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+  <title>3d Model Editor</title>
+  <desc>Perspective wireframe cube with a solid blue vertex and orange edit edge</desc>
+  <defs>
+    <linearGradient id="face" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5d8cff"/>
+      <stop offset="1" stop-color="#3156b8"/>
+    </linearGradient>
+    <linearGradient id="edge" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ffbb68"/>
+      <stop offset="1" stop-color="#e87335"/>
+    </linearGradient>
+  </defs>
+  <rect x="7" y="7" width="114" height="114" rx="25" fill="#172238"/>
+  <path d="M64 22 101 43v42l-37 21-37-21V43z" fill="url(#face)" fill-opacity=".22" stroke="#a9c5ff" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M64 22v42l37-21M64 64 27 43M64 64v42" fill="none" stroke="#d8e5ff" stroke-width="4" stroke-linejoin="round"/>
+  <path d="m27 85 37-21 37 21" fill="none" stroke="url(#edge)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="64" cy="64" r="7" fill="#ffb45b" stroke="#fff0d0" stroke-width="3"/>
+  <circle cx="27" cy="85" r="5" fill="#78a4ff"/>
+  <circle cx="101" cy="85" r="5" fill="#78a4ff"/>
+</svg>

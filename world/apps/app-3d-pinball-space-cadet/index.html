@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>3D Pinball: Space Cadet</title>
+  <style>
+    :root {
+      --bg: var(--vibe-surface, #191923);
+      --panel: var(--vibe-raised, #242431);
+      --control: var(--vibe-control, #303044);
+      --text: var(--vibe-text, #f1f1f6);
+      --muted: var(--vibe-muted, #aeb0c2);
+      --line: var(--vibe-border, #ffffff22);
+      --accent: var(--vibe-accent, #a89dfc);
+      --cyan: #63e5ff;
+      --gold: #ffca5a;
+      --red: #f16b6b;
+      --vibe-ui: var(--vibe-font-ui, Inter, ui-sans-serif, system-ui, sans-serif);
+      --vibe-mono: var(--vibe-font-mono, ui-monospace, monospace);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--vibe-ui);
+      font-size: var(--vibe-text-body, 14px);
+      line-height: var(--vibe-line-normal, 1.5);
+    }
+    button { font: inherit; color: inherit; }
+    .app {
+      height: 100%; min-height: 0; display: grid; grid-template-rows: auto minmax(0, 1fr) auto;
+      background: radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--accent) 13%, transparent), transparent 55%), var(--bg);
+    }
+    .topbar {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px 10px;
+      border-bottom: 1px solid var(--line); min-width: 0;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .mark { width: 30px; height: 30px; flex: 0 0 auto; }
+    .brand-copy { min-width: 0; }
+    .brand-title { font-size: var(--vibe-text-title, 18px); font-weight: 760; line-height: var(--vibe-line-tight, 1.15); letter-spacing: -.02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .brand-sub { color: var(--muted); font-size: var(--vibe-text-caption, 11px); letter-spacing: .12em; text-transform: uppercase; }
+    .top-actions { display: flex; gap: 8px; flex: 0 0 auto; }
+    .icon-btn, .small-btn {
+      border: 1px solid var(--line); background: var(--control); border-radius: 8px; cursor: pointer;
+      transition: background .15s ease, border-color .15s ease, transform .1s ease;
+    }
+    .icon-btn { width: 36px; height: 32px; display: grid; place-items: center; }
+    .icon-btn:hover, .small-btn:hover { background: color-mix(in srgb, var(--control) 72%, var(--accent)); border-color: color-mix(in srgb, var(--accent) 60%, var(--line)); }
+    .icon-btn:active, .small-btn:active { transform: translateY(1px); }
+    .icon-btn:focus-visible, .small-btn:focus-visible, .flipper-control:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .icon-btn svg { width: 17px; height: 17px; }
+    .main { min-height: 0; display: grid; grid-template-columns: minmax(160px, 220px) minmax(280px, 1fr) minmax(160px, 220px); gap: 16px; padding: 16px; overflow: hidden; }
+    .rail { min-width: 0; display: flex; flex-direction: column; gap: 12px; overflow: auto; scrollbar-width: thin; scrollbar-color: var(--control) transparent; }
+    .card { background: color-mix(in srgb, var(--panel) 88%, transparent); border: 1px solid var(--line); border-radius: 12px; padding: 13px; }
+    .eyebrow { color: var(--muted); font-size: var(--vibe-text-caption, 11px); text-transform: uppercase; letter-spacing: .14em; font-weight: 700; }
+    .score { font-family: var(--vibe-mono); font-size: clamp(24px, 3.2vw, 38px); letter-spacing: .08em; color: var(--gold); line-height: 1.1; margin-top: 5px; text-shadow: 0 0 18px color-mix(in srgb, var(--gold) 32%, transparent); }
+    .score-caption { margin-top: 6px; color: var(--muted); font-size: var(--vibe-text-caption, 11px); }
+    .data-row { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--line); }
+    .data-row:last-child { border-bottom: 0; padding-bottom: 0; }
+    .data-label { color: var(--muted); font-size: var(--vibe-text-label, 12px); }
+    .data-value { color: var(--text); font-family: var(--vibe-mono); font-size: var(--vibe-text-label, 12px); font-weight: 700; }
+    .mode { display: flex; align-items: center; gap: 7px; color: var(--muted); font-size: var(--vibe-text-label, 12px); }
+    .mode-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 10px var(--cyan); }
+    .mode-dot.paused { background: var(--gold); box-shadow: 0 0 10px var(--gold); }
+    .mode-dot.over { background: var(--red); box-shadow: 0 0 10px var(--red); }
+    .help { color: var(--muted); font-size: var(--vibe-text-label, 12px); }
+    .key { display: inline-grid; place-items: center; min-width: 23px; height: 22px; padding: 0 5px; border: 1px solid var(--line); border-bottom-color: color-mix(in srgb, var(--text) 30%, var(--line)); border-radius: 5px; background: var(--control); color: var(--text); font-family: var(--vibe-mono); font-size: 11px; }
+    .key-line { display: flex; align-items: center; gap: 6px; margin-top: 9px; }
+    .key-line:first-of-type { margin-top: 12px; }
+    .action-stack { display: grid; gap: 8px; }
+    .small-btn { min-height: 35px; padding: 7px 10px; text-align: left; font-size: var(--vibe-text-label, 12px); }
+    .small-btn.primary { background: color-mix(in srgb, var(--accent) 25%, var(--control)); border-color: color-mix(in srgb, var(--accent) 60%, var(--line)); }
+    .table-wrap { min-width: 0; min-height: 0; display: grid; place-items: center; position: relative; }
+    .table-frame { position: relative; width: min(100%, 460px); height: 100%; min-height: 300px; display: grid; place-items: center; }
+    canvas { display: block; width: 100%; height: 100%; max-height: 100%; touch-action: none; border-radius: 20px; filter: drop-shadow(0 16px 28px #0007); }
+    .table-overlay { position: absolute; inset: 0; pointer-events: none; display: flex; align-items: center; justify-content: center; }
+    .center-message { padding: 11px 16px; border-radius: 10px; background: #071327dd; border: 1px solid #82dcff66; color: #e9fbff; text-align: center; opacity: 0; transform: translateY(5px); transition: opacity .2s ease, transform .2s ease; }
+    .center-message.visible { opacity: 1; transform: translateY(0); }
+    .center-message strong { display: block; font-size: var(--vibe-text-heading, 24px); letter-spacing: .04em; }
+    .center-message span { display: block; font-size: var(--vibe-text-label, 12px); color: #a9d9e9; margin-top: 2px; }
+    .bottom { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 9px 16px 12px; border-top: 1px solid var(--line); color: var(--muted); font-size: var(--vibe-text-caption, 11px); }
+    .mobile-controls { display: none; gap: 9px; width: 100%; }
+    .flipper-control { flex: 1; border: 1px solid var(--line); background: var(--control); border-radius: 9px; min-height: 39px; cursor: pointer; font-size: var(--vibe-text-label, 12px); }
+    @media (max-width: 900px) { .main { grid-template-columns: 150px minmax(240px, 1fr) 150px; gap: 10px; padding: 10px; } .card { padding: 10px; } }
+    @media (max-width: 680px) {
+      .topbar { padding: 9px 11px 8px; }
+      .main { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(270px, 1fr) auto; padding: 8px; overflow: auto; }
+      .table-wrap { grid-row: 1; min-height: 320px; }
+      .table-frame { min-height: 320px; height: 100%; width: min(100%, 360px); }
+      .rail { overflow: visible; display: grid; grid-template-columns: 1fr 1fr; align-content: start; }
+      .rail.left { grid-row: 2; } .rail.right { display: none; }
+      .left .card:first-child { grid-column: span 2; }
+      .mobile-controls { display: flex; grid-column: span 2; }
+      .bottom { display: none; }
+      .brand-sub { display: none; }
+    }
+    @media (max-height: 570px) and (min-width: 681px) { .main { padding-block: 8px; } .card { padding: 9px; } .topbar { padding-block: 7px; } .bottom { padding-block: 6px; } }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="m1" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#6ce8ff"/><stop offset="1" stop-color="#5564ec"/></linearGradient></defs><path d="M9 3h14c2 0 3 1 3.5 4l3 18c.5 2-1 4-3 4H5.5c-2 0-3.5-2-3-4l3-18c.5-2 1.5-4 3.5-4Z" fill="#0c244a" stroke="url(#m1)" stroke-width="1.5"/><circle cx="12" cy="13" r="3.2" fill="#f6ad3d" stroke="#ffe5a1"/><circle cx="21" cy="11" r="3.2" fill="#f6ad3d" stroke="#ffe5a1"/><path d="m9 24 6-5 2 2-6 5Zm14 0-6-5-2 2 6 5Z" fill="#d8f9ff" stroke="#42678f"/></svg>
+        <div class="brand-copy"><div class="brand-title">3D Pinball: Space Cadet</div><div class="brand-sub">Flight deck // sector 07</div></div>
+      </div>
+      <div class="top-actions">
+        <button class="icon-btn" id="soundBtn" type="button" aria-label="Mute sound" title="Mute sound"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10v4h4l5 4V6l-5 4H4Z"/><path d="M16 9.5c1.7 1.4 1.7 3.6 0 5"/><path d="M18.5 7c3.3 2.8 3.3 7.2 0 10"/></svg></button>
+        <button class="icon-btn" id="pauseBtn" type="button" aria-label="Pause game" title="Pause game"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg></button>
+      </div>
+    </header>
+    <main class="main">
+      <aside class="rail left" aria-label="Scoreboard">
+        <section class="card"><div class="eyebrow">Score</div><div class="score" id="score">000000000</div><div class="score-caption" id="statusText">Press Space to launch</div></section>
+        <section class="card"><div class="eyebrow">Mission readout</div><div class="data-row"><span class="data-label">Ball</span><span class="data-value" id="ballValue">1 / 3</span></div><div class="data-row"><span class="data-label">Multiplier</span><span class="data-value" id="multiplierValue">×1</span></div><div class="data-row"><span class="data-label">Best</span><span class="data-value" id="bestValue">000000000</span></div></section>
+        <section class="card help"><div class="eyebrow">Flight controls</div><div class="key-line"><span class="key">←</span><span class="key">A</span> Left flipper</div><div class="key-line"><span class="key">→</span><span class="key">D</span> Right flipper</div><div class="key-line"><span class="key">Space</span> Launch ball</div></section>
+        <div class="mobile-controls"><button class="flipper-control" id="leftTouch" type="button">Left flipper</button><button class="flipper-control" id="rightTouch" type="button">Right flipper</button></div>
+      </aside>
+      <section class="table-wrap" aria-label="Pinball table">
+        <div class="table-frame"><canvas id="game" aria-label="Playable pinball table"></canvas><div class="table-overlay"><div class="center-message" id="message"><strong id="messageTitle">PAUSED</strong><span id="messageBody">Press P or the pause button to resume</span></div></div></div>
+      </section>
+      <aside class="rail right" aria-label="Table actions">
+        <section class="card"><div class="eyebrow">Table status</div><div class="data-row"><span class="data-label">Mode</span><span class="mode"><i class="mode-dot" id="modeDot"></i><span id="modeValue">Ready</span></span></div><div class="data-row"><span class="data-label">Targets</span><span class="data-value" id="targetValue">0 / 3</span></div><div class="data-row"><span class="data-label">Last hit</span><span class="data-value" id="lastHit">—</span></div></section>
+        <section class="card action-stack"><div class="eyebrow">Table actions</div><button class="small-btn primary" id="launchBtn" type="button">Launch ball <span aria-hidden="true">· Space</span></button><button class="small-btn" id="newBtn" type="button">New game</button></section>
+        <section class="card help"><div class="eyebrow">Cadet briefing</div><p style="margin:10px 0 0">Clear all three orbit targets to raise the mission multiplier. Keep the ball in play with both flippers.</p></section>
+      </aside>
+    </main>
+    <footer class="bottom"><span>SPACE CADET TRAINING TABLE</span><span aria-hidden="true">•</span><span>3 balls per sortie</span></footer>
+  </div>
+  <script>
+  (() => {
+    'use strict';
+    const canvas = document.getElementById('game');
+    const ctx = canvas.getContext('2d');
+    const ui = {
+      score: document.getElementById('score'), status: document.getElementById('statusText'), ball: document.getElementById('ballValue'), multiplier: document.getElementById('multiplierValue'), best: document.getElementById('bestValue'), mode: document.getElementById('modeValue'), modeDot: document.getElementById('modeDot'), targets: document.getElementById('targetValue'), lastHit: document.getElementById('lastHit'), message: document.getElementById('message'), messageTitle: document.getElementById('messageTitle'), messageBody: document.getElementById('messageBody')
+    };
+    const bridge = window.vibeOS;
+    const state = { score: 0, best: 0, balls: 3, sound: true };
+    let revision = 0;
+    const DPR = () => Math.min(window.devicePixelRatio || 1, 2);
+    const game = { w: 360, h: 700, running: false, paused: false, over: false, last: 0, raf: 0, shake: 0, flash: 0, lastHit: '—', targets: [false, false, false], multiplier: 1, flippers: { left: false, right: false }, launchCharge: 0, launched: false, serveTimer: 0 };
+    const ball = { x: 320, y: 625, vx: 0, vy: 0, r: 8 };
+    const stars = Array.from({length: 44}, (_, i) => ({ x: (i * 83) % 360, y: 20 + ((i * 137) % 250), r: i % 7 === 0 ? 1.7 : .75, a: .25 + (i % 5) * .12 }));
+    const bumpers = [{x:145,y:185,r:25,label:'A'}, {x:220,y:205,r:25,label:'B'}, {x:270,y:280,r:23,label:'C'}];
+    const targets = [{x:112,y:104,w:34,h:11}, {x:160,y:92,w:34,h:11}, {x:208,y:104,w:34,h:11}];
+    const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
+    const format = n => String(Math.max(0, Math.floor(n))).padStart(9, '0');
+    function setMessage(title, body, show) { ui.messageTitle.textContent = title; ui.messageBody.textContent = body; ui.message.classList.toggle('visible', show); }
+    function save() { if (!bridge || !bridge.state) return; bridge.state.write({ score: state.score, best: state.best, balls: state.balls, sound: state.sound }, revision).then(s => { if (s && Number.isInteger(s.revision)) revision = s.revision; }).catch(() => {}); }
+    function refreshState(next) { if (!next || typeof next !== 'object') return; Object.assign(state, next); renderUI(); }
+    async function load() { if (!bridge || !bridge.state) return; try { const saved = await bridge.state.read(); if (saved) { revision = saved.revision || 0; refreshState(saved.state); } } catch (_) {} }
+    function renderUI() {
+      ui.score.textContent = format(state.score); ui.best.textContent = format(state.best); ui.ball.textContent = `${Math.max(0, state.balls)} / 3`; ui.multiplier.textContent = `×${game.multiplier}`; ui.targets.textContent = `${game.targets.filter(Boolean).length} / 3`; ui.lastHit.textContent = game.lastHit;
+      ui.soundBtn = document.getElementById('soundBtn'); ui.soundBtn.setAttribute('aria-label', state.sound ? 'Mute sound' : 'Turn sound on'); ui.soundBtn.title = state.sound ? 'Mute sound' : 'Turn sound on';
+      const mode = game.over ? 'Sortie ended' : game.paused ? 'Paused' : game.running ? 'In flight' : 'Ready'; ui.mode.textContent = mode; ui.modeDot.className = `mode-dot${game.over ? ' over' : game.paused ? ' paused' : ''}`;
+      ui.status.textContent = game.over ? 'New game to fly again' : game.paused ? 'Press P to resume' : game.running ? 'Keep the ball in play' : 'Press Space to launch';
+      document.getElementById('pauseBtn').setAttribute('aria-label', game.paused ? 'Resume game' : 'Pause game');
+      document.getElementById('pauseBtn').title = game.paused ? 'Resume game' : 'Pause game';
+    }
+    function addScore(points, label) { state.score += points * game.multiplier; if (state.score > state.best) state.best = state.score; game.lastHit = label; game.flash = .16; game.shake = .12; renderUI(); save(); }
+    function resetBall() { ball.x = 320; ball.y = 625; ball.vx = 0; ball.vy = 0; game.launched = false; game.serveTimer = 0; }
+    function newGame() { state.score = 0; state.balls = 3; game.targets = [false, false, false]; game.multiplier = 1; game.running = false; game.paused = false; game.over = false; game.lastHit = '—'; resetBall(); setMessage('', '', false); renderUI(); save(); }
+    function launch() { if (game.over) { newGame(); return; } if (game.paused) { togglePause(); return; } if (game.launched) return; game.running = true; game.launched = true; ball.vx = -125; ball.vy = -510 - game.launchCharge * 120; game.launchCharge = 0; setMessage('', '', false); renderUI(); }
+    function loseBall() { if (!game.launched) return; state.balls -= 1; game.running = false; game.launched = false; resetBall(); if (state.balls <= 0) { game.over = true; setMessage('SORTIE ENDED', `Final score ${format(state.score)} · New game to redeploy`, true); } else { setMessage(`BALL ${4 - state.balls}`, 'Press Space to launch', true); setTimeout(() => { if (!game.over) setMessage('', '', false); }, 1700); } renderUI(); save(); }
+    function togglePause() { if (game.over || !game.launched) return; game.paused = !game.paused; setMessage('PAUSED', 'Press P or the pause button to resume', game.paused); renderUI(); }
+    function hitBumper(b) { const dx = ball.x - b.x, dy = ball.y - b.y, d = Math.hypot(dx, dy) || 1; const nx = dx / d, ny = dy / d; ball.x = b.x + nx * (b.r + ball.r + 1); ball.y = b.y + ny * (b.r + ball.r + 1); const dot = ball.vx * nx + ball.vy * ny; ball.vx -= 2 * dot * nx; ball.vy -= 2 * dot * ny; ball.vx += nx * 80; ball.vy += ny * 80; addScore(100, `Bumper ${b.label}`); }
+    function circleHit(cx, cy, r, bounce = 1.04) { const dx = ball.x - cx, dy = ball.y - cy, d = Math.hypot(dx, dy) || 1; if (d < ball.r + r) { const nx = dx / d, ny = dy / d; ball.x = cx + nx * (ball.r + r + 1); ball.y = cy + ny * (ball.r + r + 1); const dot = ball.vx * nx + ball.vy * ny; if (dot < 0) { ball.vx -= (1 + bounce) * dot * nx; ball.vy -= (1 + bounce) * dot * ny; } return true; } return false; }
+    function flipperHit(side) { const active = game.flippers[side]; const pivot = side === 'left' ? {x:125,y:610} : {x:235,y:610}; const tip = side === 'left' ? {x:185,y:584} : {x:175,y:584}; const ax = tip.x-pivot.x, ay=tip.y-pivot.y, bx=ball.x-pivot.x, by=ball.y-pivot.y; const len = ax*ax+ay*ay, t=clamp((bx*ax+by*ay)/len,0,1), px=pivot.x+ax*t, py=pivot.y+ay*t, d=Math.hypot(ball.x-px,ball.y-py); if (d < ball.r + 11) { const nx=(ball.x-px)/(d||1), ny=(ball.y-py)/(d||1); ball.x=px+nx*(ball.r+12); ball.y=py+ny*(ball.r+12); ball.vy=-Math.abs(ball.vy)*.95- (active ? 150 : 20); ball.vx += nx * 160 + (active ? (side === 'left' ? 80 : -80) : 0); if (active) addScore(25, side === 'left' ? 'Left flipper' : 'Right flipper'); return true; } return false; }
+    function update(dt) {
+      if (game.paused || game.over) return;
+      if (!game.launched) { game.launchCharge = (game.launchCharge + dt * .22) % 1; return; }
+      ball.vy += 340 * dt; ball.x += ball.vx * dt; ball.y += ball.vy * dt; ball.vx *= Math.pow(.996, dt * 60); ball.vy *= Math.pow(.998, dt * 60);
+      if (ball.x < 47 + ball.r) { ball.x = 47 + ball.r; ball.vx = Math.abs(ball.vx) * .88; } if (ball.x > 313 - ball.r) { ball.x = 313-ball.r; ball.vx = -Math.abs(ball.vx)*.88; } if (ball.y < 44 + ball.r) { ball.y=44+ball.r; ball.vy=Math.abs(ball.vy)*.9; }
+      targets.forEach((t, i) => { if (!game.targets[i] && ball.x > t.x-4 && ball.x < t.x+t.w+4 && ball.y > t.y-5 && ball.y < t.y+t.h+5 && ball.vy < 0) { game.targets[i]=true; ball.vy=Math.abs(ball.vy)*.72; addScore(250, `Target ${i+1}`); if (game.targets.every(Boolean)) { game.multiplier=Math.min(5,game.multiplier+1); game.targets=[false,false,false]; addScore(1000, 'Mission clear'); } renderUI(); } });
+      bumpers.forEach(b => { if (circleHit(b.x,b.y,b.r)) hitBumper(b); });
+      circleHit(96, 274, 18); circleHit(78, 350, 16); circleHit(282, 374, 17);
+      flipperHit('left'); flipperHit('right');
+      if (ball.y > 679) loseBall();
+      game.shake=Math.max(0,game.shake-dt); game.flash=Math.max(0,game.flash-dt); renderUI();
+    }
+    function pathRoundRect(c,x,y,w,h,r) { c.beginPath(); c.roundRect(x,y,w,h,r); }
+    function draw() {
+      const scaleX = canvas.width / DPR() / game.w, scaleY = canvas.height / DPR() / game.h; ctx.setTransform(DPR()*scaleX,0,0,DPR()*scaleY,0,0); ctx.clearRect(0,0,game.w,game.h);
+      const sx=game.shake ? (Math.random()-.5)*game.shake*25 : 0, sy=game.shake ? (Math.random()-.5)*game.shake*25 : 0; ctx.save(); ctx.translate(sx,sy);
+      const bg=ctx.createLinearGradient(0,0,0,game.h); bg.addColorStop(0,'#071a38'); bg.addColorStop(1,'#020712'); ctx.fillStyle=bg; ctx.fillRect(0,0,game.w,game.h);
+      stars.forEach(s => { ctx.globalAlpha=s.a; ctx.fillStyle='#b9edff'; ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2); ctx.fill(); }); ctx.globalAlpha=1;
+      ctx.save(); ctx.shadowColor='#000b'; ctx.shadowBlur=24; ctx.shadowOffsetY=13; pathRoundRect(ctx,35,24,290,657,27); ctx.fillStyle='#050b1b'; ctx.fill(); ctx.restore();
+      pathRoundRect(ctx,42,31,276,642,21); const field=ctx.createLinearGradient(42,31,318,673); field.addColorStop(0,'#092a58'); field.addColorStop(.48,'#075d87'); field.addColorStop(1,'#071d4d'); ctx.fillStyle=field; ctx.fill(); ctx.strokeStyle='#4fdcff'; ctx.lineWidth=3; ctx.stroke();
+      ctx.save(); ctx.clip(); ctx.globalAlpha=.2; ctx.strokeStyle='#91eeff'; ctx.lineWidth=1; for(let x=56;x<310;x+=18){ctx.beginPath();ctx.moveTo(x,40);ctx.lineTo(x+40,670);ctx.stroke();} for(let y=65;y<670;y+=32){ctx.beginPath();ctx.moveTo(42,y);ctx.lineTo(318,y-10);ctx.stroke();} ctx.restore();
+      ctx.strokeStyle='#70e7ff'; ctx.globalAlpha=.55; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(52,405); ctx.quadraticCurveTo(90,370,113,401); ctx.stroke(); ctx.beginPath(); ctx.moveTo(308,418); ctx.quadraticCurveTo(275,385,258,418); ctx.stroke(); ctx.globalAlpha=1;
+      // target bank
+      pathRoundRect(ctx,95,76,154,64,12); ctx.fillStyle='#061b42'; ctx.fill(); ctx.strokeStyle='#44cce9'; ctx.lineWidth=2; ctx.stroke(); ctx.fillStyle='#b8efff'; ctx.font='700 10px var(--vibe-font-mono, monospace)'; ctx.textAlign='center'; ctx.fillText('SPACE CADET',172,71);
+      targets.forEach((t,i)=>{pathRoundRect(ctx,t.x,t.y,t.w,t.h,3); ctx.fillStyle=game.targets[i]?'#64edb6':'#f2a94b'; ctx.shadowColor=game.targets[i]?'#64edb6':'#ffb548'; ctx.shadowBlur=game.targets[i]?8:12; ctx.fill(); ctx.shadowBlur=0; ctx.fillStyle='#071735'; ctx.font='700 8px var(--vibe-font-mono, monospace)'; ctx.fillText(String(i+1),t.x+t.w/2,t.y+8);});
+      // ramps and orbit lane
+      ctx.strokeStyle='#76eeff'; ctx.lineWidth=5; ctx.globalAlpha=.72; ctx.beginPath(); ctx.moveTo(60,145); ctx.bezierCurveTo(58,245,62,390,100,480); ctx.bezierCurveTo(128,540,190,550,230,501); ctx.bezierCurveTo(270,451,293,350,290,260); ctx.stroke(); ctx.globalAlpha=1; ctx.strokeStyle='#d3fbff'; ctx.setLineDash([3,8]); ctx.lineWidth=1.5; ctx.stroke(); ctx.setLineDash([]);
+      // bumpers
+      bumpers.forEach((b,i)=>{ctx.save();ctx.shadowColor=i===0?'#ffcf64':'#ff6d53';ctx.shadowBlur=15;ctx.fillStyle='#081a43';ctx.beginPath();ctx.arc(b.x,b.y,b.r+5,0,Math.PI*2);ctx.fill(); const g=ctx.createRadialGradient(b.x-7,b.y-8,2,b.x,b.y,b.r);g.addColorStop(0,'#fff6b0');g.addColorStop(.28,i===0?'#ffc65b':'#f28b45');g.addColorStop(.75,'#bd3e52');g.addColorStop(1,'#4b1c62');ctx.fillStyle=g;ctx.beginPath();ctx.arc(b.x,b.y,b.r-2,0,Math.PI*2);ctx.fill();ctx.restore();ctx.strokeStyle='#ffd273';ctx.lineWidth=2;ctx.beginPath();ctx.arc(b.x,b.y,b.r-2,0,Math.PI*2);ctx.stroke();ctx.fillStyle='#fff4bf';ctx.beginPath();ctx.arc(b.x-5,b.y-6,4,0,Math.PI*2);ctx.fill();});
+      // slings and guides
+      [[67,468,105,506],[293,468,255,506]].forEach(a=>{ctx.fillStyle='#0b2861';ctx.strokeStyle='#c9f7ff';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(a[0],a[1]);ctx.lineTo(a[2],a[3]);ctx.lineTo(a[0]+(a[0]<180?27:-27),a[1]+26);ctx.closePath();ctx.fill();ctx.stroke();});
+      ctx.strokeStyle='#d7f7ff';ctx.lineWidth=5;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(56,542);ctx.lineTo(83,625);ctx.stroke();ctx.beginPath();ctx.moveTo(304,542);ctx.lineTo(277,625);ctx.stroke();
+      // flippers
+      const drawFlip=(side,active)=>{const left=side==='left',p=left?{x:125,y:610}:{x:235,y:610}, tip=left?(active?{x:184,y:578}:{x:178,y:600}):(active?{x:176,y:578}:{x:182,y:600}); ctx.save();ctx.shadowColor='#72eaff';ctx.shadowBlur=active?16:6;ctx.strokeStyle=active?'#f5ffff':'#b0e7f1';ctx.lineWidth=16;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(tip.x,tip.y);ctx.stroke();ctx.shadowBlur=0;ctx.strokeStyle='#274969';ctx.lineWidth=3;ctx.stroke();ctx.fillStyle='#ed913a';ctx.beginPath();ctx.arc(p.x,p.y,10,0,Math.PI*2);ctx.fill();ctx.restore();}; drawFlip('left',game.flippers.left);drawFlip('right',game.flippers.right);
+      // launch lane and ball
+      ctx.strokeStyle='#9bc9d4';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(292,520);ctx.lineTo(292,650);ctx.stroke();ctx.strokeStyle='#4ae4ff';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(302,520);ctx.lineTo(302,650);ctx.stroke();ctx.globalAlpha=.65;ctx.fillStyle='#f2c65f';ctx.font='700 9px var(--vibe-font-mono, monospace)';ctx.textAlign='center';ctx.fillText('LAUNCH',294,506);ctx.globalAlpha=1;
+      ctx.save();ctx.shadowColor='#fff';ctx.shadowBlur=13;const ballG=ctx.createRadialGradient(ball.x-3,ball.y-3,1,ball.x,ball.y,ball.r);ballG.addColorStop(0,'#fff');ballG.addColorStop(.28,'#d8f5ff');ballG.addColorStop(.74,'#7597b5');ballG.addColorStop(1,'#263c5c');ctx.fillStyle=ballG;ctx.beginPath();ctx.arc(ball.x,ball.y,ball.r,0,Math.PI*2);ctx.fill();ctx.restore();
+      if (!game.launched && !game.over) { ctx.strokeStyle='#fff4a0';ctx.globalAlpha=.55+.35*Math.sin(performance.now()/200);ctx.setLineDash([4,5]);ctx.beginPath();ctx.moveTo(ball.x,ball.y-12);ctx.lineTo(ball.x,ball.y-80-game.launchCharge*38);ctx.stroke();ctx.setLineDash([]);ctx.globalAlpha=1; }
+      if (game.flash) { ctx.fillStyle=`rgba(255,235,140,${game.flash*.38})`;ctx.fillRect(42,31,276,642); } ctx.restore();
+    }
+    function resize() { const box=canvas.getBoundingClientRect(), d=DPR(); canvas.width=Math.max(1,Math.floor(box.width*d));canvas.height=Math.max(1,Math.floor(box.height*d)); draw(); }
+    function loop(now) { const dt=Math.min(.035, (now-game.last)/1000 || .016); game.last=now; update(dt); draw(); game.raf=requestAnimationFrame(loop); }
+    function setFlipper(side, value) { game.flippers[side]=value; if (value && game.launched && !game.paused) { ball.vy -= 3; } }
+    function bindHold(el,side) { el.addEventListener('pointerdown',e=>{e.preventDefault();el.setPointerCapture?.(e.pointerId);setFlipper(side,true);}); ['pointerup','pointercancel','pointerleave'].forEach(t=>el.addEventListener(t,()=>setFlipper(side,false))); }
+    document.addEventListener('keydown', e => { if (e.code==='ArrowLeft'||e.code==='KeyA') {e.preventDefault();setFlipper('left',true);} if(e.code==='ArrowRight'||e.code==='KeyD'){e.preventDefault();setFlipper('right',true);} if(e.code==='Space'){e.preventDefault();launch();} if(e.code==='KeyP')togglePause(); });
+    document.addEventListener('keyup', e => { if(e.code==='ArrowLeft'||e.code==='KeyA')setFlipper('left',false); if(e.code==='ArrowRight'||e.code==='KeyD')setFlipper('right',false); });
+    document.getElementById('launchBtn').addEventListener('click', launch); document.getElementById('newBtn').addEventListener('click', newGame); document.getElementById('pauseBtn').addEventListener('click', togglePause);
+    document.getElementById('soundBtn').addEventListener('click', ()=>{state.sound=!state.sound;renderUI();save();}); bindHold(document.getElementById('leftTouch'),'left'); bindHold(document.getElementById('rightTouch'),'right');
+    canvas.addEventListener('pointerdown', e => { const r=canvas.getBoundingClientRect(), x=(e.clientX-r.left)/r.width*game.w; if(x<180)setFlipper('left',true);else setFlipper('right',true); }); canvas.addEventListener('pointerup',()=>{setFlipper('left',false);setFlipper('right',false);}); canvas.addEventListener('pointercancel',()=>{setFlipper('left',false);setFlipper('right',false);});
+    window.addEventListener('resize', resize); if (window.ResizeObserver) new ResizeObserver(resize).observe(canvas); load(); renderUI(); resize(); game.raf=requestAnimationFrame(loop);
+  })();
+  </script>
+</body>
+</html>

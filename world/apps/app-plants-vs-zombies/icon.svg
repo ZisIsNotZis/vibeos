@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+  <title>Plants Vs Zombies</title>
+  <desc>A stylized peashooter plant facing a zombie silhouette</desc>
+  <defs>
+    <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#5f9d47"/><stop offset="1" stop-color="#2d6339"/></linearGradient>
+    <linearGradient id="leaf" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#9edb52"/><stop offset="1" stop-color="#347b43"/></linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="28" fill="#f0c84b"/>
+  <circle cx="64" cy="63" r="49" fill="#8bc54b" opacity=".35"/>
+  <path d="M19 103c20-12 69-12 90 0 5 3 4 10-2 10H22c-6 0-8-7-3-10Z" fill="url(#ground)"/>
+  <path d="M51 96c-2-18 0-28 10-37 7-7 18-11 29-7 4 2 5 7 1 10-8 5-14 11-16 21-3 10-3 16-2 23Z" fill="#327840"/>
+  <path d="M53 87c-16 2-28-4-33-15-2-5 2-9 7-8 9 2 17 5 25 11Z" fill="url(#leaf)" stroke="#28683b" stroke-width="3"/>
+  <path d="M60 66c-7-5-10-14-7-23 3-9 12-16 22-17 5 0 8 5 5 9-5 7-8 14-7 23Z" fill="url(#leaf)" stroke="#28683b" stroke-width="3"/>
+  <path d="M44 59c-12-7-21-15-24-25-1-5 3-8 8-7 12 3 20 12 23 24Z" fill="#6db84a" stroke="#28683b" stroke-width="3"/>
+  <path d="M67 51c-1-13 4-22 14-28 4-3 9 0 9 5-1 12-7 21-18 28Z" fill="#4a9140" stroke="#28683b" stroke-width="3"/>
+  <path d="M23 56c3-13 14-20 29-19 9 1 17 6 21 14l-10 9-14-5-17 8c-6 3-11-1-9-7Z" fill="#67b94b" stroke="#28683b" stroke-width="3"/>
+  <circle cx="37" cy="49" r="5" fill="#d6ef9d"/><circle cx="37" cy="49" r="2.4" fill="#193c2d"/>
+  <path d="M73 45c5-8 13-11 22-9 8 2 13 8 13 16 0 7-5 11-12 11H78c-8 0-11-9-5-18Z" fill="#7b9a72" stroke="#425e49" stroke-width="3"/>
+  <path d="M78 40c0-10 5-17 13-19 6-1 11 3 11 8-2 5-6 8-12 10Z" fill="#536e55"/>
+  <circle cx="84" cy="52" r="3" fill="#1b2c2b"/><circle cx="98" cy="52" r="3" fill="#1b2c2b"/>
+  <path d="M84 61c5 3 10 3 15 0" fill="none" stroke="#32463d" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="71" cy="42" r="6" fill="#a9df50" stroke="#28683b" stroke-width="3"/>
+</svg>

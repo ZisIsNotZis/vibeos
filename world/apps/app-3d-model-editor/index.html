@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>3D Model Editor</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app-shell">
+    <header class="toolbar">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">◆</span><div><strong>Model Studio</strong><small>Untitled scene</small></div></div>
+      <div class="tool-group" aria-label="Transform tools">
+        <button class="tool active" data-mode="select" title="Select (V)">↖ <span>Select</span></button>
+        <button class="tool" data-mode="move" title="Move (G)">✥ <span>Move</span></button>
+        <button class="tool" data-mode="rotate" title="Rotate (R)">⟳ <span>Rotate</span></button>
+        <button class="tool" data-mode="scale" title="Scale (S)">↗ <span>Scale</span></button>
+      </div>
+      <div class="toolbar-actions"><button id="undo" class="icon-button" title="Undo">↶</button><button id="redo" class="icon-button" title="Redo">↷</button><button id="save" class="primary">Save scene</button><button id="export" class="outline">Export</button></div>
+    </header>
+    <div class="workspace">
+      <aside class="panel scene-panel">
+        <div class="panel-heading"><span>Scene</span><button id="add-object" class="add-button" title="Add object">＋</button></div>
+        <div class="scene-tree" id="scene-tree"></div>
+        <div class="panel-footer"><span class="status-dot"></span><span id="scene-status">All changes saved</span></div>
+      </aside>
+      <section class="viewport-wrap">
+        <div class="viewport-bar"><div class="view-tabs"><button class="view-tab active" data-view="perspective">Perspective</button><button class="view-tab" data-view="front">Front</button><button class="view-tab" data-view="top">Top</button></div><div class="viewport-actions"><button id="wireframe" class="small-button">◇ Wireframe</button><button id="frame" class="small-button">⌗ Frame selected</button><button id="grid-toggle" class="small-button active">Grid</button></div></div>
+        <div class="viewport" id="viewport" tabindex="0" aria-label="3D scene viewport">
+          <div class="axis axis-x">X</div><div class="axis axis-y">Y</div><div class="axis axis-z">Z</div>
+          <div class="floor-grid" id="floor-grid"></div>
+          <div class="model-stage" id="model-stage"></div>
+          <div class="gizmo" id="gizmo"><span class="gizmo-x">X</span><span class="gizmo-y">Y</span><span class="gizmo-z">Z</span><i></i></div>
+          <div class="viewport-hint">Drag to orbit&nbsp; · &nbsp;Scroll to zoom&nbsp; · &nbsp; <kbd>F</kbd> frame</div>
+          <div class="view-cube" aria-hidden="true"><b>TOP</b><span>FRONT</span><em>RIGHT</em></div>
+        </div>
+        <div class="timeline"><button id="play" class="play" title="Play animation">▶</button><span class="timecode" id="timecode">00:00.00</span><div class="track"><div class="track-fill"></div><div class="playhead"></div><span class="key key-a"></span><span class="key key-b"></span><span class="key key-c"></span></div><span class="fps">24 fps</span><button class="small-button" id="add-key">＋ Keyframe</button></div>
+      </section>
+      <aside class="panel inspector">
+        <div class="inspector-tabs"><button class="inspector-tab active" data-inspect="object">Object</button><button class="inspector-tab" data-inspect="material">Material</button></div>
+        <div id="object-inspector" class="inspector-content"><div class="selected-heading"><span class="object-icon" id="selected-icon">◈</span><div><strong id="selected-name">Cube</strong><small id="selected-type">Mesh · 12 tris</small></div><button id="visibility" class="visibility" title="Toggle visibility">◉</button></div><div class="property-section"><div class="section-title">Transform <button class="reset-link" id="reset-transform">Reset</button></div><div class="field-row"><label>Position</label><input data-prop="x" type="number" step="0.1"><input data-prop="y" type="number" step="0.1"><input data-prop="z" type="number" step="0.1"></div><div class="field-row"><label>Rotation</label><input data-prop="rx" type="number" step="1"><input data-prop="ry" type="number" step="1"><input data-prop="rz" type="number" step="1"></div><div class="field-row"><label>Scale</label><input data-prop="sx" type="number" step="0.1"><input data-prop="sy" type="number" step="0.1"><input data-prop="sz" type="number" step="0.1"></div></div><div class="property-section"><div class="section-title">Geometry</div><div class="info-row"><span>Vertices</span><b id="vertices">8</b></div><div class="info-row"><span>Faces</span><b id="faces">6</b></div><div class="info-row"><span>Dimensions</span><b id="dimensions">2 × 2 × 2 m</b></div></div></div>
+        <div id="material-inspector" class="inspector-content hidden"><div class="property-section"><div class="section-title">Surface</div><label class="stack-label">Base color</label><div class="swatches" id="swatches"><button data-color="#8b7cf6" style="--swatch:#8b7cf6"></button><button data-color="#31c48d" style="--swatch:#31c48d"></button><button data-color="#ef8354" style="--swatch:#ef8354"></button><button data-color="#e6b84b" style="--swatch:#e6b84b"></button><button data-color="#e6e8f0" style="--swatch:#e6e8f0"></button></div><label class="range-label">Roughness <output id="roughness-value">42%</output></label><input id="roughness" class="range" type="range" min="0" max="100" value="42"><label class="range-label">Metallic <output id="metallic-value">18%</output></label><input id="metallic" class="range" type="range" min="0" max="100" value="18"></div><div class="property-section"><div class="section-title">Shading</div><button class="select-row active" id="smooth-shading">◉ Smooth shading <span>✓</span></button><button class="select-row" id="flat-shading">△ Flat shading <span></span></button></div></div>
+      </aside>
+    </div>
+    <div class="toast" id="toast" role="status"></div>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>

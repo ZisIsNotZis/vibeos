@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Plants Vs Zombies</title>
+  <style>
+    :root {
+      --vibe-font-ui: Inter, ui-sans-serif, system-ui, sans-serif;
+      --vibe-font-mono: "DM Mono", ui-monospace, monospace;
+      --vibe-surface: #191923;
+      --vibe-raised: #242431;
+      --vibe-control: #303044;
+      --vibe-text: #f1f1f6;
+      --vibe-muted: #aeb0c2;
+      --vibe-border: #ffffff22;
+      --vibe-accent: #a89dfc;
+      --vibe-scale: 1;
+    }
+    :root[data-theme="light"] { --vibe-surface:#f7f8fc; --vibe-raised:#fff; --vibe-control:#e8ebf3; --vibe-text:#20202b; --vibe-muted:#596070; --vibe-border:#20202b22; --vibe-accent:#6658cf; }
+    :root[data-theme="desert"] { --vibe-surface:#f5e6c8; --vibe-raised:#fff7e5; --vibe-control:#dfbf82; --vibe-text:#302016; --vibe-muted:#674b34; --vibe-border:#5b371f35; --vibe-accent:#a85028; }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; overflow: hidden; }
+    body { background: var(--vibe-surface); color: var(--vibe-text); font-family: var(--vibe-font-ui); font-size: calc(14px * var(--vibe-scale)); }
+    button { font: inherit; color: inherit; }
+    button:focus-visible { outline: 3px solid var(--vibe-accent); outline-offset: 2px; }
+    .app { height: 100%; min-width: 0; display: flex; flex-direction: column; overflow: auto; }
+    .topbar { display:flex; align-items:center; gap:14px; padding:16px clamp(16px, 3vw, 36px) 12px; }
+    .brand-mark { width:42px; height:42px; border-radius:13px; background:#f1c94a; display:grid; place-items:center; box-shadow:0 7px 18px #0002; flex:0 0 auto; }
+    .brand-mark svg { width:32px; height:32px; }
+    .brand-copy { min-width:0; }
+    .brand-copy strong { display:block; font-size:calc(16px * var(--vibe-scale)); line-height:1.1; letter-spacing:-.02em; }
+    .brand-copy span { display:block; margin-top:3px; color:var(--vibe-muted); font-size:calc(11px * var(--vibe-scale)); }
+    .top-actions { margin-left:auto; display:flex; gap:8px; }
+    .icon-button, .small-button { border:1px solid var(--vibe-border); background:var(--vibe-raised); border-radius:10px; cursor:pointer; transition:transform .15s, background .15s; }
+    .icon-button { width:36px; height:36px; display:grid; place-items:center; }
+    .icon-button:hover, .small-button:hover { transform:translateY(-1px); background:var(--vibe-control); }
+    .icon-button svg { width:18px; height:18px; }
+    .content { width:min(1220px, 100%); margin:0 auto; padding:0 clamp(16px, 3vw, 36px) 26px; display:flex; flex-direction:column; gap:16px; min-height:0; }
+    .hero { display:flex; justify-content:space-between; align-items:end; gap:18px; }
+    .eyebrow { color:var(--vibe-accent); font-weight:700; letter-spacing:.12em; text-transform:uppercase; font-size:calc(11px * var(--vibe-scale)); }
+    h1 { font-size:clamp(calc(25px * var(--vibe-scale)), 4vw, calc(42px * var(--vibe-scale))); line-height:1; letter-spacing:-.045em; margin:6px 0 0; }
+    .hero p { color:var(--vibe-muted); margin:9px 0 0; max-width:570px; line-height:1.45; }
+    .hero-stat { border-left:1px solid var(--vibe-border); padding-left:18px; min-width:138px; }
+    .hero-stat span { color:var(--vibe-muted); display:block; font-size:calc(11px * var(--vibe-scale)); }
+    .hero-stat strong { display:block; font-size:calc(25px * var(--vibe-scale)); margin-top:4px; }
+    .game-shell { border:1px solid var(--vibe-border); border-radius:18px; background:var(--vibe-raised); box-shadow:0 18px 50px #0002; overflow:hidden; }
+    .game-toolbar { min-height:65px; padding:11px 14px; display:flex; align-items:center; gap:10px; border-bottom:1px solid var(--vibe-border); flex-wrap:wrap; }
+    .sun-counter { display:flex; align-items:center; gap:8px; min-width:116px; padding:7px 10px; border-radius:10px; background:var(--vibe-control); }
+    .sun-icon { width:22px; height:22px; border-radius:50%; background:#f6c83f; box-shadow:0 0 0 4px #f6c83f2c; position:relative; }
+    .sun-icon:before { content:""; position:absolute; inset:-4px; border:2px dashed #f6c83f; border-radius:50%; }
+    .sun-counter strong { font-size:calc(18px * var(--vibe-scale)); }
+    .level-copy { color:var(--vibe-muted); font-size:calc(12px * var(--vibe-scale)); }
+    .level-copy strong { color:var(--vibe-text); display:block; font-size:calc(13px * var(--vibe-scale)); }
+    .seed-row { display:flex; gap:7px; min-width:0; overflow:auto; padding:2px; scrollbar-width:thin; }
+    .seed { position:relative; border:1px solid var(--vibe-border); background:var(--vibe-surface); border-radius:10px; padding:5px 8px; min-width:69px; cursor:pointer; text-align:center; transition:transform .15s, border-color .15s, opacity .15s; }
+    .seed:hover { transform:translateY(-2px); }
+    .seed.active { border-color:#f6c83f; box-shadow:0 0 0 2px #f6c83f44; }
+    .seed.locked { opacity:.42; cursor:not-allowed; }
+    .seed-art { display:block; height:27px; line-height:27px; }
+    .seed-art svg { width:27px; height:27px; vertical-align:middle; }
+    .seed-name { display:block; font-size:calc(10px * var(--vibe-scale)); color:var(--vibe-muted); white-space:nowrap; }
+    .seed-cost { display:block; color:#f6c83f; font-family:var(--vibe-font-mono); font-size:calc(10px * var(--vibe-scale)); margin-top:2px; }
+    .toolbar-spacer { flex:1; min-width:12px; }
+    .small-button { padding:8px 11px; font-size:calc(12px * var(--vibe-scale)); }
+    .small-button.primary { background:var(--vibe-accent); color:#fff; border-color:transparent; font-weight:700; }
+    .small-button.primary:hover { filter:brightness(1.08); }
+    .board-wrap { position:relative; background:#1a3024; min-height:290px; height:min(56vh, 510px); }
+    canvas { display:block; width:100%; height:100%; touch-action:none; cursor:crosshair; }
+    .game-overlay { position:absolute; inset:0; display:none; place-items:center; background:#10201780; backdrop-filter:blur(3px); }
+    .game-overlay.show { display:grid; }
+    .overlay-card { width:min(390px, calc(100% - 32px)); background:var(--vibe-raised); border:1px solid var(--vibe-border); border-radius:16px; padding:26px; text-align:center; box-shadow:0 20px 60px #0005; }
+    .overlay-card .seal { width:50px; height:50px; margin:0 auto 13px; border-radius:50%; display:grid; place-items:center; background:#f1c94a; color:#2e3e23; font-size:25px; }
+    .overlay-card .seal svg { width:27px; height:27px; }
+    .overlay-card h2 { margin:0; font-size:calc(23px * var(--vibe-scale)); }
+    .overlay-card p { color:var(--vibe-muted); line-height:1.45; margin:9px 0 18px; }
+    .overlay-card .small-button { width:100%; padding:11px; }
+    .tips { display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; }
+    .tip { display:flex; gap:10px; align-items:flex-start; padding:13px; border-radius:12px; border:1px solid var(--vibe-border); background:var(--vibe-raised); min-width:0; }
+    .tip-icon { width:29px; height:29px; border-radius:9px; background:var(--vibe-control); display:grid; place-items:center; flex:0 0 auto; font-size:15px; }
+    .tip strong { display:block; font-size:calc(12px * var(--vibe-scale)); }
+    .tip span { display:block; color:var(--vibe-muted); font-size:calc(11px * var(--vibe-scale)); line-height:1.35; margin-top:3px; }
+    .tip-icon.sun-mini { background:#f6c83f; box-shadow:0 0 0 4px #f6c83f2c; border-radius:50%; width:17px; height:17px; margin:6px; }
+    .tip-icon.dot-mini { background:#7bc34d; border-radius:50%; width:17px; height:17px; margin:6px; box-shadow:inset -4px -2px 0 #3b8143; }
+    .tip-icon.key-mini { font-family:var(--vibe-font-mono); font-weight:700; font-size:13px; }
+    .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+    @media (max-width: 680px) {
+      .hero { align-items:start; flex-direction:column; gap:12px; }
+      .hero-stat { border-left:0; border-top:1px solid var(--vibe-border); padding:10px 0 0; width:100%; }
+      .game-toolbar { gap:8px; }
+      .seed-row { order:5; width:100%; }
+      .board-wrap { height:58vh; min-height:300px; }
+      .tips { grid-template-columns:1fr; }
+      .tip { padding:10px 12px; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *:before, *:after { animation-duration:.01ms !important; transition-duration:.01ms !important; } }
+  </style>
+</head>
+<body>
+<main class="app">
+  <header class="topbar">
+    <div class="brand-mark" aria-hidden="true">
+      <svg viewBox="0 0 40 40" fill="none"><path d="M20 31V16" stroke="#2c6d39" stroke-width="3.5" stroke-linecap="round"/><path d="M19 22c-8 2-12-2-13-8 7-1 12 1 13 8Z" fill="#55a445" stroke="#2c6d39" stroke-width="2"/><path d="M20 18c0-7 4-11 10-12 1 7-2 11-10 12Z" fill="#7bc34d" stroke="#2c6d39" stroke-width="2"/><circle cx="14" cy="13" r="6" fill="#74bd50" stroke="#2c6d39" stroke-width="2"/><circle cx="13" cy="12" r="1.5" fill="#173f2c"/></svg>
+    </div>
+    <div class="brand-copy"><strong>Plants Vs Zombies</strong><span>Garden defense · day one</span></div>
+    <div class="top-actions"><button class="icon-button" id="soundBtn" type="button" aria-label="Toggle sound" title="Toggle sound"><svg id="soundIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10v4h4l5 4V6l-5 4H4Z"/><path d="M17 9c1.4 1.4 1.4 4.6 0 6"/><path d="M19.5 6.5c3 3 3 8 0 11"/></svg></button><button class="icon-button" id="helpBtn" type="button" aria-label="How to play" title="How to play"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.7 9a2.4 2.4 0 1 1 4.1 1.7c-1.1 1.1-1.8 1.4-1.8 3"/><path d="M12 17h.01"/></svg></button></div>
+  </header>
+  <section class="content">
+    <div class="hero"><div><div class="eyebrow">Front yard · wave 1</div><h1>Keep the garden growing.</h1><p>Plant a living defense, collect sunlight, and hold the line before the shamblers reach the house.</p></div><div class="hero-stat"><span>best garden score</span><strong id="bestScore">0</strong></div></div>
+    <section class="game-shell" aria-label="Garden defense game">
+      <div class="game-toolbar">
+        <div class="sun-counter" aria-label="Sunlight"><span class="sun-icon" aria-hidden="true"></span><strong id="sunCount">150</strong><span class="level-copy">sunlight<strong id="scoreCount">0 pts</strong></span></div>
+        <div class="seed-row" id="seedRow" role="group" aria-label="Plant cards"></div>
+        <div class="toolbar-spacer"></div><button class="small-button" id="pauseBtn" type="button">Pause <span class="sr-only">game</span></button><button class="small-button" id="restartBtn" type="button">Restart</button>
+      </div>
+      <div class="board-wrap" id="boardWrap"><canvas id="board" aria-label="Garden game board"></canvas><div class="game-overlay show" id="startOverlay"><div class="overlay-card"><div class="seal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V9"/><path d="M12 14C7 15 4 12 4 8c4 0 8 1 8 6Z" fill="currentColor" opacity=".35"/><path d="M12 11c0-4 3-7 7-7 0 4-2 7-7 7Z" fill="currentColor" opacity=".55"/></svg></div><h2>Morning shift</h2><p>Choose a plant, then click an open tile. Survive the first wave to earn your garden score.</p><button class="small-button primary" id="startBtn" type="button">Start the garden</button></div></div><div class="game-overlay" id="pauseOverlay"><div class="overlay-card"><div class="seal">Ⅱ</div><h2>Garden paused</h2><p>Your plants are safe for now. Resume when you are ready to return to the lawn.</p><button class="small-button primary" id="resumeBtn" type="button">Resume defense</button></div></div><div class="game-overlay" id="endOverlay"><div class="overlay-card"><div class="seal" id="endSeal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="m5 12 4 4L19 6"/></svg></div><h2 id="endTitle">Wave cleared</h2><p id="endText">The garden held strong.</p><button class="small-button primary" id="endBtn" type="button">Play again</button></div></div></div>
+    </section>
+    <div class="tips"><div class="tip"><div class="tip-icon sun-mini" aria-hidden="true"></div><div><strong>Build your economy</strong><span>Sunflowers make extra sunlight over time.</span></div></div><div class="tip"><div class="tip-icon dot-mini" aria-hidden="true"></div><div><strong>Protect every lane</strong><span>Peashooters fire down their own row.</span></div></div><div class="tip"><div class="tip-icon key-mini" aria-hidden="true">P</div><div><strong>Quick controls</strong><span>Press P to pause · R to restart.</span></div></div></div>
+  </section>
+</main>
+<script>
+(() => {
+  'use strict';
+  const root = document.documentElement;
+  const canvas = document.getElementById('board');
+  const ctx = canvas.getContext('2d');
+  const wrap = document.getElementById('boardWrap');
+  const seedRow = document.getElementById('seedRow');
+  const sunEl = document.getElementById('sunCount');
+  const scoreEl = document.getElementById('scoreCount');
+  const bestEl = document.getElementById('bestScore');
+  const pauseBtn = document.getElementById('pauseBtn');
+  const startOverlay = document.getElementById('startOverlay');
+  const pauseOverlay = document.getElementById('pauseOverlay');
+  const endOverlay = document.getElementById('endOverlay');
+  const endTitle = document.getElementById('endTitle');
+  const endText = document.getElementById('endText');
+  const endSeal = document.getElementById('endSeal');
+  const W = 9, H = 5;
+  const plants = {
+    sunflower: { name:'Sunflower', art:'<svg viewBox="0 0 28 28" fill="none"><path d="M14 24V13" stroke="#28643b" stroke-width="2.4" stroke-linecap="round"/><path d="M14 19c-5 1-8-1-9-5 4 0 8 1 9 5Z" fill="#54a94a" stroke="#28643b" stroke-width="1.4"/><path d="M14 16c0-4 3-7 7-7 0 4-2 6-7 7Z" fill="#76c350" stroke="#28643b" stroke-width="1.4"/><circle cx="14" cy="8" r="4" fill="#f5c83f" stroke="#d58b32" stroke-width="1.5"/><path d="M14 2.4v2M14 12v2M8.4 8h2M17.6 8h2M10 4l1.4 1.4M17 10.6l1.4 1.4M18 4l-1.4 1.4M11 10.6 9.6 12" stroke="#f5c83f" stroke-width="1.4" stroke-linecap="round"/></svg>', cost:50, hp:100, recharge:4.5, kind:'income' },
+    shooter: { name:'Peashooter', art:'<svg viewBox="0 0 28 28" fill="none"><path d="M14 24V17" stroke="#28643b" stroke-width="2.4" stroke-linecap="round"/><path d="M14 20c-5 1-7-1-8-4 4 0 7 1 8 4ZM14 22c4 1 7-1 8-4-4 0-7 1-8 4Z" fill="#54a94a" stroke="#28643b" stroke-width="1.3"/><circle cx="11" cy="10" r="6" fill="#6cbb4c" stroke="#28643b" stroke-width="1.5"/><path d="M15 8h7c2 0 3 4 0 5h-7Z" fill="#337c43" stroke="#28643b" stroke-width="1.5"/><circle cx="9.5" cy="8.5" r="1.3" fill="#d8f49b"/><circle cx="9.5" cy="8.5" r=".55" fill="#173b2d"/></svg>', cost:100, hp:130, recharge:4, kind:'shooter' },
+    wall: { name:'Wall-nut', art:'<svg viewBox="0 0 28 28" fill="none"><ellipse cx="14" cy="14" rx="8" ry="10" fill="#bc895b" stroke="#765339" stroke-width="1.6"/><path d="M10 10c2-3 5-3 7-1M9 14c2-2 4-2 6 0M17 17c1-2 2-3 4-3" stroke="#e0b37c" stroke-width="1.3" stroke-linecap="round"/><circle cx="11.5" cy="13" r="1" fill="#443329"/><circle cx="17" cy="13" r="1" fill="#443329"/></svg>', cost:50, hp:420, recharge:8, kind:'wall' }
+  };
+  let dpr = 1, cw = 900, ch = 500, cellW = 100, cellH = 80;
+  const startBtn = document.getElementById('startBtn');
+  const resumeBtn = document.getElementById('resumeBtn');
+  const endBtn = document.getElementById('endBtn');
+  let state = { phase:'ready', sun:150, score:0, best:0, wave:1, selected:'shooter', plants:[], zombies:[], peas:[], suns:[], particles:[], elapsed:0, spawnClock:0, sunClock:5, mowers:[true,true,true,true,true] };
+  let last = 0, raf = 0, soundOn = true;
+  const fallbackStore = { read: async k => JSON.parse(localStorage.getItem('pvz:'+k) || 'null'), write: async (k,v) => localStorage.setItem('pvz:'+k, JSON.stringify(v)) };
+  const bridge = window.vibeOS || { storage:fallbackStore, notify:async()=>{}, commands:{register:()=>()=>{},setContext:()=>{}} };
+  const storage = bridge.storage || fallbackStore;
+  function notify(message, level='info') { if (bridge.notify) bridge.notify(message, {level, timeoutMs:2400}); }
+  async function loadBest() { try { const saved = await storage.read('garden-progress'); state.best = Number(saved && saved.best) || 0; bestEl.textContent = state.best.toLocaleString(); } catch (_) {} }
+  async function saveBest() { if (state.score <= state.best) return; state.best = state.score; bestEl.textContent = state.best.toLocaleString(); try { await storage.write('garden-progress', {best:state.best}); } catch (_) {} }
+  function fit() { const rect = wrap.getBoundingClientRect(); dpr = Math.min(2, window.devicePixelRatio || 1); cw = Math.max(300, rect.width); ch = Math.max(260, rect.height); canvas.width = Math.floor(cw*dpr); canvas.height = Math.floor(ch*dpr); canvas.style.width = cw+'px'; canvas.style.height = ch+'px'; ctx.setTransform(dpr,0,0,dpr,0,0); cellW = cw/W; cellH = ch/H; draw(); }
+  function setupSeeds() { seedRow.innerHTML = ''; Object.entries(plants).forEach(([id,p]) => { const b = document.createElement('button'); b.type='button'; b.className='seed'; b.dataset.plant=id; b.setAttribute('aria-label', `${p.name}, costs ${p.cost} sunlight`); b.innerHTML=`<span class="seed-art" aria-hidden="true">${p.art}</span><span class="seed-name">${p.name}</span><span class="seed-cost">${p.cost} sun</span>`; b.addEventListener('click', () => selectPlant(id)); seedRow.appendChild(b); }); updateSeeds(); }
+  function updateSeeds() { seedRow.querySelectorAll('.seed').forEach(b => { const id=b.dataset.plant, p=plants[id]; b.classList.toggle('active', state.selected===id); b.classList.toggle('locked', state.sun<p.cost || state.phase!=='playing'); b.disabled = state.sun<p.cost || state.phase!=='playing'; }); }
+  function selectPlant(id) { if (state.phase!=='playing' || state.sun<plants[id].cost) return; state.selected=id; updateSeeds(); notify(`${plants[id].name} selected`, 'info'); }
+  function resetGame() { state = {phase:'playing',sun:150,score:0,best:state.best,wave:1,selected:'shooter',plants:[],zombies:[],peas:[],suns:[],particles:[],elapsed:0,spawnClock:1.5,sunClock:3,mowers:[true,true,true,true,true]}; startOverlay.classList.remove('show'); pauseOverlay.classList.remove('show'); endOverlay.classList.remove('show'); pauseBtn.textContent='Pause'; updateUI(); }
+  function updateUI() { sunEl.textContent=state.sun; scoreEl.textContent=state.score.toLocaleString()+' pts'; updateSeeds(); }
+  function togglePause() { if (state.phase==='playing') { state.phase='paused'; pauseOverlay.classList.add('show'); pauseBtn.textContent='Resume'; } else if (state.phase==='paused') resume(); }
+  function resume() { if(state.phase!=='paused') return; state.phase='playing'; pauseOverlay.classList.remove('show'); pauseBtn.textContent='Pause'; last=performance.now(); tick(last); }
+  function placePlant(col,row) { if(state.phase!=='playing' || col<0 || col>=W || row<0 || row>=H) return; const p=plants[state.selected]; if(state.sun<p.cost || state.plants.some(x=>x.col===col&&x.row===row)) { if(state.sun<p.cost) notify('Not enough sunlight yet', 'warning'); return; } state.sun-=p.cost; state.plants.push({id:state.selected,col,row,hp:p.hp,maxHp:p.hp,age:0,fire:1.1}); state.particles.push({x:(col+.5)*cellW,y:(row+.5)*cellH,text:p.name+' planted',life:1,color:'#fff5a6'}); updateUI(); }
+  function spawnZombie() { const row=Math.floor(Math.random()*H); const tough = state.elapsed>38 && Math.random()<.25; state.zombies.push({row,x:cw+46,hp:tough?260:150,maxHp:tough?260:150,speed:tough?10:15,damage:tough?22:18,attack:0,type:tough?'bucket':'walker',bob:Math.random()*7}); }
+  function addSun(x,y,fromSky=false) { state.suns.push({x,y,life:fromSky?8:10,fromSky,drift:0}); }
+  function update(dt) {
+    state.elapsed+=dt; state.spawnClock-=dt; state.sunClock-=dt;
+    if(state.spawnClock<=0) { spawnZombie(); const interval=Math.max(1.5,3.8-state.elapsed*.025); state.spawnClock=interval; }
+    if(state.sunClock<=0) { addSun((Math.random()*.8+.1)*cw,-12,true); state.sunClock=7; }
+    state.plants.forEach(p=>{ p.age+=dt; p.fire-=dt; if(plants[p.id].kind==='income' && p.age>5) { addSun((p.col+.5)*cellW,(p.row+.2)*cellH); p.age=0; } if(plants[p.id].kind==='shooter' && p.fire<=0) { const target=state.zombies.find(z=>z.row===p.row&&z.x>p.col*cellW); if(target) { state.peas.push({x:(p.col+.68)*cellW,y:(p.row+.51)*cellH,row:p.row,damage:35}); p.fire=1.35; } } });
+    state.suns.forEach(s=>{ if(s.fromSky && s.y<cellH*4.65) s.y+=26*dt; s.life-=dt; }); state.suns=state.suns.filter(s=>s.life>0);
+    state.peas.forEach(q=>{q.x+=240*dt; const target=state.zombies.find(z=>z.row===q.row&&Math.abs(z.x-q.x)<25); if(target){target.hp-=q.damage;q.hit=true;state.score+=5;state.particles.push({x:target.x,y:(target.row+.3)*cellH,text:'+5',life:.7,color:'#d9f39b'});}}); state.peas=state.peas.filter(q=>q.x<cw+30&&!q.hit);
+    state.zombies.forEach(z=>{ const front=state.plants.filter(p=>p.row===z.row&&z.x>p.col*cellW-5&&z.x<p.col*cellW+cellW*.72).sort((a,b)=>b.col-a.col)[0]; if(front){z.attack-=dt;if(z.attack<=0){front.hp-=z.damage;z.attack=.65;state.particles.push({x:front.col*cellW+cellW*.55,y:(front.row+.25)*cellH,text:'−'+z.damage,life:.5,color:'#ffb17d'});}} else z.x-=z.speed*dt;});
+    state.zombies=state.zombies.filter(z=>{if(z.hp<=0){state.score+=50;state.particles.push({x:z.x,y:(z.row+.3)*cellH,text:'+50',life:1,color:'#f6d668'});return false;}if(z.x<25){ if(state.mowers[z.row]){state.mowers[z.row]=false;z.x=-100;state.score+=30;notify('Lawn mower cleared a lane','success');return true;} endGame(false); } return true;});
+    state.plants=state.plants.filter(p=>p.hp>0); state.particles.forEach(p=>{p.life-=dt;p.y-=13*dt;}); state.particles=state.particles.filter(p=>p.life>0); updateUI();
+    if(state.elapsed>55 && state.zombies.length===0) endGame(true);
+  }
+  function endGame(won) { if(state.phase==='ended') return; state.phase='ended'; cancelAnimationFrame(raf); saveBest(); endTitle.textContent=won?'Wave cleared':'The garden fell'; endText.textContent=won?`You held the lawn for 55 seconds and scored ${state.score.toLocaleString()} points.`:'A zombie reached the house. Replant, reinforce, and try a new defense.'; endSeal.innerHTML=won?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="m5 12 4 4L19 6"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 5v8"/><path d="M12 17h.01"/></svg>'; endSeal.style.background=won?'#f1c94a':'#e47d69'; endOverlay.classList.add('show'); pauseBtn.textContent='Pause'; updateSeeds(); }
+  function draw() { if(!ctx) return; ctx.clearRect(0,0,cw,ch); drawLawn(); state.plants.forEach(drawPlant); state.zombies.forEach(drawZombie); state.peas.forEach(drawPea); state.suns.forEach(drawSun); state.particles.forEach(drawParticle); }
+  function drawLawn() { const sky=ctx.createLinearGradient(0,0,0,ch); sky.addColorStop(0,'#142c31');sky.addColorStop(.32,'#244d3a');sky.addColorStop(1,'#162d25');ctx.fillStyle=sky;ctx.fillRect(0,0,cw,ch); for(let r=0;r<H;r++){for(let c=0;c<W;c++){ctx.fillStyle=(r+c)%2?'#4c9b4b':'#459146';ctx.globalAlpha=.72;ctx.fillRect(c*cellW+1,r*cellH+1,cellW-2,cellH-2);ctx.globalAlpha=1;}} ctx.fillStyle='#213c2e';ctx.fillRect(0,0,cellW*.72,ch); ctx.strokeStyle='#ffffff2a';ctx.lineWidth=1;for(let c=0;c<=W;c++){ctx.beginPath();ctx.moveTo(c*cellW,0);ctx.lineTo(c*cellW,ch);ctx.stroke();}for(let r=0;r<=H;r++){ctx.beginPath();ctx.moveTo(0,r*cellH);ctx.lineTo(cw,r*cellH);ctx.stroke();} for(let r=0;r<H;r++){const y=(r+.5)*cellH; ctx.fillStyle=state.mowers[r]?'#d5d7ba':'#45534a';ctx.beginPath();ctx.roundRect(9,y-13,cellW*.42,26,8);ctx.fill();ctx.fillStyle=state.mowers[r]?'#5d6b52':'#7d8a7b';ctx.beginPath();ctx.arc(20,y+10,4,0,7);ctx.arc(cellW*.32,y+10,4,0,7);ctx.fill();ctx.fillStyle='#263c2e';ctx.font='bold 9px '+getComputedStyle(root).getPropertyValue('--vibe-font-ui');ctx.fillText(state.mowers[r]?'MOWER':'USED',15,y+2);}}
+  function drawPlant(p) { const x=(p.col+.5)*cellW,y=(p.row+.53)*cellH,s=Math.min(cellW,cellH); ctx.save();ctx.translate(x,y); if(plants[p.id].kind==='income'){ctx.strokeStyle='#267343';ctx.lineWidth=Math.max(3,s*.045);ctx.beginPath();ctx.moveTo(0,s*.27);ctx.lineTo(0,-s*.08);ctx.stroke();leaf(-s*.03,s*.08,-1);leaf(s*.02,s*.02,1);ctx.fillStyle='#f6c83f';ctx.beginPath();ctx.arc(0,-s*.24,s*.19,0,7);ctx.fill();ctx.strokeStyle='#d78b31';ctx.lineWidth=2;for(let i=0;i<8;i++){const a=i*Math.PI/4;ctx.beginPath();ctx.moveTo(Math.cos(a)*s*.19,-s*.24+Math.sin(a)*s*.19);ctx.lineTo(Math.cos(a)*s*.26,-s*.24+Math.sin(a)*s*.26);ctx.stroke();}ctx.fillStyle='#70512b';ctx.beginPath();ctx.arc(0,-s*.24,s*.07,0,7);ctx.fill();}else if(plants[p.id].kind==='shooter'){leaf(-s*.02,s*.12,-1);leaf(s*.06,s*.17,1);ctx.fillStyle='#6dbd4e';ctx.beginPath();ctx.arc(-s*.03,-s*.13,s*.25,0,7);ctx.fill();ctx.fillStyle='#2e7140';ctx.beginPath();ctx.ellipse(s*.18,-s*.11,s*.24,s*.14,0,0,7);ctx.fill();ctx.fillStyle='#c7ef78';ctx.beginPath();ctx.arc(-s*.1,-s*.18,s*.055,0,7);ctx.fill();ctx.fillStyle='#183a31';ctx.beginPath();ctx.arc(-s*.1,-s*.18,s*.022,0,7);ctx.fill();}else{ctx.fillStyle='#bd8c5c';ctx.beginPath();ctx.ellipse(0,-s*.03,s*.28,s*.34,0,0,7);ctx.fill();ctx.strokeStyle='#7b563a';ctx.lineWidth=2;ctx.stroke();ctx.strokeStyle='#dcb27c';ctx.beginPath();ctx.arc(-s*.07,-s*.1,s*.13,0,5);ctx.stroke();ctx.fillStyle='#453328';ctx.beginPath();ctx.arc(-s*.08,-s*.07,s*.025,0,7);ctx.arc(s*.09,-s*.07,s*.025,0,7);ctx.fill();} if(p.hp<p.maxHp){ctx.fillStyle='#102017aa';ctx.fillRect(-s*.3,s*.32,s*.6,4);ctx.fillStyle=p.hp/p.maxHp>.45?'#8ee15f':'#ef7661';ctx.fillRect(-s*.3,s*.32,s*.6*(p.hp/p.maxHp),4);}ctx.restore(); }
+  function leaf(x,y,side){ctx.save();ctx.fillStyle=side<0?'#3c9848':'#64b04b';ctx.beginPath();ctx.ellipse(x,y,Math.min(cellW,cellH)*.19,Math.min(cellW,cellH)*.09,side*.35,0,7);ctx.fill();ctx.restore();}
+  function drawZombie(z) { const x=z.x,y=(z.row+.57)*cellH,s=Math.min(cellW,cellH), bob=Math.sin(state.elapsed*4+z.bob)*2;ctx.save();ctx.translate(x,y+bob);ctx.fillStyle='#355448';ctx.fillRect(-s*.16,s*.05,s*.32,s*.28);ctx.fillStyle=z.type==='bucket'?'#7f9290':'#718f77';ctx.beginPath();ctx.arc(0,-s*.17,s*.19,0,7);ctx.fill();ctx.fillStyle='#4b6656';ctx.fillRect(-s*.2,-s*.37,s*.4,s*.08);ctx.fillStyle='#d1dfb1';ctx.beginPath();ctx.arc(-s*.07,-s*.18,s*.035,0,7);ctx.arc(s*.07,-s*.18,s*.035,0,7);ctx.fill();ctx.fillStyle='#243a34';ctx.beginPath();ctx.arc(-s*.07,-s*.18,s*.015,0,7);ctx.arc(s*.07,-s*.18,s*.015,0,7);ctx.fill();ctx.strokeStyle='#243a34';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(-s*.08,-s*.05);ctx.lineTo(s*.08,-s*.03);ctx.stroke();ctx.fillStyle='#3e6850';ctx.fillRect(-s*.22,s*.3,s*.44,s*.08);if(z.hp<z.maxHp){ctx.fillStyle='#102017aa';ctx.fillRect(-s*.25,-s*.48,s*.5,4);ctx.fillStyle='#ef7661';ctx.fillRect(-s*.25,-s*.48,s*.5*(z.hp/z.maxHp),4);}ctx.restore(); }
+  function drawPea(q){ctx.fillStyle='#d9f39b';ctx.shadowColor='#b6ef77';ctx.shadowBlur=8;ctx.beginPath();ctx.arc(q.x,q.y,6,0,7);ctx.fill();ctx.shadowBlur=0;}
+  function drawSun(s){const pulse=1+Math.sin(state.elapsed*4+s.x)*.08;ctx.save();ctx.globalAlpha=Math.min(1,s.life*2);ctx.translate(s.x,s.y);ctx.scale(pulse,pulse);ctx.fillStyle='#f6c83f';for(let i=0;i<8;i++){ctx.rotate(Math.PI/4);ctx.fillRect(-3,-24,6,9);}ctx.beginPath();ctx.arc(0,0,15,0,7);ctx.fill();ctx.fillStyle='#fff0a1';ctx.beginPath();ctx.arc(-4,-5,4,0,7);ctx.fill();ctx.restore();}
+  function drawParticle(p){ctx.save();ctx.globalAlpha=Math.max(0,p.life);ctx.fillStyle=p.color;ctx.font='700 13px '+getComputedStyle(root).getPropertyValue('--vibe-font-ui');ctx.textAlign='center';ctx.fillText(p.text,p.x,p.y);ctx.restore();}
+  function pointer(e){const r=canvas.getBoundingClientRect(); const x=(e.clientX-r.left)*cw/r.width,y=(e.clientY-r.top)*ch/r.height; const col=Math.floor(x/cellW),row=Math.floor(y/cellH); if(state.phase==='playing' && x>cellW*.72) { const sun=state.suns.find(s=>Math.hypot(s.x-x,s.y-y)<28); if(sun){state.sun+=25;sun.life=0;state.score+=10;state.particles.push({x,y,text:'+25',life:.8,color:'#fff0a1'});updateUI();return;} placePlant(col,row); }}
+  canvas.addEventListener('pointerdown',pointer); startBtn.addEventListener('click',resetGame); resumeBtn.addEventListener('click',resume); pauseBtn.addEventListener('click',togglePause); restartBtn.addEventListener('click',()=>{resetGame();notify('A fresh lawn is ready','success');}); endBtn.addEventListener('click',resetGame);
+  document.getElementById('helpBtn').addEventListener('click',()=>{notify('Pick a card, then plant on an empty tile. Collect sunlight and protect each lane.','info');}); document.getElementById('soundBtn').addEventListener('click',()=>{soundOn=!soundOn;document.getElementById('soundIcon').style.opacity=soundOn?'1':'.45';notify(soundOn?'Sound on':'Sound off','info');});
+  window.addEventListener('keydown',e=>{if(e.key.toLowerCase()==='p'){e.preventDefault();togglePause();}if(e.key.toLowerCase()==='r'){e.preventDefault();resetGame();}if(state.phase==='playing'&&['1','2','3'].includes(e.key)){selectPlant(['sunflower','shooter','wall'][Number(e.key)-1]);}}); window.addEventListener('resize',fit);
+  bridge.commands?.setContext?.(()=>({phase:state.phase,sun:state.sun,score:state.score,wave:state.wave,plants:state.plants.length,zombies:state.zombies.length})); bridge.commands?.register?.({id:'restart-garden',title:'Restart garden',detail:'Start a fresh defense'});
+  function tick(now){const dt=Math.min(.05,(now-last)/1000||0);last=now;if(state.phase==='playing')update(dt);draw();if(state.phase==='playing')raf=requestAnimationFrame(tick);}
+  loadBest(); setupSeeds(); fit(); function beginLoop(){if(!raf){last=performance.now();raf=requestAnimationFrame(tick);}} startBtn.addEventListener('click',beginLoop); resumeBtn.addEventListener('click',beginLoop); endBtn.addEventListener('click',beginLoop);
+})();
+</script>
+</body>
+</html>

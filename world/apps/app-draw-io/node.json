@@ -1,0 +1,9 @@
+{
+  "id": "app-draw-io",
+  "title": "Draw.Io",
+  "kind": "app",
+  "status": "ready",
+  "icon": "icon.svg",
+  "entry": "index.html",
+  "children": []
+}

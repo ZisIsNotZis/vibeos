@@ -1,0 +1,9 @@
+{
+  "id": "app-outlook",
+  "title": "Outlook",
+  "kind": "app",
+  "status": "ready",
+  "icon": "icon.svg",
+  "children": [],
+  "entry": "entry.html"
+}

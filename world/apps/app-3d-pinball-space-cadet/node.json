@@ -1,0 +1,9 @@
+{
+  "id": "app-3d-pinball-space-cadet",
+  "title": "3D Pinball: Space Cadet",
+  "kind": "app",
+  "status": "ready",
+  "icon": "icon.svg",
+  "entry": "index.html",
+  "children": []
+}

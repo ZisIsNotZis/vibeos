@@ -7,20 +7,42 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
 class FakeAgent implements AgentAdapter { tasks: AgentTask[] = []; async fulfill(task: AgentTask) { this.tasks.push(task); return { ok: true as const, capability: 'editor' }; } }
+class QuestionAgent extends FakeAgent { answers: string[] = []; async fulfill(task: AgentTask) { this.tasks.push(task); return { ok: true as const, capability: task.capability, result: { status: 'needs_input' as const, summary: 'Need a choice.', questionId: 'question-12345678', question: { kind: 'text' as const, title: 'Name', message: 'Choose a name.', multiline: false } } }; } async resume(questionId: string, answer: string) { this.answers.push(`${questionId}:${answer}`); return { ok: true as const, capability: 'resumed', result: { status: 'ready' as const, summary: 'Completed.', statePatches: [] } }; } }
 class DelayedAgent extends FakeAgent { async fulfill(task: AgentTask) { this.tasks.push(task); await new Promise(resolve => setTimeout(resolve, 20)); return { ok: true as const, capability: task.capability }; } }
-class MemoryStore { value: any; constructor(public root?: string) {} load() { return this.value ?? { windows: [], operations: [], notifications: [], apps: [], surfaces: [], settings: { model: 'terra', reasoning: 'high', effort: 'quality', search: 'none' } }; } save(snapshot: any) { this.value = structuredClone(snapshot); } }
+class MemoryStore { value: any; constructor(public root?: string) {} load() { return this.value ?? { windows: [], operations: [], notifications: [], apps: [], surfaces: [], settings: { model: 'terra', useGhPrefix: false, reasoning: 'high', effort: 'quality', search: 'none' } }; } save(snapshot: any) { this.value = structuredClone(snapshot); } }
 test('recovers interrupted operations instead of exposing them as active after restart', () => {
   const store = new MemoryStore();
-  store.value = { windows: [], operations: [{ id: 'op-old', intent: { type: 'open_app', appId: 'calculator' }, state: 'pending' }], notifications: [], apps: [], surfaces: [], settings: { model: 'terra', reasoning: 'high', effort: 'quality', search: 'none' } };
+  store.value = { windows: [], operations: [{ id: 'op-old', intent: { type: 'open_app', appId: 'calculator' }, state: 'pending' }], notifications: [], apps: [], surfaces: [], settings: { model: 'terra', useGhPrefix: false, reasoning: 'high', effort: 'quality', search: 'none' } };
   const runtime = new OperatingSystemRuntime(new FakeAgent(), { send() {} }, store);
   assert.equal(runtime.snapshot().operations[0]?.state, 'cancelled');
   assert.match(runtime.snapshot().operations[0]?.message ?? '', /Interrupted/);
+});
+test('compacts recovered operation history, keeps window updates transient, and continues IDs after restart', async () => {
+  const store = new MemoryStore();
+  store.value = {
+    windows: [{ id: 'window-900', appId: 'assistant', title: 'Assistant', route: '/', state: 'normal', focused: true, position: { x: 120, y: 72 }, size: { width: 760, height: 500 } }],
+    operations: Array.from({ length: 750 }, (_, index) => ({ id: `op-${index + 1}`, intent: { type: 'focus_window', windowId: 'window-900' }, state: 'ready' })),
+    notifications: [], apps: [], surfaces: [], settings: { model: 'terra', useGhPrefix: false, reasoning: 'high', effort: 'quality', search: 'none' }
+  };
+  const runtime = new OperatingSystemRuntime(new FakeAgent(), { send() {} }, store);
+  assert.equal(runtime.snapshot().operations.length, 100);
+  await runtime.dispatch({ type: 'focus_window', windowId: 'window-900' });
+  await runtime.dispatch({ type: 'move_window', windowId: 'window-900', x: 240, y: 160 });
+  assert.equal(runtime.snapshot().operations.length, 100);
+  const operation = await runtime.dispatch({ type: 'open_app', appId: 'assistant' });
+  assert.equal(Number(operation.id.slice(3)) > 900, true);
 });
 test('opens an app generically and focuses the new window', async () => {
   const events: RuntimeEvent[] = []; const runtime = new OperatingSystemRuntime(new FakeAgent(), { send: e => events.push(e) });
   const operation = await runtime.dispatch({ type: 'open_app', appId: 'calculator' });
   assert.equal(operation.state, 'ready'); assert.equal(runtime.snapshot().windows[0]?.appId, 'calculator');
   assert.equal(runtime.snapshot().windows[0]?.focused, true); assert.equal(events.at(-1)?.type, 'operation');
+});
+test('does not broadcast a snapshot when the already focused window is clicked again', async () => {
+  const events: RuntimeEvent[] = []; const runtime = new OperatingSystemRuntime(new FakeAgent(), { send: event => events.push(event) });
+  await runtime.dispatch({ type: 'open_app', appId: 'calculator' }); events.length = 0;
+  await runtime.dispatch({ type: 'focus_window', windowId: runtime.snapshot().windows[0]!.id });
+  assert.equal(events.some(event => event.type === 'snapshot'), false);
 });
 test('opens the App Shop root surface immediately', async () => {
   const agent = new FakeAgent(); const runtime = new OperatingSystemRuntime(agent, { send() {} });
@@ -48,7 +70,7 @@ test('opens the browser root surface immediately', async () => {
 });
 test('hydrates durable cached surfaces when persisted runtime surfaces are empty', () => {
   const store = new MemoryStore();
-  store.value = { windows: [], operations: [], notifications: [], apps: [], surfaces: [], settings: { model: 'terra', reasoning: 'high', effort: 'quality', search: 'none' } };
+  store.value = { windows: [], operations: [], notifications: [], apps: [], surfaces: [], settings: { model: 'terra', useGhPrefix: false, reasoning: 'high', effort: 'quality', search: 'none' } };
   const runtime = new OperatingSystemRuntime(new FakeAgent(), { send() {} }, store);
   assert.equal(runtime.snapshot().surfaces.some(surface => surface.appId === 'browser' && surface.route === '/'), true);
   assert.equal(runtime.snapshot().surfaces.some(surface => surface.appId === 'app-firefox' && surface.route === '/google.com'), true);
@@ -173,6 +195,14 @@ test('generated bridge keeps storage in the calling app namespace and returns a 
     assert.deepEqual(events.find(event => event.type === 'bridge_result' && event.requestId === 'request-2'), { type: 'bridge_result', requestId: 'request-2', ok: true, value: 42 });
   } finally { rmSync(root, { recursive: true, force: true }); }
 });
+test('generated apps can show bounded, transient OS notifications', async () => {
+  const events: RuntimeEvent[] = []; const runtime = new OperatingSystemRuntime(new FakeAgent(), { send: event => events.push(event) });
+  const result = await runtime.dispatch({ type: 'bridge_request', requestId: 'notify-1', appId: 'app-tetris', operation: { type: 'notify', message: 'Five', level: 'success', timeoutMs: 5000 } });
+  assert.equal(result.state, 'ready');
+  assert.deepEqual(events.find(event => event.type === 'notification'), { type: 'notification', message: 'Five', level: 'success', timeoutMs: 5000 });
+  const rejected = await runtime.dispatch({ type: 'bridge_request', requestId: 'notify-2', appId: 'app-tetris', operation: { type: 'notify', message: '   ' } });
+  assert.equal(rejected.state, 'failed');
+});
 test('generated bridge binds navigation and dispatched app operations to the calling app', async () => {
   const runtime = new OperatingSystemRuntime(new FakeAgent(), { send() {} });
   await runtime.dispatch({ type: 'bridge_request', requestId: 'navigate', appId: 'app-firefox', operation: { type: 'navigate', url: 'google.com' } });
@@ -186,30 +216,77 @@ test('generated apps can request generic AI work and emit world changes', async 
   const result = await runtime.dispatch({ type: 'bridge_request', requestId: 'ai-1', appId: 'app-editor', operation: { type: 'ai.command', command: 'Create a child note', scope: 'app', context: { selection: 'hello' }, output: 'generate' } });
   assert.equal(result.state, 'ready'); assert.equal(agent.tasks.at(-1)?.capability, 'ai:command:app-editor'); assert.equal(events.some(event => event.type === 'world_changed' && event.apps.includes('app-editor')), true);
 });
+test('holds a generic agent question and resumes the same worker on answer', async () => {
+  const agent = new QuestionAgent(); const events: RuntimeEvent[] = []; const runtime = new OperatingSystemRuntime(agent, { send: event => events.push(event) });
+  await runtime.dispatch({ type: 'bridge_request', requestId: 'question-bridge', appId: 'app-editor', operation: { type: 'ai.command', command: 'Rename it', scope: 'app' } });
+  const question = events.find((event): event is Extract<RuntimeEvent, { type: 'agent_question' }> => event.type === 'agent_question');
+  assert.equal(question?.questionId, 'question-12345678');
+  const answer = await runtime.dispatch({ type: 'answer_agent_question', questionId: 'question-12345678', answer: 'hello.py' });
+  assert.equal(answer.state, 'ready'); assert.deepEqual(agent.answers, ['question-12345678:hello.py']);
+});
 test('settings default to quality and none, update, persist, and reach generation', async () => {
   const agent = new FakeAgent(); const store = new MemoryStore(); const runtime = new OperatingSystemRuntime(agent, { send() {} }, store);
-  assert.deepEqual(runtime.snapshot().settings, { model: 'terra', reasoning: 'high', effort: 'quality', search: 'none', appearance: { mode: 'dark', backgroundMode: 'fill', autoHideChromeOnMaximize: false, dockPosition: 'bottom' } });
+  assert.deepEqual(runtime.snapshot().settings, { model: 'terra', useGhPrefix: false, reasoning: 'high', effort: 'quality', search: 'none', generationVisibility: 'completion', appearance: { mode: 'dark', backgroundMode: 'fill', autoHideChromeOnMaximize: false, dockPosition: 'bottom', uiTypeface: 'modern', monoTypeface: 'modern', displayScale: 'default' } });
   await runtime.dispatch({ type: 'set_setting', key: 'effort', value: 'ultra' });
   await runtime.dispatch({ type: 'set_setting', key: 'search', value: 'online_info' });
-  assert.deepEqual(runtime.snapshot().settings, { model: 'terra', reasoning: 'high', effort: 'ultra', search: 'online_info', appearance: { mode: 'dark', backgroundMode: 'fill', autoHideChromeOnMaximize: false, dockPosition: 'bottom' } });
+  await runtime.dispatch({ type: 'set_setting', key: 'generationVisibility', value: 'tools' });
+  assert.deepEqual(runtime.snapshot().settings, { model: 'terra', useGhPrefix: false, reasoning: 'high', effort: 'ultra', search: 'online_info', generationVisibility: 'tools', appearance: { mode: 'dark', backgroundMode: 'fill', autoHideChromeOnMaximize: false, dockPosition: 'bottom', uiTypeface: 'modern', monoTypeface: 'modern', displayScale: 'default' } });
   const restored = new OperatingSystemRuntime(agent, { send() {} }, store);
-  assert.deepEqual(restored.snapshot().settings, { model: 'terra', reasoning: 'high', effort: 'ultra', search: 'online_info', appearance: { mode: 'dark', backgroundMode: 'fill', autoHideChromeOnMaximize: false, dockPosition: 'bottom' } });
+  assert.deepEqual(restored.snapshot().settings, { model: 'terra', useGhPrefix: false, reasoning: 'high', effort: 'ultra', search: 'online_info', generationVisibility: 'tools', appearance: { mode: 'dark', backgroundMode: 'fill', autoHideChromeOnMaximize: false, dockPosition: 'bottom', uiTypeface: 'modern', monoTypeface: 'modern', displayScale: 'default' } });
   await restored.dispatch({ type: 'open_surface', appId: 'app-future', route: '/settings-check' });
-  assert.deepEqual(agent.tasks.at(-1)?.context?.settings, { model: 'terra', reasoning: 'high', effort: 'ultra', search: 'online_info', appearance: { mode: 'dark', backgroundMode: 'fill', autoHideChromeOnMaximize: false, dockPosition: 'bottom' } });
+  assert.deepEqual(agent.tasks.at(-1)?.context?.settings, { model: 'terra', useGhPrefix: false, reasoning: 'high', effort: 'ultra', search: 'online_info', generationVisibility: 'tools', appearance: { mode: 'dark', backgroundMode: 'fill', autoHideChromeOnMaximize: false, dockPosition: 'bottom', uiTypeface: 'modern', monoTypeface: 'modern', displayScale: 'default' } });
+});
+test('gh model prefix is independently toggleable and persistent', async () => {
+  const store = new MemoryStore(); const agent = new FakeAgent(); const runtime = new OperatingSystemRuntime(agent, { send() {} }, store);
+  assert.equal(runtime.snapshot().settings.useGhPrefix, false);
+  await runtime.dispatch({ type: 'set_setting', key: 'useGhPrefix', value: true });
+  assert.equal(runtime.snapshot().settings.useGhPrefix, true);
+  const restored = new OperatingSystemRuntime(agent, { send() {} }, store);
+  assert.equal(restored.snapshot().settings.useGhPrefix, true);
+  await restored.dispatch({ type: 'set_setting', key: 'useGhPrefix', value: false });
+  assert.equal(new OperatingSystemRuntime(agent, { send() {} }, store).snapshot().settings.useGhPrefix, false);
+});
+
+test('emits a coalescible live task trace with a terminal status', () => {
+  const events: RuntimeEvent[] = []; const runtime = new OperatingSystemRuntime(new FakeAgent(), { send: event => events.push(event) });
+  runtime.reportTask('task-1', 'Paint — Install', 'tool_call', '{"tool":"command_execution"}');
+  runtime.completeTask('task-1', 'Paint — Install', 'Installed Paint.', true);
+  assert.deepEqual(events, [
+    { type: 'task_trace', taskId: 'task-1', title: 'Paint — Install', kind: 'tool_call', text: '{"tool":"command_execution"}', status: 'active' },
+    { type: 'task_trace', taskId: 'task-1', title: 'Paint — Install', kind: 'end', text: 'Installed Paint.', status: 'success' }
+  ]);
 });
 test('migrates old settings and persists appearance changes', async () => {
-  const agent = new FakeAgent(); const store = new MemoryStore(); store.value = { windows: [], operations: [], notifications: [], apps: [], surfaces: [], settings: { model: 'terra', reasoning: 'high', effort: 'balanced', search: 'none' } };
+  const agent = new FakeAgent(); const store = new MemoryStore(); store.value = { windows: [], operations: [], notifications: [], apps: [], surfaces: [], settings: { model: 'terra', useGhPrefix: false, reasoning: 'high', effort: 'balanced', search: 'none' } };
   const runtime = new OperatingSystemRuntime(agent, { send() {} }, store);
-  assert.deepEqual(runtime.snapshot().settings.appearance, { mode: 'dark', backgroundMode: 'fill', autoHideChromeOnMaximize: false, dockPosition: 'bottom' });
+  assert.deepEqual(runtime.snapshot().settings.appearance, { mode: 'dark', backgroundMode: 'fill', autoHideChromeOnMaximize: false, dockPosition: 'bottom', uiTypeface: 'modern', monoTypeface: 'modern', displayScale: 'default' });
   await runtime.dispatch({ type: 'set_appearance', key: 'mode', value: 'light' });
   await runtime.dispatch({ type: 'set_appearance', key: 'backgroundMode', value: 'pad' });
+  await runtime.dispatch({ type: 'set_appearance', key: 'uiTypeface', value: 'accessible' });
+  await runtime.dispatch({ type: 'set_appearance', key: 'monoTypeface', value: 'system' });
+  await runtime.dispatch({ type: 'set_appearance', key: 'displayScale', value: 'large' });
   assert.equal(runtime.snapshot().settings.appearance.mode, 'light');
   assert.equal(runtime.snapshot().settings.appearance.backgroundMode, 'pad');
+  assert.equal(runtime.snapshot().settings.appearance.uiTypeface, 'accessible');
+  assert.equal(runtime.snapshot().settings.appearance.monoTypeface, 'system');
+  assert.equal(runtime.snapshot().settings.appearance.displayScale, 'large');
   const restored = new OperatingSystemRuntime(agent, { send() {} }, store);
   assert.equal(restored.snapshot().settings.appearance.mode, 'light');
+  assert.equal(restored.snapshot().settings.appearance.uiTypeface, 'accessible');
+  assert.equal(restored.snapshot().settings.appearance.monoTypeface, 'system');
+  assert.equal(restored.snapshot().settings.appearance.displayScale, 'large');
+});
+test('persists the desert theme and rejects unknown theme values', async () => {
+  const store = new MemoryStore(); const runtime = new OperatingSystemRuntime(new FakeAgent(), { send() {} }, store);
+  await runtime.dispatch({ type: 'set_appearance', key: 'mode', value: 'desert' });
+  assert.equal(runtime.snapshot().settings.appearance.mode, 'desert');
+  const restored = new OperatingSystemRuntime(new FakeAgent(), { send() {} }, store);
+  assert.equal(restored.snapshot().settings.appearance.mode, 'desert');
+  const rejected = await restored.dispatch({ type: 'set_appearance', key: 'mode', value: 'unknown' as any });
+  assert.equal(rejected.state, 'failed');
 });
 test('repairs stale persisted icon tokens from world manifests on startup', () => {
-  const store = new MemoryStore(); store.value = { windows: [], operations: [], notifications: [], apps: [{ id: 'app-music', name: 'Music Studio', description: '', icon: 'music', installed: true, status: 'placeholder' }, { id: 'app-poetry', name: 'Poetry House', description: '', icon: '', installed: true, status: 'placeholder' }], surfaces: [], settings: { model: 'terra', reasoning: 'high', effort: 'quality', search: 'none' } };
+  const store = new MemoryStore(); store.value = { windows: [], operations: [], notifications: [], apps: [{ id: 'app-music', name: 'Music Studio', description: '', icon: 'music', installed: true, status: 'placeholder' }, { id: 'app-poetry', name: 'Poetry House', description: '', icon: '', installed: true, status: 'placeholder' }], surfaces: [], settings: { model: 'terra', useGhPrefix: false, reasoning: 'high', effort: 'quality', search: 'none' } };
   const runtime = new OperatingSystemRuntime(new FakeAgent(), { send() {} }, store);
   assert.equal(runtime.snapshot().apps.find(app => app.id === 'app-music')?.icon, 'icon.svg');
   assert.equal(runtime.snapshot().apps.find(app => app.id === 'app-poetry')?.icon, 'icon.svg');

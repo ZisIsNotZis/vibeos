@@ -1,0 +1,8 @@
+{
+  "appId": "app-word",
+  "revision": 2,
+  "state": {
+    "title": "The quiet craft of a clear brief",
+    "html": "\n          <h1>The quiet craft of a clear brief</h1>\n          <p class=\"lede\">A good brief does not make the work smaller. It gives the work a shape.</p>\n          <p class=\"date-line\">Field notes · 20 August 2026</p>\n          <hr>\n          <h2>Start with the decision</h2>\n          <p>Before the background, name the decision this document should help someone make. A reader can carry context lightly when the destination is visible.</p>\n          <p>Strong briefs are generous with constraints. They explain what matters, what is still unknown, and which trade-offs are acceptable.</p>\n          <h2>Make the next step obvious</h2>\n          <p>Every section should earn its place by moving the reader closer to action. Keep the most useful detail close to the moment it becomes relevant.</p>\n          <ul><li>Put the outcome in one sentence.</li><li>Separate evidence from interpretation.</li><li>End with an owner and a next step.</li></ul>\n          <blockquote>Clarity is not a tone of voice. It is a kindness built into the structure.</blockquote>\n          <h2>A small practice</h2>\n          <p>Read the brief once as a newcomer. Circle every phrase that asks the reader to guess. Then make the guess unnecessary.</p>\n        "
+  }
+}

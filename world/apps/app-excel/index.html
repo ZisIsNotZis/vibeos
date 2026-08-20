@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Excel</title>
+  <style>
+    :root {
+      --vibe-font-ui: Inter, ui-sans-serif, system-ui, sans-serif;
+      --vibe-font-mono: "DM Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+      --vibe-text-caption: 11px;
+      --vibe-text-label: 12px;
+      --vibe-text-body: 14px;
+      --vibe-text-title: 18px;
+      --vibe-text-heading: 24px;
+      --vibe-line-tight: 1.15;
+      --vibe-line-normal: 1.5;
+      --vibe-surface: #f7f8fc;
+      --vibe-raised: #ffffff;
+      --vibe-control: #e8ebf3;
+      --vibe-text: #20202b;
+      --vibe-muted: #596070;
+      --vibe-border: #20202b22;
+      --vibe-accent: #217346;
+      --brand-green: #217346;
+      --brand-light: #e9f3ec;
+      --grid-line: #dfe3e9;
+      color-scheme: light;
+    }
+    :root[data-theme="dark"] { --vibe-surface:#191923; --vibe-raised:#242431; --vibe-control:#303044; --vibe-text:#f1f1f6; --vibe-muted:#aeb0c2; --vibe-border:#ffffff22; --vibe-accent:#8bc6a2; --brand-green:#51a978; --brand-light:#1f3a2a; --grid-line:#3b3b49; color-scheme:dark; }
+    :root[data-theme="desert"] { --vibe-surface:#f5e6c8; --vibe-raised:#fff7e5; --vibe-control:#dfbf82; --vibe-text:#302016; --vibe-muted:#674b34; --vibe-border:#5b371f35; --vibe-accent:#a85028; --brand-green:#217346; --brand-light:#e6f0df; --grid-line:#d7c6a9; color-scheme:light; }
+    * { box-sizing: border-box; }
+    html, body { width:100%; height:100%; margin:0; overflow:hidden; }
+    body { background:var(--vibe-surface); color:var(--vibe-text); font:var(--vibe-text-body)/var(--vibe-line-normal) var(--vibe-font-ui); }
+    button, input { font:inherit; }
+    button { color:inherit; }
+    .app { height:100%; min-width:0; display:flex; flex-direction:column; background:var(--vibe-surface); }
+    .topbar { height:57px; flex:none; display:flex; align-items:center; gap:14px; padding:0 18px; background:var(--vibe-raised); border-bottom:1px solid var(--vibe-border); }
+    .excel-mark { width:29px; height:29px; flex:none; }
+    .brand { display:flex; align-items:center; gap:10px; min-width:138px; }
+    .brand-name { font-size:var(--vibe-text-title); font-weight:700; letter-spacing:-.02em; }
+    .book-name { min-width:0; flex:1; display:flex; align-items:center; gap:8px; }
+    .book-name input { width:min(270px,100%); min-width:80px; border:1px solid transparent; border-radius:5px; padding:6px 8px; background:transparent; color:var(--vibe-text); font-weight:600; outline:none; }
+    .book-name input:hover, .book-name input:focus { border-color:var(--vibe-border); background:var(--vibe-surface); }
+    .save-state { color:var(--vibe-muted); font-size:var(--vibe-text-caption); white-space:nowrap; }
+    .top-actions { display:flex; align-items:center; gap:7px; }
+    .primary-btn, .quiet-btn { border:1px solid var(--vibe-border); border-radius:5px; cursor:pointer; height:31px; padding:0 11px; font-size:var(--vibe-text-label); font-weight:600; white-space:nowrap; }
+    .primary-btn { background:var(--brand-green); border-color:var(--brand-green); color:#fff; }
+    .quiet-btn { background:var(--vibe-raised); }
+    button:hover { filter:brightness(1.06); }
+    button:focus-visible, input:focus-visible, [contenteditable="true"]:focus-visible { outline:2px solid var(--vibe-accent); outline-offset:1px; }
+    .toolbar { flex:none; min-height:50px; display:flex; align-items:center; gap:5px; padding:8px 18px; background:var(--vibe-raised); border-bottom:1px solid var(--vibe-border); overflow:auto hidden; }
+    .tool-group { display:flex; align-items:center; gap:3px; padding-right:9px; margin-right:4px; border-right:1px solid var(--vibe-border); }
+    .tool-group:last-child { border-right:0; }
+    .tool-btn { min-width:32px; height:30px; border:1px solid transparent; border-radius:4px; background:transparent; cursor:pointer; font-size:var(--vibe-text-label); padding:0 8px; }
+    .tool-btn:hover { background:var(--vibe-control); }
+    .tool-btn.active { background:var(--brand-light); color:var(--brand-green); border-color:color-mix(in srgb, var(--brand-green) 35%, transparent); }
+    .tool-btn em { font-style:normal; font-weight:800; font-size:15px; }
+    .select-tool { height:30px; border:1px solid var(--vibe-border); background:var(--vibe-raised); color:var(--vibe-text); border-radius:4px; padding:0 7px; font-size:var(--vibe-text-label); }
+    .formula-row { flex:none; height:44px; display:flex; align-items:center; gap:8px; padding:6px 18px; border-bottom:1px solid var(--vibe-border); background:var(--vibe-surface); }
+    .name-box { width:70px; height:30px; border:1px solid var(--vibe-border); border-radius:4px; background:var(--vibe-raised); padding:5px 8px; text-align:center; font:var(--vibe-text-label) var(--vibe-font-mono); }
+    .fx { color:var(--brand-green); font:italic 700 17px Georgia,serif; width:18px; text-align:center; }
+    .formula-input { flex:1; min-width:0; height:30px; border:1px solid var(--vibe-border); border-radius:4px; padding:5px 9px; background:var(--vibe-raised); color:var(--vibe-text); outline:none; font:var(--vibe-text-label) var(--vibe-font-mono); }
+    .formula-input:focus { border-color:var(--vibe-accent); box-shadow:0 0 0 2px color-mix(in srgb, var(--vibe-accent) 18%, transparent); }
+    .formula-actions { display:flex; gap:3px; }
+    .formula-action { width:29px; height:29px; border:0; border-radius:4px; background:transparent; color:var(--vibe-muted); cursor:pointer; font-weight:700; }
+    .formula-action:hover { background:var(--vibe-control); color:var(--vibe-text); }
+    .sheet-viewport { flex:1; min-height:0; overflow:auto; background:var(--vibe-raised); }
+    .grid { display:grid; grid-template-columns:48px repeat(12, minmax(94px, 1fr)); grid-auto-rows:29px; min-width:1176px; width:100%; background:var(--vibe-raised); }
+    .grid > * { min-width:0; border-right:1px solid var(--grid-line); border-bottom:1px solid var(--grid-line); }
+    .corner, .col-header, .row-header { background:var(--vibe-surface); color:var(--vibe-muted); font-size:var(--vibe-text-caption); display:flex; align-items:center; justify-content:center; user-select:none; }
+    .corner { position:sticky; top:0; left:0; z-index:5; background:var(--vibe-surface); }
+    .col-header { position:sticky; top:0; z-index:4; font-weight:700; }
+    .col-header.active, .row-header.active { color:var(--brand-green); background:var(--brand-light); }
+    .row-header { position:sticky; left:0; z-index:3; }
+    .cell { padding:4px 7px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; background:var(--vibe-raised); outline:none; font-size:var(--vibe-text-body); line-height:20px; cursor:cell; }
+    .cell:hover { background:color-mix(in srgb, var(--brand-light) 42%, var(--vibe-raised)); }
+    .cell.selected { box-shadow:inset 0 0 0 2px var(--brand-green); z-index:2; }
+    .cell.editing { padding:3px 6px; background:var(--vibe-raised); white-space:nowrap; overflow:visible; }
+    .cell.number { text-align:right; font-variant-numeric:tabular-nums; }
+    .cell.bold { font-weight:700; }
+    .cell.heading { color:var(--brand-green); font-weight:700; }
+    .cell.error { color:#c24545; }
+    .sheetbar { flex:none; min-height:43px; display:flex; align-items:center; gap:3px; padding:5px 18px; background:var(--vibe-surface); border-top:1px solid var(--vibe-border); }
+    .sheet-tab { height:32px; border:1px solid transparent; border-radius:4px 4px 0 0; padding:0 15px; background:transparent; color:var(--vibe-muted); cursor:pointer; font-size:var(--vibe-text-label); }
+    .sheet-tab.active { color:var(--brand-green); background:var(--vibe-raised); border-color:var(--vibe-border); border-bottom:2px solid var(--brand-green); font-weight:700; }
+    .add-sheet { width:30px; height:30px; border:1px solid transparent; border-radius:4px; background:transparent; color:var(--brand-green); cursor:pointer; font-size:20px; line-height:1; }
+    .statusbar { flex:none; height:29px; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:0 18px; background:var(--brand-green); color:#fff; font-size:var(--vibe-text-caption); }
+    .status-left, .status-right { display:flex; align-items:center; gap:15px; min-width:0; }
+    .status-right { overflow:hidden; white-space:nowrap; }
+    .status-item { opacity:.95; }
+    @media (max-width:680px) { .topbar{padding:0 10px;gap:8px}.toolbar,.formula-row,.sheetbar{padding-left:10px;padding-right:10px}.statusbar{padding:0 10px}.book-name{display:none}.save-state{display:none}.top-actions .quiet-btn:first-child{display:none}.tool-group{padding-right:4px}.status-right{display:none} }
+  </style>
+</head>
+<body>
+<main class="app" id="app">
+  <header class="topbar">
+    <div class="brand" aria-label="Excel">
+      <svg class="excel-mark" viewBox="0 0 32 32" aria-hidden="true"><path fill="var(--brand-green)" d="M5 2h15l7 7v20H5a3 3 0 0 1-3-3V5a3 3 0 0 1 3-3Z"/><path fill="#65b083" d="M20 2v7h7z"/><rect x="2" y="11" width="13" height="13" rx="2" fill="#185d3e"/><path fill="#fff" d="m5.1 14.2 2.6 3.1 2.6-3.1h2.1l-3.5 4.1 3.6 4.2h-2.2l-2.6-3.2-2.6 3.2H3l3.5-4.2-3.4-4.1z"/><path fill="none" stroke="#d7f0df" stroke-width="1.5" d="M18 14h6M18 18h6M18 22h6M18 26h6M18 14v12M21 14v12"/></svg>
+      <span class="brand-name">Excel</span>
+    </div>
+    <div class="book-name"><input id="book-name" value="Book1" aria-label="Workbook name"><span class="save-state" id="save-state">Saved locally</span></div>
+    <div class="top-actions"><button class="quiet-btn" id="new-book" type="button">New</button><button class="quiet-btn" id="download" type="button">Download</button><button class="primary-btn" id="save" type="button">Save</button></div>
+  </header>
+  <section class="toolbar" aria-label="Formatting toolbar">
+    <div class="tool-group"><button class="tool-btn" id="undo" type="button" title="Undo (Ctrl+Z)">Undo</button><button class="tool-btn" id="redo" type="button" title="Redo (Ctrl+Y)">Redo</button></div>
+    <div class="tool-group"><select class="select-tool" id="font-size" aria-label="Font size"><option>11</option><option selected>12</option><option>14</option><option>16</option><option>18</option></select><button class="tool-btn" id="bold" type="button" title="Bold"><em>B</em></button><button class="tool-btn" id="italic" type="button" title="Italic"><em>I</em></button></div>
+    <div class="tool-group"><button class="tool-btn" id="currency" type="button">Currency</button><button class="tool-btn" id="percent" type="button">Percent</button><button class="tool-btn" id="number" type="button">Number</button></div>
+    <div class="tool-group"><button class="tool-btn" id="clear" type="button">Clear</button><button class="tool-btn" id="fill-down" type="button">Fill down</button></div>
+  </section>
+  <section class="formula-row" aria-label="Formula bar"><div class="name-box" id="name-box">A1</div><div class="fx">fx</div><input class="formula-input" id="formula-input" aria-label="Formula bar" spellcheck="false"><div class="formula-actions"><button class="formula-action" id="cancel-edit" type="button" title="Cancel">×</button><button class="formula-action" id="accept-edit" type="button" title="Enter">✓</button></div></section>
+  <section class="sheet-viewport" id="sheet-viewport" tabindex="0" aria-label="Spreadsheet grid"><div class="grid" id="grid"></div></section>
+  <nav class="sheetbar" id="sheetbar" aria-label="Worksheets"><button class="add-sheet" id="add-sheet" type="button" title="Add worksheet">+</button></nav>
+  <footer class="statusbar"><div class="status-left"><span class="status-item" id="status-cell">Ready</span><span class="status-item" id="status-message">Select a cell to begin</span></div><div class="status-right"><span class="status-item" id="status-summary"></span><span class="status-item">Enter to edit · Tab to move</span></div></footer>
+</main>
+<script>
+(() => {
+  'use strict';
+  const COLS = 12, ROWS = 32;
+  const letters = Array.from({length: COLS}, (_, i) => String.fromCharCode(65 + i));
+  const defaultSheets = [{name:'Sheet1', cells:{A1:{value:'Quarterly Sales', bold:true, size:16}, A3:{value:'Region',bold:true}, B3:{value:'Units',bold:true}, C3:{value:'Price',bold:true}, D3:{value:'Revenue',bold:true}, A4:{value:'East'},B4:{value:'148',format:'number'},C4:{value:'42.5',format:'currency'},D4:{value:'=B4*C4',format:'currency'}, A5:{value:'West'},B5:{value:'203',format:'number'},C5:{value:'38.75',format:'currency'},D5:{value:'=B5*C5',format:'currency'}, A6:{value:'North'},B6:{value:'176',format:'number'},C6:{value:'45',format:'currency'},D6:{value:'=B6*C6',format:'currency'}, A7:{value:'South'},B7:{value:'119',format:'number'},C7:{value:'51.25',format:'currency'},D7:{value:'=B7*C7',format:'currency'}, A8:{value:'Total',bold:true},B8:{value:'=SUM(B4:B7)',bold:true,format:'number'},D8:{value:'=SUM(D4:D7)',bold:true,format:'currency'}}}, {name:'Sheet2',cells:{}}];
+  const app = document.getElementById('app'), grid = document.getElementById('grid'), sheetbar = document.getElementById('sheetbar');
+  const formula = document.getElementById('formula-input'), nameBox = document.getElementById('name-box'), statusCell = document.getElementById('status-cell'), statusMessage = document.getElementById('status-message'), statusSummary = document.getElementById('status-summary'), saveState = document.getElementById('save-state');
+  let workbook = {version:1, name:'Book1', activeSheet:0, sheets:structuredClone(defaultSheets)};
+  let selected = 'A1', editing = null, undoStack = [], redoStack = [], revision = 0, saveTimer = null;
+  const bridge = window.vibeOS;
+  const clone = obj => JSON.parse(JSON.stringify(obj));
+  const currentSheet = () => workbook.sheets[workbook.activeSheet];
+  const keyToParts = key => { const m = /^([A-Z]+)(\d+)$/.exec(key); return m ? {col:m[1], row:Number(m[2])} : {col:'A',row:1}; };
+  const colNumber = col => { let n=0; for(const c of col) n=n*26+c.charCodeAt(0)-64; return n; };
+  function cellObject(key) { const c=currentSheet().cells[key]; return c || {value:''}; }
+  function rawValue(key, trail=[]) {
+    const cell = currentSheet().cells[key]; if (!cell || cell.value === '') return 0;
+    if (typeof cell.value !== 'string' || !cell.value.startsWith('=')) return Number.isFinite(Number(cell.value)) && String(cell.value).trim() !== '' ? Number(cell.value) : String(cell.value);
+    if (trail.includes(key)) return '#CYCLE!';
+    return evaluate(cell.value.slice(1), trail.concat(key));
+  }
+  function evaluate(expr, trail=[]) {
+    let text = expr.toUpperCase().replace(/\s+/g,'');
+    text = text.replace(/(SUM|AVERAGE)\(([A-Z]+\d+):([A-Z]+\d+)\)/g, (_, fn, start, end) => {
+      const a=keyToParts(start), b=keyToParts(end), vals=[]; for(let r=a.row;r<=b.row;r++) for(let c=colNumber(a.col);c<=colNumber(b.col);c++) vals.push(rawValue(String.fromCharCode(64+c)+r, trail));
+      const nums=vals.map(Number).filter(Number.isFinite); return fn==='SUM'?String(nums.reduce((x,y)=>x+y,0)):String(nums.length?nums.reduce((x,y)=>x+y,0)/nums.length:0);
+    });
+    text = text.replace(/\b([A-Z]+\d+)\b/g, (_, key) => { const value=rawValue(key,trail); return typeof value==='number'?String(value):'NaN'; });
+    if (!/^[0-9+\-*/().]+$/.test(text)) return '#VALUE!';
+    try { const value = Function('return ('+text+')')(); return Number.isFinite(value) ? value : '#VALUE!'; } catch { return '#VALUE!'; }
+  }
+  function displayValue(key) {
+    const cell=cellObject(key), raw=rawValue(key); if (typeof raw !== 'number') return raw;
+    if (cell.format==='currency') return new Intl.NumberFormat(undefined,{style:'currency',currency:'USD',maximumFractionDigits:2}).format(raw);
+    if (cell.format==='percent') return new Intl.NumberFormat(undefined,{style:'percent',maximumFractionDigits:1}).format(raw);
+    if (cell.format==='number') return new Intl.NumberFormat(undefined,{maximumFractionDigits:2}).format(raw);
+    return String(raw).replace(/\.0+$/,'');
+  }
+  function snapshot() { undoStack.push(clone(workbook)); if(undoStack.length>30) undoStack.shift(); redoStack=[]; }
+  function markDirty() { saveState.textContent='Unsaved changes'; clearTimeout(saveTimer); saveTimer=setTimeout(saveWorkbook,700); }
+  async function saveWorkbook() { try { if(bridge?.state){ const result=await bridge.state.write(workbook,revision); revision=result?.revision ?? revision+1; } else if(bridge?.storage) await bridge.storage.write('excel-workbook',workbook); saveState.textContent='Saved locally'; } catch { saveState.textContent='Could not save'; } }
+  function commit(key, value) { const old=cellObject(key).value; if(old===value) return; snapshot(); if(String(value)==='') delete currentSheet().cells[key]; else currentSheet().cells[key]={...cellObject(key), value:String(value)}; markDirty(); render(); }
+  function setFormat(format) { snapshot(); const cell=cellObject(selected); if(!currentSheet().cells[selected]) currentSheet().cells[selected]={value:''}; currentSheet().cells[selected].format=format; markDirty(); render(); }
+  function beginEdit(initial='') { const node=grid.querySelector('.cell.selected'); if(!node) return; editing=selected; node.contentEditable='true'; node.classList.add('editing'); node.textContent=initial || cellObject(selected).value; node.focus(); const range=document.createRange(); range.selectNodeContents(node); range.collapse(false); const sel=window.getSelection(); sel.removeAllRanges(); sel.addRange(range); }
+  function finishEdit(cancel=false) { if(!editing) return; const key=editing, node=grid.querySelector('[data-cell="'+key+'"]'); const value=cancel?cellObject(key).value:node.textContent.trim(); editing=null; commit(key,value); }
+  function selectCell(key, shouldFocus=true) { const parts=keyToParts(key); if(parts.colNumber>COLS||parts.row<1||parts.row>ROWS) return; selected=key; nameBox.textContent=key; const cell=cellObject(key); formula.value=cell.value || ''; statusCell.textContent=key; const raw=rawValue(key); statusMessage.textContent=cell.value?.startsWith('=') ? 'Formula result: '+displayValue(key) : 'Ready to edit'; statusSummary.textContent=''; render(); if(shouldFocus) document.getElementById('sheet-viewport').focus(); }
+  function move(deltaCol,deltaRow) { const p=keyToParts(selected), n=colNumber(p.col)+deltaCol, r=p.row+deltaRow; if(n>=1&&n<=COLS&&r>=1&&r<=ROWS) selectCell(String.fromCharCode(64+n)+r); }
+  function render() {
+    const sheet=currentSheet(); grid.innerHTML='';
+    const corner=document.createElement('div'); corner.className='corner'; grid.appendChild(corner);
+    letters.forEach(letter=>{const h=document.createElement('div');h.className='col-header'+(keyToParts(selected).col===letter?' active':'');h.textContent=letter;grid.appendChild(h);});
+    for(let r=1;r<=ROWS;r++){const h=document.createElement('div');h.className='row-header'+(keyToParts(selected).row===r?' active':'');h.textContent=r;grid.appendChild(h); for(const col of letters){const key=col+r, c=cellObject(key), node=document.createElement('div'); node.className='cell'+(key===selected?' selected ':' ')+(typeof rawValue(key)==='number'?'number ':'')+(c.bold?'bold ':'')+(r===3?'heading ':'')+(String(rawValue(key)).startsWith('#')?'error':''); node.dataset.cell=key; node.dataset.raw=c.value||''; node.textContent=displayValue(key); node.style.fontSize=(c.size||12)+'px'; if(c.italic) node.style.fontStyle='italic'; node.addEventListener('click',()=>selectCell(key)); node.addEventListener('dblclick',()=>beginEdit()); node.addEventListener('contextmenu',e=>openCellMenu(e,key)); grid.appendChild(node);}}
+    renderSheets(); updateSummary();
+  }
+  function renderSheets(){ sheetbar.querySelectorAll('.sheet-tab').forEach(x=>x.remove()); workbook.sheets.forEach((s,i)=>{const b=document.createElement('button');b.className='sheet-tab'+(i===workbook.activeSheet?' active':'');b.type='button';b.textContent=s.name;b.addEventListener('click',()=>{workbook.activeSheet=i;selected='A1';render();markDirty();});sheetbar.insertBefore(b,document.getElementById('add-sheet'));}); }
+  function updateSummary(){ const c=cellObject(selected), raw=rawValue(selected); statusSummary.textContent=typeof raw==='number'?'Value '+displayValue(selected):c.value?'Text':' '; }
+  async function openCellMenu(e,key){ e.preventDefault(); const items=[{id:'clear',label:'Clear cell'},{id:'copy',label:'Copy value'},{id:'bold',label:'Toggle bold'}]; const pick=bridge?.contextMenu?await bridge.contextMenu.open(items,{x:e.clientX,y:e.clientY}):null; if(pick==='clear'){selectCell(key,false);commit(key,'')} if(pick==='bold'){selectCell(key,false);document.getElementById('bold').click()} if(pick==='copy'){navigator.clipboard?.writeText(String(cellObject(key).value||''));} }
+  document.getElementById('accept-edit').addEventListener('click',()=>{commit(selected,formula.value);});
+  document.getElementById('cancel-edit').addEventListener('click',()=>{formula.value=cellObject(selected).value||'';});
+  formula.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();commit(selected,formula.value);selectCell(selected);}});
+  formula.addEventListener('input',()=>{statusMessage.textContent='Editing formula';});
+  document.getElementById('sheet-viewport').addEventListener('keydown',e=>{ if(editing){if(e.key==='Enter'){e.preventDefault();finishEdit();move(0,1)}if(e.key==='Escape'){e.preventDefault();finishEdit(true)}return;} if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){e.preventDefault();undo();return;} if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='y'){e.preventDefault();redo();return;} if(e.key==='Enter'){e.preventDefault();beginEdit();return;} if(e.key==='Tab'){e.preventDefault();move(e.shiftKey?-1:1,0);return;} if(e.key==='ArrowUp'){e.preventDefault();move(0,-1)} if(e.key==='ArrowDown'){e.preventDefault();move(0,1)} if(e.key==='ArrowLeft'){e.preventDefault();move(-1,0)} if(e.key==='ArrowRight'){e.preventDefault();move(1,0)} if(e.key.length===1&&!e.ctrlKey&&!e.metaKey){beginEdit(e.key);} });
+  function undo(){if(!undoStack.length)return;redoStack.push(clone(workbook));workbook=undoStack.pop();selected='A1';markDirty();render();}
+  function redo(){if(!redoStack.length)return;undoStack.push(clone(workbook));workbook=redoStack.pop();selected='A1';markDirty();render();}
+  document.getElementById('undo').addEventListener('click',undo); document.getElementById('redo').addEventListener('click',redo);
+  document.getElementById('bold').addEventListener('click',()=>{snapshot();const c=cellObject(selected);currentSheet().cells[selected]={...c,bold:!c.bold};markDirty();render();});
+  document.getElementById('italic').addEventListener('click',()=>{snapshot();const c=cellObject(selected);currentSheet().cells[selected]={...c,italic:!c.italic};markDirty();render();});
+  document.getElementById('font-size').addEventListener('change',e=>{snapshot();const c=cellObject(selected);currentSheet().cells[selected]={...c,size:Number(e.target.value)};markDirty();render();});
+  document.getElementById('currency').addEventListener('click',()=>setFormat('currency')); document.getElementById('percent').addEventListener('click',()=>setFormat('percent')); document.getElementById('number').addEventListener('click',()=>setFormat('number'));
+  document.getElementById('clear').addEventListener('click',()=>commit(selected,''));
+  document.getElementById('fill-down').addEventListener('click',()=>{const p=keyToParts(selected);if(p.row===1)return;const above=String.fromCharCode(64+colNumber(p.col))+(p.row-1), c=cellObject(above);snapshot();currentSheet().cells[selected]=clone(c);markDirty();render();});
+  document.getElementById('add-sheet').addEventListener('click',()=>{snapshot();workbook.sheets.push({name:'Sheet'+(workbook.sheets.length+1),cells:{}});workbook.activeSheet=workbook.sheets.length-1;selected='A1';markDirty();render();});
+  document.getElementById('book-name').addEventListener('change',e=>{workbook.name=e.target.value.trim()||'Book1';markDirty();});
+  document.getElementById('save').addEventListener('click',async()=>{await saveWorkbook();if(bridge?.notify)bridge.notify('Workbook saved',{level:'success',timeoutMs:1600});});
+  document.getElementById('new-book').addEventListener('click',()=>{if(!confirm('Start a new workbook?'))return;snapshot();workbook={version:1,name:'Book1',activeSheet:0,sheets:[{name:'Sheet1',cells:{}}]};selected='A1';document.getElementById('book-name').value='Book1';markDirty();render();});
+  document.getElementById('download').addEventListener('click',()=>{const sheet=currentSheet(), used=Object.keys(sheet.cells);const maxRow=Math.max(1,...used.map(k=>keyToParts(k).row)),maxCol=Math.max(1,...used.map(k=>colNumber(keyToParts(k).col)));const rows=[];for(let r=1;r<=maxRow;r++){const row=[];for(let c=1;c<=maxCol;c++){const key=String.fromCharCode(64+c)+r;row.push('"'+String(displayValue(key)).replace(/"/g,'""')+'"')}rows.push(row.join(','));}const blob=new Blob([rows.join('\n')],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=(workbook.name||'Book1')+'-'+sheet.name+'.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
+  (async()=>{try{if(bridge?.state){const saved=await bridge.state.read();if(saved?.state?.sheets) {workbook=saved.state;revision=saved.revision||0;document.getElementById('book-name').value=workbook.name||'Book1';}} else if(bridge?.storage){const saved=await bridge.storage.read('excel-workbook');if(saved?.sheets) workbook=saved;}}catch{}render();})();
+})();
+</script>
+</body>
+</html>

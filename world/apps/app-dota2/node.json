@@ -1,0 +1,9 @@
+{
+  "id": "app-dota2",
+  "title": "DOTA2",
+  "kind": "app",
+  "status": "placeholder",
+  "icon": "icon.svg",
+  "children": [],
+  "entry": "index.html"
+}

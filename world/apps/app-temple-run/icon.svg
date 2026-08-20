@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Temple Run">
+  <defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#d8753b"/><stop offset="1" stop-color="#8b341f"/></linearGradient></defs>
+  <rect width="64" height="64" rx="16" fill="url(#g)"/>
+  <path d="M10 49h44L48 19H16L10 49Z" fill="#54291e" opacity=".8"/>
+  <path d="M14 18h36v8H14zM20 26h8v23h-8zM36 26h8v23h-8z" fill="#f5c46b"/>
+  <path d="M26 49V35c0-5 4-8 6-8s6 3 6 8v14h-6l-6 0Z" fill="#2d2530"/>
+  <circle cx="32" cy="17" r="6" fill="#f5c46b"/><path d="M32 7v4M22 10l3 3M42 10l-3 3" stroke="#f5c46b" stroke-width="3" stroke-linecap="round"/>
+</svg>

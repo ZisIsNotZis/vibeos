@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+  <title id="title">CS1.6 emblem</title>
+  <desc id="desc">A tactical crosshair and opposing chevrons surrounding the number sixteen</desc>
+  <rect width="128" height="128" rx="24" fill="#141b24"/>
+  <path d="M64 18v18M64 92v18M18 64h18M92 64h18" stroke="#d9b56d" stroke-width="5" stroke-linecap="square"/>
+  <circle cx="64" cy="64" r="30" fill="none" stroke="#d9b56d" stroke-width="5"/>
+  <path d="M45 50l-14 14 14 14M83 50l14 14-14 14" fill="none" stroke="#e6edf2" stroke-width="7" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M58 51v27M70 51v27" stroke="#e6edf2" stroke-width="5"/>
+  <path d="M58 51h13M58 64h10M70 51v13c-7 0-12 3-12 9 0 4 3 6 7 6 4 0 6-2 6-6" fill="none" stroke="#e6edf2" stroke-width="4" stroke-linecap="square" stroke-linejoin="miter"/>
+  <circle cx="64" cy="64" r="3" fill="#d9b56d"/>
+</svg>

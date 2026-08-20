@@ -1,0 +1,9 @@
+{
+  "id": "app-plants-vs-zombies",
+  "title": "Plants Vs Zombies",
+  "kind": "app",
+  "status": "ready",
+  "icon": "icon.svg",
+  "entry": "index.html",
+  "children": []
+}

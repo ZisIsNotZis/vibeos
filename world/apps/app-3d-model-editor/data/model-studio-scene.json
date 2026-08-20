@@ -1,0 +1,60 @@
+{
+  "selected": "Cube",
+  "mode": "select",
+  "wire": false,
+  "grid": true,
+  "view": "perspective",
+  "orbitX": 84,
+  "orbitZ": -516.8000000000001,
+  "zoom": 1,
+  "objects": [
+    {
+      "name": "Cube",
+      "type": "Mesh",
+      "color": "#8b7cf6",
+      "x": -0.25,
+      "y": 1,
+      "z": -3.9999999999999996,
+      "rx": 1,
+      "ry": 0,
+      "rz": 0,
+      "sx": 1,
+      "sy": 1,
+      "sz": 1,
+      "vertices": 8,
+      "faces": 6
+    },
+    {
+      "name": "Ground",
+      "type": "Plane",
+      "color": "#536078",
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "rx": 0,
+      "ry": 0,
+      "rz": 0,
+      "sx": 4,
+      "sy": 4,
+      "sz": 4,
+      "vertices": 4,
+      "faces": 1
+    },
+    {
+      "name": "Camera",
+      "type": "Camera",
+      "color": "#e6b84b",
+      "x": 4,
+      "y": 3,
+      "z": 5,
+      "rx": -18,
+      "ry": 38,
+      "rz": 0,
+      "sx": 1,
+      "sy": 1,
+      "sz": 1,
+      "vertices": 0,
+      "faces": 0
+    }
+  ]
+}

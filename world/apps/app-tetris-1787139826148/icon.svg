@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-labelledby="t d">
- <title id="t">Tetris 1787139826148</title><desc id="d">A colorful T tetromino over a gridded playfield</desc>
- <rect width="96" height="96" rx="22" fill="#18233b"/><rect x="16" y="12" width="64" height="72" rx="7" fill="#101827" stroke="#58708f" stroke-width="2"/>
- <path d="M25 13v70M34 13v70M43 13v70M52 13v70M61 13v70M70 13v70M16 22h64M16 31h64M16 40h64M16 49h64M16 58h64M16 67h64M16 76h64" stroke="#7790ad" opacity=".2"/>
- <g stroke="#0b1220" stroke-width="1.5"><path fill="#54d9ee" d="M34 17h9v9h-9zM43 17h9v9h-9zM52 17h9v9h-9zM43 26h9v9h-9z"/><path fill="#f36aa8" d="M25 44h9v9h-9zM34 44h9v9h-9zM43 44h9v9h-9zM34 53h9v9h-9z"/><path fill="#ffd166" d="M17 70h9v9h-9zM26 70h9v9h-9zM35 70h9v9h-9zM44 70h9v9h-9zM53 70h9v9h-9zM62 70h9v9h-9zM71 70h8v9h-8z"/></g>
-</svg>

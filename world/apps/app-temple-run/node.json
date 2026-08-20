@@ -1,0 +1,8 @@
+{
+  "id": "app-temple-run",
+  "title": "Temple Run",
+  "kind": "app",
+  "icon": "icon.svg",
+  "entry": "index.html",
+  "routes": ["/"]
+}

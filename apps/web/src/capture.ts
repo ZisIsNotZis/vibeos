@@ -1,6 +1,11 @@
+import html2canvas from 'html2canvas';
+
+export async function captureElement(element: HTMLElement) {
+  const canvas = await html2canvas(element, { backgroundColor: null, useCORS: true, logging: false, scale: 1 });
+  return canvas.toDataURL('image/png');
+}
+
 export async function captureScreen() {
-  if (!navigator.mediaDevices?.getDisplayMedia) throw new Error('Screen capture is unavailable in this browser.');
-  const stream = await navigator.mediaDevices.getDisplayMedia({ video: { displaySurface: 'browser' }, audio: false });
-  try { const video = document.createElement('video'); video.srcObject = stream; await video.play(); await new Promise(requestAnimationFrame); const canvas = document.createElement('canvas'); canvas.width = video.videoWidth; canvas.height = video.videoHeight; canvas.getContext('2d')?.drawImage(video, 0, 0); const link = document.createElement('a'); link.download = `vibeos-${Date.now()}.png`; link.href = canvas.toDataURL('image/png'); link.click(); }
-  finally { stream.getTracks().forEach(track => track.stop()); }
+  const dataUrl = await captureElement(document.querySelector<HTMLElement>('.os') ?? document.body);
+  const link = document.createElement('a'); link.download = `vibeos-${Date.now()}.png`; link.href = dataUrl; link.click();
 }

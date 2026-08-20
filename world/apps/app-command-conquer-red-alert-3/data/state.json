@@ -1,0 +1,12 @@
+{
+  "appId": "app-command-conquer-red-alert-3",
+  "revision": 2,
+  "state": {
+    "surface": "battle",
+    "mode": "campaign",
+    "faction": "allies",
+    "ops": 1,
+    "wins": 0,
+    "last": "Defeat · ALLIES · 00:31"
+  }
+}

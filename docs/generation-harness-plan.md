@@ -5,7 +5,7 @@ Status: core redesign implemented following `docs/vibeos-design.md`. The hermeti
 ## Implemented baseline
 
 - Ordinary generation runs in an app-owned staging directory with Codex `workspace-write`, approvals disabled, a scrubbed environment, conditional search, structured output, and transactional publication.
-- Effort profiles select the documented `gh/gpt-5.6-terra` or `gh/gpt-5.6-sol` model, native reasoning effort, and distinct repair budget.
+- Effort profiles select the configured base model (`gpt-5.6-luna`, `gpt-5.6-terra`, or `gpt-5.6-sol`), optional `gh/` prefix, native reasoning effort, and distinct repair budget.
 - Workers receive a versioned, self-contained work order, acceptance contract, current node, bridge API, semantic theme contract, and explicit complete-vertical-slice guidance.
 - Generated HTML runs in an opaque-origin `allow-scripts` iframe and reaches the runtime only through a channel-bound, app-bound bridge with request limits and isolated durable storage.
 - Static asset checks and effort-dependent repair run before publication. Job transitions and evidence survive under `world/.jobs/` (ignored by Git).
@@ -100,22 +100,20 @@ The worker returns a structured result using `codex exec --output-schema`, while
 
 ## Worker profiles and OmniRoute model routing
 
-All production model names must retain the OmniRoute `gh/` prefix.
+The model slider selects a base model without a provider prefix. The independent `useGhPrefix` setting controls whether the exact command model is `gpt-5.6-*` or `gh/gpt-5.6-*`; it defaults off for fresh settings. A local OmniRoute deployment may enable it, and the exact configured model string is passed unchanged to Codex.
 
 | Profile | Model | `model_reasoning_effort` | Search | Worker behavior | Verification/repair budget |
 | --- | --- | --- | --- | --- | --- |
-| `ultrafast` | `gh/gpt-5.6-terra` | `low` | selected policy | One implementation pass; supplied context only; smallest coherent result | deterministic schema/static/launch checks; no worker repair unless artifact is unloadable |
-| `fast` | `gh/gpt-5.6-terra` | `low` | selected policy | One focused pass | one primary browser scenario; one compact repair if it fails |
-| `balanced` | `gh/gpt-5.6-terra` | `medium` | selected policy | Complete current workflow | focused scenarios, persistence/reload check, up to one repair |
-| `quality` | `gh/gpt-5.6-sol` | `high` | selected policy | Polished production-style vertical slice | browser, console, assets, two sizes, both themes, screenshot review, up to two repairs |
-| `research` | `gh/gpt-5.6-sol` | `max` | selected policy | Evidence-led implementation and TDD where useful | broad scenarios, state/reload/a11y/edge checks, visual review, up to three repairs |
-| `ultra` | `gh/gpt-5.6-sol` | `ultra` | selected policy | Largest sensible coherent slice with delegation where available | adversarial and broad verification, repeated repair within explicit time/cost budget |
+| `fast` | configured base model | `low` | selected policy | One focused pass | one primary browser scenario; one compact repair if it fails |
+| `balanced` | configured base model | `medium` | selected policy | Complete current workflow | focused scenarios, persistence/reload check, up to one repair |
+| `quality` | configured base model | `high` | selected policy | Polished production-style vertical slice | browser, console, assets, two sizes, both themes, screenshot review, up to two repairs |
+| `ultra` | configured base model | `ultra` | selected policy | Largest sensible coherent slice with delegation where available | adversarial and broad verification, repeated repair within explicit time/cost budget |
 
 The runner should invoke native Codex controls rather than merely describing effort in prose, conceptually:
 
 ```bash
 codex exec \
-  --model gh/gpt-5.6-sol \
+  --model gpt-5.6-sol \
   -c model_reasoning_effort=high \
   --sandbox workspace-write \
   --ask-for-approval never \
@@ -252,7 +250,7 @@ Exit criterion: adversarial fixture workers cannot modify the live repository, s
 - Build and version the worker framework kit with bridge/theme/schema/example material.
 - Replace the monolithic universal prompt with common invariants plus task-specific instructions.
 - Use `--output-schema`, `--json`, explicit `--model`, native `model_reasoning_effort`, and conditional `--search`.
-- Implement the exact `gh/gpt-5.6-terra` and `gh/gpt-5.6-sol` routing table above and test command construction.
+- Implement base-model plus optional-prefix routing and test exact command construction.
 
 Exit criterion: each effort tier produces a distinct, inspectable execution profile and structured result.
 

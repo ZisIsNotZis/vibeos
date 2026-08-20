@@ -1,0 +1,10 @@
+{
+  "appId": "app-3d-pinball-space-cadet",
+  "revision": 16,
+  "state": {
+    "score": 300,
+    "best": 300,
+    "balls": 1,
+    "sound": true
+  }
+}

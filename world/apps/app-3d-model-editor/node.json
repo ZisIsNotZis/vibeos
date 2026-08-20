@@ -1,0 +1,9 @@
+{
+  "id": "app-3d-model-editor",
+  "title": "3d Model Editor",
+  "kind": "app",
+  "status": "ready",
+  "icon": "icon.svg",
+  "children": [],
+  "entry": "index.html"
+}

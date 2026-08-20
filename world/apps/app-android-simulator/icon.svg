@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">Android Simulator</title>
+  <desc id="desc">A virtual Android device with a green system robot mark</desc>
+  <defs>
+    <linearGradient id="device" x1="32" y1="18" x2="224" y2="238" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#3ddc84"/>
+      <stop offset="1" stop-color="#159b63"/>
+    </linearGradient>
+  </defs>
+  <rect x="35" y="12" width="186" height="232" rx="28" fill="#101a20" stroke="url(#device)" stroke-width="10"/>
+  <rect x="51" y="39" width="154" height="170" rx="10" fill="#172c31" stroke="#3ddc84" stroke-opacity=".42" stroke-width="3"/>
+  <path d="M105 25h46" stroke="#9bf0bd" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="128" cy="225" r="8" fill="#3ddc84"/>
+  <g fill="#3ddc84">
+    <path d="M83 111c0-22 20-39 45-39s45 17 45 39v28c0 8-6 14-14 14H97c-8 0-14-6-14-14v-28Z"/>
+    <rect x="76" y="113" width="12" height="36" rx="6"/>
+    <rect x="168" y="113" width="12" height="36" rx="6"/>
+    <rect x="101" y="146" width="13" height="31" rx="6"/>
+    <rect x="142" y="146" width="13" height="31" rx="6"/>
+  </g>
+  <path d="m105 66-10-15M151 66l10-15" fill="none" stroke="#3ddc84" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="112" cy="101" r="4" fill="#101a20"/>
+  <circle cx="144" cy="101" r="4" fill="#101a20"/>
+</svg>

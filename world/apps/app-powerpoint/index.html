@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Powerpoint</title>
+  <style>
+    :root {
+      --vibe-font-ui: Inter, ui-sans-serif, system-ui, sans-serif;
+      --vibe-font-mono: "DM Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+      --vibe-text-caption: calc(11px * var(--vibe-scale, 1));
+      --vibe-text-label: calc(12px * var(--vibe-scale, 1));
+      --vibe-text-body: calc(14px * var(--vibe-scale, 1));
+      --vibe-text-title: calc(18px * var(--vibe-scale, 1));
+      --vibe-text-heading: calc(24px * var(--vibe-scale, 1));
+      --vibe-text-display: calc(34px * var(--vibe-scale, 1));
+      --vibe-line-tight: 1.15;
+      --vibe-line-normal: 1.5;
+      --vibe-surface: #191923;
+      --vibe-raised: #242431;
+      --vibe-control: #303044;
+      --vibe-text: #f1f1f6;
+      --vibe-muted: #aeb0c2;
+      --vibe-border: #ffffff22;
+      --vibe-accent: #a89dfc;
+      --vibe-focus: #a89dfc;
+      --vibe-error: #ef8c85;
+      --brand: #d94832;
+      --brand-deep: #a91f26;
+      color-scheme: dark;
+    }
+    :root[data-theme="light"] { --vibe-surface:#f7f8fc; --vibe-raised:#fff; --vibe-control:#e8ebf3; --vibe-text:#20202b; --vibe-muted:#596070; --vibe-border:#20202b22; --vibe-accent:#6658cf; color-scheme:light; }
+    :root[data-theme="desert"] { --vibe-surface:#f5e6c8; --vibe-raised:#fff7e5; --vibe-control:#dfbf82; --vibe-text:#302016; --vibe-muted:#674b34; --vibe-border:#5b371f35; --vibe-accent:#a85028; color-scheme:light; }
+    :root[data-ui-typeface="system"] { --vibe-font-ui:system-ui,-apple-system,"Segoe UI",sans-serif; }
+    :root[data-ui-typeface="accessible"] { --vibe-font-ui:Arial,Helvetica,sans-serif; }
+    :root[data-display-scale="comfortable"] { --vibe-scale:1.1; }
+    :root[data-display-scale="large"] { --vibe-scale:1.25; }
+    * { box-sizing: border-box; }
+    html, body { margin:0; width:100%; height:100%; overflow:hidden; }
+    body { background:var(--vibe-surface); color:var(--vibe-text); font-family:var(--vibe-font-ui); font-size:var(--vibe-text-body); line-height:var(--vibe-line-normal); }
+    button, input, textarea, select { font:inherit; color:inherit; }
+    button { border:0; cursor:pointer; }
+    button:focus-visible, input:focus-visible, textarea:focus-visible, [contenteditable="true"]:focus-visible { outline:2px solid var(--vibe-focus); outline-offset:2px; }
+    .app { height:100%; display:grid; grid-template-rows:48px 38px minmax(0,1fr) 28px; min-width:0; }
+    .topbar { display:flex; align-items:center; gap:12px; padding:0 16px; border-bottom:1px solid var(--vibe-border); background:var(--vibe-raised); min-width:0; }
+    .brand { display:flex; align-items:center; gap:9px; font-weight:720; letter-spacing:-.02em; white-space:nowrap; }
+    .brand img { width:25px; height:25px; }
+    .brand small { color:var(--vibe-muted); font-size:var(--vibe-text-caption); font-weight:500; margin-left:2px; letter-spacing:0; }
+    .top-actions { display:flex; align-items:center; gap:7px; margin-left:auto; }
+    .share-btn, .present-btn, .icon-btn { display:inline-flex; align-items:center; justify-content:center; gap:7px; border-radius:6px; height:30px; padding:0 11px; }
+    .share-btn { background:var(--vibe-control); color:var(--vibe-text); }
+    .present-btn { background:var(--brand); color:#fff; font-weight:670; padding:0 14px; }
+    .share-btn:hover, .icon-btn:hover { background:color-mix(in srgb, var(--vibe-control), var(--vibe-text) 10%); }
+    .present-btn:hover { background:var(--brand-deep); }
+    .toolbar { display:flex; align-items:center; padding:0 14px; gap:2px; border-bottom:1px solid var(--vibe-border); background:var(--vibe-surface); min-width:0; }
+    .tool-label { color:var(--vibe-muted); padding:4px 9px; border-radius:5px; font-size:var(--vibe-text-label); }
+    .tool-label:hover { background:var(--vibe-control); color:var(--vibe-text); }
+    .tool-divider { width:1px; height:20px; background:var(--vibe-border); margin:0 8px; }
+    .icon-btn { width:31px; padding:0; background:transparent; color:var(--vibe-muted); }
+    .icon-btn:disabled { opacity:.35; cursor:default; }
+    .tool-title { margin-left:9px; color:var(--vibe-muted); font-size:var(--vibe-text-caption); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .workspace { min-height:0; display:grid; grid-template-columns:190px minmax(340px,1fr) 230px; overflow:hidden; }
+    .sidebar, .inspector { min-width:0; background:var(--vibe-raised); overflow:auto; }
+    .sidebar { border-right:1px solid var(--vibe-border); padding:16px 10px 12px; }
+    .inspector { border-left:1px solid var(--vibe-border); padding:15px 13px; }
+    .panel-heading { display:flex; align-items:center; justify-content:space-between; margin:0 6px 13px; color:var(--vibe-muted); text-transform:uppercase; font-size:var(--vibe-text-caption); letter-spacing:.11em; font-weight:720; }
+    .new-slide { width:25px; height:25px; border-radius:5px; background:var(--vibe-control); color:var(--vibe-text); display:grid; place-items:center; }
+    .new-slide:hover { background:var(--brand); color:#fff; }
+    .slides { display:flex; flex-direction:column; gap:9px; }
+    .slide-card { position:relative; display:grid; grid-template-columns:18px minmax(0,1fr); gap:6px; align-items:start; border:1px solid transparent; padding:5px 5px 5px 3px; border-radius:7px; background:transparent; text-align:left; }
+    .slide-card:hover { background:color-mix(in srgb,var(--vibe-control),transparent 48%); }
+    .slide-card.active { border-color:var(--brand); background:color-mix(in srgb,var(--brand),transparent 87%); }
+    .slide-num { padding-top:8px; color:var(--vibe-muted); font-family:var(--vibe-font-mono); font-size:var(--vibe-text-caption); text-align:center; }
+    .thumb { aspect-ratio:16/9; background:#fff; border-radius:3px; overflow:hidden; position:relative; border:1px solid #0002; color:#253248; }
+    .thumb .mini-band { position:absolute; inset:0 0 auto; height:21%; background:var(--thumb-accent,#d94832); }
+    .thumb .mini-title { position:absolute; left:10%; top:31%; right:7%; font-size:9px; line-height:1.1; font-weight:800; overflow:hidden; white-space:nowrap; color:#203046; }
+    .thumb .mini-line { position:absolute; left:10%; height:3px; border-radius:2px; background:#b9c2d3; }
+    .thumb .line-a { top:52%; width:65%; }.thumb .line-b { top:60%; width:48%; }.thumb .line-c { top:68%; width:56%; }
+    .thumb .mini-chart { position:absolute; right:9%; bottom:12%; width:27%; height:25%; border-left:2px solid #b9c2d3; border-bottom:2px solid #b9c2d3; }
+    .thumb .mini-chart:after { content:""; position:absolute; left:2px; right:0; bottom:3px; height:65%; background:linear-gradient(90deg,transparent 0 8%,var(--thumb-accent,#d94832) 8% 27%,transparent 27% 36%,var(--thumb-accent,#d94832) 36% 59%,transparent 59% 68%,var(--thumb-accent,#d94832) 68% 90%); }
+    .editor { min-width:0; min-height:0; background:color-mix(in srgb,var(--vibe-surface),#000 10%); display:grid; grid-template-rows:minmax(0,1fr) 47px; }
+    .canvas-wrap { min-height:0; overflow:auto; padding:30px; display:flex; align-items:center; justify-content:center; }
+    .slide-canvas { --slide-accent:#d94832; width:min(860px,100%); aspect-ratio:16/9; flex:0 0 auto; position:relative; overflow:hidden; background:#fff; color:#243147; border-radius:3px; box-shadow:0 18px 45px #0005; }
+    .slide-canvas:before { content:""; position:absolute; inset:0 auto 0 0; width:34%; background:linear-gradient(145deg, color-mix(in srgb,var(--slide-accent),#fff 8%), color-mix(in srgb,var(--slide-accent),#000 12%)); clip-path:polygon(0 0, 74% 0, 100% 100%, 0 100%); }
+    .slide-canvas:after { content:""; position:absolute; inset:0; background:linear-gradient(115deg,transparent 0 58%,#f2f6fb 58% 100%); opacity:.75; z-index:0; }
+    .slide-content { position:relative; z-index:1; height:100%; padding:10% 8% 7% 39%; display:flex; flex-direction:column; justify-content:center; }
+    .eyebrow { color:var(--slide-accent); text-transform:uppercase; font-size:clamp(8px,1.1vw,12px); letter-spacing:.18em; font-weight:780; margin-bottom:4%; }
+    .slide-title { font-size:clamp(24px,4vw,53px); line-height:1.03; letter-spacing:-.045em; font-weight:780; margin:0 0 4%; max-width:95%; }
+    .slide-body { margin:0; max-width:87%; font-size:clamp(10px,1.35vw,17px); line-height:1.5; color:#526177; }
+    .slide-footer { position:absolute; z-index:2; right:5%; bottom:5%; color:#78859a; font-family:var(--vibe-font-mono); font-size:clamp(8px,1vw,11px); }
+    [contenteditable="true"] { border-radius:3px; transition:background .15s; }
+    [contenteditable="true"]:hover, [contenteditable="true"]:focus { background:#fff8; }
+    .canvas-tools { display:flex; align-items:center; justify-content:center; gap:7px; border-top:1px solid var(--vibe-border); background:var(--vibe-raised); }
+    .zoom { color:var(--vibe-muted); font-size:var(--vibe-text-caption); margin-left:8px; }
+    .inspector-tabs { display:flex; border-bottom:1px solid var(--vibe-border); margin-bottom:17px; }
+    .tab { flex:1; background:transparent; padding:8px 2px 10px; color:var(--vibe-muted); font-size:var(--vibe-text-label); border-bottom:2px solid transparent; }
+    .tab.active { color:var(--vibe-text); border-color:var(--brand); }
+    .field-label { display:block; color:var(--vibe-muted); font-size:var(--vibe-text-caption); text-transform:uppercase; letter-spacing:.09em; font-weight:720; margin:16px 0 8px; }
+    .field-label:first-child { margin-top:0; }
+    .note { width:100%; min-height:115px; resize:vertical; border:1px solid var(--vibe-border); background:var(--vibe-control); border-radius:6px; padding:9px; font-size:var(--vibe-text-label); line-height:1.45; }
+    .note::placeholder { color:var(--vibe-muted); opacity:.8; }
+    .swatches { display:flex; gap:9px; flex-wrap:wrap; }
+    .swatch { width:27px; height:27px; border-radius:50%; border:2px solid transparent; box-shadow:inset 0 0 0 1px #0002; }
+    .swatch.active { border-color:var(--vibe-text); outline:2px solid var(--brand); outline-offset:2px; }
+    .layout-option { display:flex; width:100%; align-items:center; justify-content:space-between; gap:9px; padding:9px; margin-top:6px; border:1px solid var(--vibe-border); background:transparent; border-radius:6px; text-align:left; font-size:var(--vibe-text-label); }
+    .layout-option.active { border-color:var(--brand); background:color-mix(in srgb,var(--brand),transparent 88%); }
+    .layout-preview { width:39px; height:24px; border:1px solid var(--vibe-muted); border-radius:2px; position:relative; opacity:.75; }
+    .layout-preview:before { content:""; position:absolute; left:4px; top:5px; width:15px; height:3px; background:var(--vibe-muted); box-shadow:0 6px 0 var(--vibe-muted); }
+    .layout-preview.split:before { width:8px; }.layout-preview.split:after { content:""; position:absolute; right:4px; top:5px; width:13px; height:13px; background:var(--vibe-muted); opacity:.65; }
+    .statusbar { display:flex; align-items:center; justify-content:space-between; padding:0 14px; border-top:1px solid var(--vibe-border); color:var(--vibe-muted); font-size:var(--vibe-text-caption); background:var(--vibe-raised); }
+    .status-left { display:flex; gap:14px; }.saved { color:#6fc493; }.status-right { font-family:var(--vibe-font-mono); }
+    .menu { position:fixed; z-index:20; top:82px; left:14px; min-width:160px; padding:6px; border:1px solid var(--vibe-border); border-radius:7px; background:var(--vibe-raised); box-shadow:0 12px 30px #0005; }
+    .menu button { display:block; width:100%; padding:8px 10px; background:transparent; border-radius:4px; text-align:left; font-size:var(--vibe-text-label); }.menu button:hover { background:var(--vibe-control); }
+    .presenter { position:fixed; z-index:30; inset:0; display:none; background:#10121b; color:#fff; align-items:center; justify-content:center; }.presenter.open { display:flex; }
+    .presenter .present-slide { width:min(1100px,90vw); aspect-ratio:16/9; }.presenter-close { position:absolute; top:22px; right:25px; background:#fff2; color:#fff; border-radius:6px; padding:8px 12px; }.presenter-hint { position:absolute; bottom:20px; color:#b9bfd2; font-size:var(--vibe-text-caption); }
+    @media (max-width:900px) { .workspace { grid-template-columns:155px minmax(300px,1fr); }.inspector { display:none; }.canvas-wrap { padding:18px; } }
+    @media (max-width:650px) { .workspace { grid-template-columns:108px minmax(260px,1fr); }.sidebar { padding:12px 5px; }.slide-card { grid-template-columns:1fr; }.slide-num { display:none; }.topbar { padding:0 9px; }.tool-label:nth-child(n+3), .tool-divider { display:none; }.brand small { display:none; } }
+  </style>
+</head>
+<body>
+  <main class="app" aria-label="Powerpoint presentation editor">
+    <header class="topbar">
+      <div class="brand"><img src="icon.svg" alt="Powerpoint"><span>Powerpoint</span><small>Presentation</small></div>
+      <div class="top-actions">
+        <button class="share-btn" id="shareBtn" type="button"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 16V3m0 0L7 8m5-5 5 5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg>Share</button>
+        <button class="present-btn" id="presentBtn" type="button"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M3 4.5A2.5 2.5 0 0 1 5.5 2h13A2.5 2.5 0 0 1 21 4.5v9a2.5 2.5 0 0 1-2.5 2.5h-5.2l2.7 4H8l2.7-4H5.5A2.5 2.5 0 0 1 3 13.5v-9Zm2.5-.2a.5.5 0 0 0-.5.5v8.4a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5V4.8a.5.5 0 0 0-.5-.5h-13Z"/></svg>Present</button>
+      </div>
+    </header>
+    <nav class="toolbar" aria-label="Editing tools">
+      <button class="tool-label" id="fileMenuBtn" type="button" aria-expanded="false">File</button>
+      <button class="tool-label" id="editMenuBtn" type="button" aria-expanded="false">Edit</button>
+      <button class="tool-label" id="viewMenuBtn" type="button" aria-expanded="false">View</button>
+      <span class="tool-divider"></span>
+      <button class="icon-btn" id="undoBtn" type="button" aria-label="Undo" title="Undo" disabled><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 7 4 12l5 5M4 12h10a6 6 0 0 1 6 6v1"/></svg></button>
+      <button class="icon-btn" id="redoBtn" type="button" aria-label="Redo" title="Redo" disabled><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 7 5 5-5 5M20 12H10a6 6 0 0 0-6 6v1"/></svg></button>
+      <span class="tool-divider"></span>
+      <button class="tool-label" id="addTextBtn" type="button">Add text</button>
+      <button class="tool-label" id="duplicateBtn" type="button">Duplicate slide</button>
+      <span class="tool-title" id="deckTitle">Quarterly review · 3 slides</span>
+    </nav>
+    <section class="workspace">
+      <aside class="sidebar" aria-label="Slides">
+        <div class="panel-heading"><span>Slides</span><button class="new-slide" id="newSlideBtn" type="button" aria-label="New slide" title="New slide"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button></div>
+        <div class="slides" id="slides"></div>
+      </aside>
+      <section class="editor" aria-label="Slide editor">
+        <div class="canvas-wrap"><article class="slide-canvas" id="slideCanvas"></article></div>
+        <div class="canvas-tools">
+          <button class="icon-btn" id="zoomOut" type="button" aria-label="Zoom out" title="Zoom out"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M8 11h6m2.5 5.5L21 21"/></svg></button>
+          <span class="zoom" id="zoomText">Fit to window</span>
+          <button class="icon-btn" id="zoomIn" type="button" aria-label="Zoom in" title="Zoom in"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M8 11h6m-3-3v6m5.5 2.5L21 21"/></svg></button>
+        </div>
+      </section>
+      <aside class="inspector" aria-label="Slide inspector">
+        <div class="inspector-tabs"><button class="tab active" data-tab="design" type="button">Design</button><button class="tab" data-tab="notes" type="button">Notes</button></div>
+        <div id="designPanel">
+          <label class="field-label">Accent</label><div class="swatches" id="swatches"></div>
+          <label class="field-label">Layout</label>
+          <button class="layout-option active" data-layout="story" type="button"><span>Story</span><span class="layout-preview"></span></button>
+          <button class="layout-option" data-layout="split" type="button"><span>Split focus</span><span class="layout-preview split"></span></button>
+          <label class="field-label">Slide details</label><div style="color:var(--vibe-muted);font-size:var(--vibe-text-label);line-height:1.55">Click a heading or paragraph on the canvas to edit it directly.</div>
+        </div>
+        <div id="notesPanel" hidden><label class="field-label" for="notes">Speaker notes</label><textarea class="note" id="notes" spellcheck="true" placeholder="Add a note for this slide"></textarea><div style="color:var(--vibe-muted);font-size:var(--vibe-text-caption);margin-top:10px">Notes stay with the selected slide.</div></div>
+      </aside>
+    </section>
+    <footer class="statusbar"><div class="status-left"><span id="slideCount">3 slides</span><span class="saved" id="saveState">Saved</span></div><span class="status-right" id="slidePosition">01 / 03</span></footer>
+  </main>
+  <div class="menu" id="fileMenu" hidden><button type="button" data-action="new">New presentation</button><button type="button" data-action="download">Download .json</button></div>
+  <div class="menu" id="editMenu" hidden><button type="button" data-action="undo">Undo</button><button type="button" data-action="redo">Redo</button><button type="button" data-action="duplicate">Duplicate slide</button></div>
+  <div class="menu" id="viewMenu" hidden><button type="button" data-action="notes">Show notes</button><button type="button" data-action="design">Show design</button></div>
+  <section class="presenter" id="presenter" aria-label="Presentation view"><button class="presenter-close" id="closePresenter" type="button">Exit presentation</button><article class="slide-canvas present-slide" id="presentSlide"></article><div class="presenter-hint">Use ← → to change slides · Esc to exit</div></section>
+  <script>
+    (() => {
+      const accents = ['#d94832','#3767b1','#18856c','#8a5bb8','#d28a2f','#1d879b'];
+      const initial = { title:'Quarterly review', slides:[
+        {title:'Quarterly review', body:'A clear look at the work behind our momentum.', eyebrow:'2026 · Q2', accent:'#d94832', layout:'story', notes:'Open with the headline: this quarter was about turning momentum into a repeatable rhythm.'},
+        {title:'Momentum is compounding', body:'Three focused bets moved the work forward: a simpler launch path, tighter customer feedback, and a team cadence built to last.', eyebrow:'THE SIGNAL', accent:'#3767b1', layout:'story', notes:''},
+        {title:'Next: make the good repeatable', body:'Keep the learning loop short, protect the craft, and turn the strongest patterns into shared practice.', eyebrow:'THE NEXT MOVE', accent:'#18856c', layout:'split', notes:'Invite the room to name one pattern worth carrying into the next quarter.'}
+      ], active:0};
+      let state = structuredClone(initial), history = [], future = [], saveTimer;
+      const $ = (id) => document.getElementById(id);
+      const bridge = window.vibeOS;
+      const safeNotify = (message, level='info') => bridge?.notify?.(message,{level,timeoutMs:2200});
+      const clone = (v) => JSON.parse(JSON.stringify(v));
+      function pushHistory() { history.push(clone(state)); if (history.length > 30) history.shift(); future=[]; updateUndo(); }
+      function updateUndo() { $('undoBtn').disabled=!history.length; $('redoBtn').disabled=!future.length; }
+      async function persist() {
+        $('saveState').textContent='Saving…';
+        try { if (bridge?.state) await bridge.state.write({title:state.title,slides:state.slides,active:state.active}); else localStorage.setItem('powerpoint-deck',JSON.stringify(state)); $('saveState').textContent='Saved'; }
+        catch (e) { $('saveState').textContent='Not saved'; safeNotify('Could not save this presentation','error'); }
+      }
+      function scheduleSave() { clearTimeout(saveTimer); saveTimer=setTimeout(persist,250); }
+      async function hydrate() {
+        try { const stored = bridge?.state ? await bridge.state.read() : JSON.parse(localStorage.getItem('powerpoint-deck')||'null'); const candidate=stored?.state ?? stored; if(candidate?.slides?.length) state={...initial,...candidate,slides:candidate.slides}; }
+        catch(e) { /* The starter deck remains usable when persistence is unavailable. */ }
+      }
+      function slideMarkup(slide, presentation=false) {
+        const editable = presentation ? '' : ' contenteditable="true" spellcheck="true"';
+        return `<div class="slide-content" data-layout="${slide.layout||'story'}"><div class="eyebrow"${editable} data-field="eyebrow">${escapeHTML(slide.eyebrow)}</div><h1 class="slide-title"${editable} data-field="title">${escapeHTML(slide.title)}</h1><p class="slide-body"${editable} data-field="body">${escapeHTML(slide.body)}</p></div><span class="slide-footer">${String(state.active+1).padStart(2,'0')} / ${String(state.slides.length).padStart(2,'0')}</span>`;
+      }
+      function escapeHTML(value) { return String(value??'').replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+      function render() {
+        const slide=state.slides[state.active]; if(!slide) return;
+        $('slides').innerHTML=state.slides.map((s,i)=>`<button class="slide-card ${i===state.active?'active':''}" data-index="${i}" type="button"><span class="slide-num">${String(i+1).padStart(2,'0')}</span><span class="thumb" style="--thumb-accent:${s.accent}"><span class="mini-band"></span><span class="mini-title">${escapeHTML(s.title)}</span><span class="mini-line line-a"></span><span class="mini-line line-b"></span><span class="mini-line line-c"></span><span class="mini-chart"></span></span></button>`).join('');
+        $('slideCanvas').style.setProperty('--slide-accent',slide.accent); $('slideCanvas').innerHTML=slideMarkup(slide); $('slideCanvas').dataset.layout=slide.layout||'story';
+        $('presentSlide').style.setProperty('--slide-accent',slide.accent); $('presentSlide').innerHTML=slideMarkup(slide,true);
+        $('notes').value=slide.notes||''; $('slideCount').textContent=`${state.slides.length} ${state.slides.length===1?'slide':'slides'}`; $('slidePosition').textContent=`${String(state.active+1).padStart(2,'0')} / ${String(state.slides.length).padStart(2,'0')}`; $('deckTitle').textContent=`${state.title} · ${state.slides.length} slides`;
+        document.querySelectorAll('.swatch').forEach(el=>el.classList.toggle('active',el.dataset.color===slide.accent)); document.querySelectorAll('.layout-option').forEach(el=>el.classList.toggle('active',el.dataset.layout===slide.layout)); updateUndo(); attachEditorListeners();
+      }
+      function attachEditorListeners() { $('slides').querySelectorAll('.slide-card').forEach(btn=>btn.addEventListener('click',()=>{state.active=Number(btn.dataset.index);render();})); $('slideCanvas').querySelectorAll('[data-field]').forEach(el=>el.addEventListener('focus',()=>{el.dataset.before=el.textContent;})); $('slideCanvas').querySelectorAll('[data-field]').forEach(el=>el.addEventListener('blur',()=>{const field=el.dataset.field, value=el.textContent.trim(); if(value!==el.dataset.before && value){pushHistory();state.slides[state.active][field]=value;scheduleSave();render();}})); }
+      function newSlide(copy=false) { pushHistory(); const source=state.slides[state.active]; const number=state.slides.length+1; state.slides.splice(state.active+1,0,copy?{...clone(source),title:`${source.title} — copy`,notes:''}:{title:`Slide ${number}`,body:'Add the key idea for this moment.',eyebrow:'NEW SECTION',accent:accents[number%accents.length],layout:'story',notes:''}); state.active++; render(); scheduleSave(); safeNotify(copy?'Slide duplicated':'New slide added','success'); }
+      function undo() { if(!history.length)return; future.push(clone(state)); state=history.pop(); render(); scheduleSave(); }
+      function redo() { if(!future.length)return; history.push(clone(state)); state=future.pop(); render(); scheduleSave(); }
+      function openPresentation() { $('presenter').classList.add('open'); document.body.dataset.presenting='true'; $('presenter').focus(); }
+      function closePresentation() { $('presenter').classList.remove('open'); delete document.body.dataset.presenting; }
+      function showMenu(name) { ['file','edit','view'].forEach(n=>$(n+'Menu').hidden=n!==name); ['file','edit','view'].forEach(n=>$(n+'MenuBtn').setAttribute('aria-expanded',n===name?'true':'false')); }
+      document.querySelectorAll('.tab').forEach(tab=>tab.addEventListener('click',()=>{const notes=tab.dataset.tab==='notes'; document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t===tab)); $('designPanel').hidden=notes; $('notesPanel').hidden=!notes;}));
+      accents.forEach(color=>{const b=document.createElement('button');b.className='swatch';b.type='button';b.dataset.color=color;b.style.background=color;b.setAttribute('aria-label',`Use ${color} accent`);b.addEventListener('click',()=>{pushHistory();state.slides[state.active].accent=color;render();scheduleSave();});$('swatches').appendChild(b);});
+      $('newSlideBtn').addEventListener('click',()=>newSlide()); $('duplicateBtn').addEventListener('click',()=>newSlide(true)); $('undoBtn').addEventListener('click',undo); $('redoBtn').addEventListener('click',redo); $('presentBtn').addEventListener('click',openPresentation); $('closePresenter').addEventListener('click',closePresentation);
+      $('addTextBtn').addEventListener('click',()=>{const body=$('slideCanvas').querySelector('[data-field="body"]');body.focus();document.execCommand('selectAll',false,null);safeNotify('Edit the selected slide text directly','info');});
+      $('notes').addEventListener('input',e=>{state.slides[state.active].notes=e.target.value;scheduleSave();});
+      document.querySelectorAll('.layout-option').forEach(btn=>btn.addEventListener('click',()=>{pushHistory();state.slides[state.active].layout=btn.dataset.layout;render();scheduleSave();}));
+      [['fileMenuBtn','file'],['editMenuBtn','edit'],['viewMenuBtn','view']].forEach(([id,name])=>$(id).addEventListener('click',()=>showMenu($(name+'Menu').hidden?name:null)));
+      document.querySelectorAll('.menu button').forEach(btn=>btn.addEventListener('click',()=>{const action=btn.dataset.action; document.querySelectorAll('.menu').forEach(m=>m.hidden=true); if(action==='new'){state=clone(initial);history=[];future=[];render();scheduleSave();safeNotify('New presentation ready','success');} if(action==='download'){const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='quarterly-review.json';a.click();URL.revokeObjectURL(a.href);safeNotify('Presentation downloaded','success');} if(action==='undo')undo();if(action==='redo')redo();if(action==='duplicate')newSlide(true);if(action==='notes'){document.querySelector('[data-tab="notes"]').click();}if(action==='design'){document.querySelector('[data-tab="design"]').click();}}));
+      document.addEventListener('click',e=>{if(!e.target.closest('.menu')&&!e.target.closest('.tool-label'))showMenu(null);});
+      document.addEventListener('keydown',e=>{if(document.body.dataset.presenting==='true'){if(e.key==='Escape')closePresentation();if(e.key==='ArrowRight'||e.key==='ArrowDown'){state.active=Math.min(state.slides.length-1,state.active+1);renderPresenter();}if(e.key==='ArrowLeft'||e.key==='ArrowUp'){state.active=Math.max(0,state.active-1);renderPresenter();}return;} if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='z'){e.preventDefault();e.shiftKey?redo():undo();} if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='y'){e.preventDefault();redo();}});
+      function renderPresenter(){const slide=state.slides[state.active];$('presentSlide').style.setProperty('--slide-accent',slide.accent);$('presentSlide').innerHTML=slideMarkup(slide,true);}
+      $('zoomIn').addEventListener('click',()=>{const current=parseFloat(getComputedStyle($('slideCanvas')).width);$('slideCanvas').style.width=Math.min(1200,current+100)+'px';$('zoomText').textContent=Math.round((current+100)/860*100)+'%';}); $('zoomOut').addEventListener('click',()=>{const current=parseFloat(getComputedStyle($('slideCanvas')).width);$('slideCanvas').style.width=Math.max(340,current-100)+'px';$('zoomText').textContent=Math.round((current-100)/860*100)+'%';});
+      $('shareBtn').addEventListener('click',async()=>{try{if(!navigator.clipboard)throw new Error('clipboard unavailable');await navigator.clipboard.writeText(location.href);safeNotify('Presentation link copied','success');}catch(e){safeNotify('Copying the link is unavailable here','warning');}});
+      hydrate().then(render); if(bridge?.state?.subscribe) bridge.state.subscribe(next=>{const candidate=next?.state;if(candidate?.slides?.length && JSON.stringify(candidate.slides)!==JSON.stringify(state.slides)){state={...state,...candidate};render();}});
+    })();
+  </script>
+</body>
+</html>

@@ -1,14 +1,33 @@
 {
   "appId": "app-sublime-text",
-  "revision": 0,
+  "revision": 36,
   "state": {
     "tabs": [
-      { "id": "app.js", "content": "const greeting = \"Hello, VibeOS\";\n\nfunction start() {\n  console.log(greeting);\n}\n\nstart();" },
-      { "id": "index.html", "content": "<!doctype html>\n<html lang=\"en\">\n  <body>\n    <main id=\"app\"></main>\n  </body>\n</html>" },
-      { "id": "styles.css", "content": ":root {\n  --accent: #a89dfc;\n}\n\nbody {\n  margin: 0;\n}" },
-      { "id": "README.md", "content": "# My Project\n\nA small, focused workspace." }
+      {
+        "id": "app.js",
+        "content": "const greeting = \"Hello, VibeOS\";\n\nfunction start() {\n  console.log(greeting);\n}\n\nstart();"
+      },
+      {
+        "id": "index.html",
+        "content": "<!doctype html>\n<html lang=\"en\">\n  <body>\n    <main id=\"app\"></main>\n  </body>\n</html>"
+      },
+      {
+        "id": "styles.css",
+        "content": ":root {\n  --accent: #a89dfc;\n}\n\nbody {\n  margin: 0;\n}"
+      },
+      {
+        "id": "README.md",
+        "content": "# My Project\n\nA small, focused workspace."
+      },
+      {
+        "id": "hello.py",
+        "content": "def broken()"
+      }
     ],
-    "activeTabId": "app.js",
-    "selection": { "start": 0, "end": 0 }
+    "activeTabId": "hello.py",
+    "selection": {
+      "start": 12,
+      "end": 12
+    }
   }
 }

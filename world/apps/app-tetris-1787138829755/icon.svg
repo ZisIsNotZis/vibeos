@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Tetris icon">
-  <rect width="64" height="64" rx="15" fill="#1259d3"/>
-  <path fill="#55d6be" d="M10 12h13v13H10zM25 12h13v13H25zM40 12h13v13H40zM25 27h13v13H25zM40 27h13v13H40zM40 42h13v13H40z"/>
-  <path fill="#ffce5c" d="M10 42h13v13H10zM25 42h13v13H25z"/>
-  <path fill="#ee6a79" d="M10 27h13v13H10z"/>
-</svg>

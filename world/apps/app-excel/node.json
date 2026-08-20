@@ -1,0 +1,9 @@
+{
+  "id": "app-excel",
+  "title": "Excel",
+  "kind": "app",
+  "status": "ready",
+  "icon": "icon.svg",
+  "children": [],
+  "entry": "index.html"
+}

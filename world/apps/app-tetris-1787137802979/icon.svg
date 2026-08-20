@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Tetris 1787137802979 icon">
-  <rect width="64" height="64" rx="14" fill="#111827"/>
-  <path fill="#22d3ee" d="M10 10h13v13H10zM23 10h13v13H23zM36 10h13v13H36z"/>
-  <path fill="#a78bfa" d="M23 23h13v13H23zM36 23h13v13H36zM36 36h13v13H36z"/>
-  <path fill="#f472b6" d="M10 36h13v13H10zM10 49h13v5H10zM23 49h13v5H23z"/>
-  <path fill="#fbbf24" d="M10 23h13v13H10z"/>
-</svg>

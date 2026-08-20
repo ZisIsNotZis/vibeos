@@ -1,0 +1,9 @@
+{
+  "id": "app-word",
+  "title": "Word",
+  "kind": "app",
+  "status": "ready",
+  "icon": "icon.svg",
+  "children": [],
+  "entry": "index.html"
+}

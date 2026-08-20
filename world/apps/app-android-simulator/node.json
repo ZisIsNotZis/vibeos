@@ -1,0 +1,9 @@
+{
+  "id": "app-android-simulator",
+  "title": "Android Simulator",
+  "kind": "app",
+  "status": "ready",
+  "icon": "icon.svg",
+  "children": [],
+  "entry": "index.html"
+}

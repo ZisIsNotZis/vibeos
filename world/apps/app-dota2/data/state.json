@@ -1,0 +1,12 @@
+{
+  "appId": "app-dota2",
+  "revision": 1,
+  "state": {
+    "activeView": "home",
+    "selectedMode": "Ranked All Pick",
+    "selectedHero": "Queen of Pain",
+    "playerName": "AshenRook",
+    "queued": true,
+    "sound": true
+  }
+}

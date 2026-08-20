@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Paint3d</title>
+  <style>
+    :root {
+      --vibe-font-ui: Inter, ui-sans-serif, system-ui, sans-serif;
+      --vibe-font-mono: "DM Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+      --vibe-text-caption: calc(11px * var(--vibe-scale, 1));
+      --vibe-text-label: calc(12px * var(--vibe-scale, 1));
+      --vibe-text-body: calc(14px * var(--vibe-scale, 1));
+      --vibe-text-title: calc(18px * var(--vibe-scale, 1));
+      --vibe-text-heading: calc(24px * var(--vibe-scale, 1));
+      --vibe-line-tight: 1.15;
+      --vibe-line-normal: 1.5;
+      --vibe-surface: #191923;
+      --vibe-raised: #242431;
+      --vibe-control: #303044;
+      --vibe-text: #f1f1f6;
+      --vibe-muted: #aeb0c2;
+      --vibe-border: #ffffff22;
+      --vibe-accent: #a89dfc;
+      --vibe-accent-strong: #d0caff;
+      --vibe-on-accent: #201d3e;
+      --vibe-danger: #ff968d;
+      --vibe-canvas: #171721;
+      --vibe-grid: #ffffff16;
+    }
+    :root[data-theme="light"] { --vibe-surface:#f7f8fc; --vibe-raised:#fff; --vibe-control:#e8ebf3; --vibe-text:#20202b; --vibe-muted:#596070; --vibe-border:#20202b22; --vibe-accent:#6658cf; --vibe-accent-strong:#5144b8; --vibe-on-accent:#fff; --vibe-danger:#b33d45; --vibe-canvas:#eef0f7; --vibe-grid:#20202b20; }
+    :root[data-theme="desert"] { --vibe-surface:#f5e6c8; --vibe-raised:#fff7e5; --vibe-control:#dfbf82; --vibe-text:#302016; --vibe-muted:#674b34; --vibe-border:#5b371f35; --vibe-accent:#a85028; --vibe-accent-strong:#893d20; --vibe-on-accent:#fff7e5; --vibe-danger:#9f3932; --vibe-canvas:#ead5ad; --vibe-grid:#5b371f24; }
+    :root[data-ui-typeface="system"] { --vibe-font-ui: system-ui, -apple-system, "Segoe UI", sans-serif; }
+    :root[data-ui-typeface="accessible"] { --vibe-font-ui: Arial, Helvetica, sans-serif; }
+    :root[data-mono-typeface="system"] { --vibe-font-mono: ui-monospace, monospace; }
+    :root[data-mono-typeface="accessible"] { --vibe-font-mono: "Courier New", monospace; }
+    :root[data-display-scale="compact"] { --vibe-scale:.8; }
+    :root[data-display-scale="comfortable"] { --vibe-scale:1.1; }
+    :root[data-display-scale="large"] { --vibe-scale:1.25; }
+    :root[data-display-scale="extra_large"] { --vibe-scale:1.5; }
+    * { box-sizing:border-box; }
+    html, body { margin:0; width:100%; height:100%; overflow:hidden; background:var(--vibe-surface); color:var(--vibe-text); font-family:var(--vibe-font-ui); font-size:var(--vibe-text-body); }
+    button, input { font:inherit; }
+    button { border:0; color:inherit; }
+    button:focus-visible, input:focus-visible { outline:2px solid var(--vibe-accent); outline-offset:2px; }
+    #app { display:grid; grid-template-rows:58px minmax(0,1fr) 28px; height:100%; min-width:0; }
+    .topbar { display:flex; align-items:center; gap:12px; padding:0 18px; border-bottom:1px solid var(--vibe-border); background:var(--vibe-raised); min-width:0; }
+    .brand { display:flex; align-items:center; gap:10px; min-width:148px; font-weight:750; letter-spacing:-.02em; }
+    .brand-mark { width:30px; height:30px; flex:none; }
+    .brand-name { font-size:var(--vibe-text-title); }
+    .crumb { color:var(--vibe-muted); font-family:var(--vibe-font-mono); font-size:var(--vibe-text-caption); white-space:nowrap; }
+    .toolbar { display:flex; align-items:center; gap:6px; margin-left:auto; }
+    .icon-btn, .text-btn, .tool-btn { cursor:pointer; background:transparent; color:var(--vibe-muted); border:1px solid transparent; border-radius:7px; }
+    .icon-btn { width:34px; height:32px; display:grid; place-items:center; }
+    .icon-btn:hover, .text-btn:hover, .tool-btn:hover { color:var(--vibe-text); background:var(--vibe-control); }
+    .icon-btn:disabled { opacity:.35; cursor:default; }
+    .text-btn { padding:7px 11px; font-size:var(--vibe-text-label); }
+    .text-btn.primary { color:var(--vibe-on-accent); background:var(--vibe-accent); font-weight:700; }
+    .text-btn.primary:hover { background:var(--vibe-accent-strong); color:var(--vibe-on-accent); }
+    .separator { width:1px; height:22px; background:var(--vibe-border); margin:0 4px; }
+    .content { display:grid; grid-template-columns:230px minmax(0,1fr); min-height:0; min-width:0; }
+    .sidebar { min-height:0; overflow:auto; border-right:1px solid var(--vibe-border); background:var(--vibe-surface); padding:18px 14px 20px; }
+    .section { padding-bottom:19px; margin-bottom:18px; border-bottom:1px solid var(--vibe-border); }
+    .section:last-child { border-bottom:0; }
+    .section-title { display:flex; justify-content:space-between; align-items:center; color:var(--vibe-muted); text-transform:uppercase; letter-spacing:.1em; font-size:var(--vibe-text-caption); font-weight:750; margin:0 5px 11px; }
+    .tool-list { display:grid; grid-template-columns:1fr 1fr; gap:7px; }
+    .tool-btn { display:flex; align-items:center; justify-content:center; gap:7px; min-height:38px; border-color:var(--vibe-border); background:var(--vibe-raised); font-size:var(--vibe-text-label); }
+    .tool-btn.active { border-color:var(--vibe-accent); color:var(--vibe-accent-strong); background:color-mix(in srgb, var(--vibe-accent) 15%, var(--vibe-raised)); }
+    .tool-icon { width:16px; height:16px; }
+    .swatches { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; }
+    .swatch { width:29px; height:29px; padding:0; border-radius:50%; cursor:pointer; border:2px solid transparent; box-shadow:inset 0 0 0 1px #ffffff44; }
+    .swatch.active { border-color:var(--vibe-text); outline:2px solid var(--vibe-accent); outline-offset:2px; }
+    .range-row { display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center; margin:13px 0 0; }
+    .range-row label { color:var(--vibe-muted); font-size:var(--vibe-text-label); }
+    .range-value { color:var(--vibe-text); font-family:var(--vibe-font-mono); font-size:var(--vibe-text-caption); }
+    input[type="range"] { width:100%; accent-color:var(--vibe-accent); cursor:pointer; }
+    .layer-card { display:flex; align-items:center; gap:10px; padding:10px 9px; border:1px solid var(--vibe-accent); background:color-mix(in srgb, var(--vibe-accent) 12%, var(--vibe-raised)); border-radius:8px; }
+    .layer-icon { width:27px; height:27px; display:grid; place-items:center; background:var(--vibe-control); border-radius:6px; color:var(--vibe-accent-strong); }
+    .layer-info { min-width:0; }
+    .layer-name { font-size:var(--vibe-text-label); font-weight:700; }
+    .layer-meta { display:block; margin-top:2px; color:var(--vibe-muted); font-size:var(--vibe-text-caption); }
+    .tip { color:var(--vibe-muted); font-size:var(--vibe-text-caption); line-height:var(--vibe-line-normal); }
+    .tip kbd { color:var(--vibe-text); border:1px solid var(--vibe-border); border-bottom-width:2px; border-radius:4px; padding:1px 4px; font-family:var(--vibe-font-mono); }
+    .editor { position:relative; min-width:0; min-height:0; background:var(--vibe-canvas); overflow:hidden; }
+    #scene { display:block; width:100%; height:100%; touch-action:none; cursor:crosshair; }
+    .canvas-top { position:absolute; top:16px; left:18px; right:18px; display:flex; justify-content:space-between; align-items:flex-start; pointer-events:none; }
+    .scene-label { pointer-events:auto; display:flex; flex-direction:column; gap:3px; }
+    .scene-title { font-size:var(--vibe-text-heading); line-height:var(--vibe-line-tight); font-weight:750; letter-spacing:-.03em; }
+    .scene-subtitle { color:var(--vibe-muted); font-size:var(--vibe-text-label); }
+    .view-tools { pointer-events:auto; display:flex; gap:5px; padding:4px; background:color-mix(in srgb, var(--vibe-raised) 85%, transparent); border:1px solid var(--vibe-border); border-radius:9px; backdrop-filter:blur(8px); }
+    .view-tools .icon-btn { width:30px; height:29px; }
+    .canvas-bottom { position:absolute; left:18px; right:18px; bottom:16px; display:flex; justify-content:space-between; align-items:end; pointer-events:none; }
+    .hint { color:var(--vibe-muted); font-size:var(--vibe-text-caption); background:color-mix(in srgb, var(--vibe-raised) 85%, transparent); border:1px solid var(--vibe-border); border-radius:7px; padding:7px 10px; backdrop-filter:blur(8px); }
+    .hint strong { color:var(--vibe-text); }
+    .coord { color:var(--vibe-muted); font-family:var(--vibe-font-mono); font-size:var(--vibe-text-caption); background:color-mix(in srgb, var(--vibe-raised) 85%, transparent); padding:7px 10px; border-radius:7px; }
+    .statusbar { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:0 14px; color:var(--vibe-muted); background:var(--vibe-raised); border-top:1px solid var(--vibe-border); font-size:var(--vibe-text-caption); min-width:0; }
+    .statusbar span { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .status-live { color:var(--vibe-accent-strong); }
+    @media (max-width:760px) { #app{grid-template-rows:52px minmax(0,1fr) 26px}.content{grid-template-columns:190px minmax(0,1fr)}.sidebar{padding:13px 10px}.brand{min-width:auto}.crumb{display:none}.topbar{padding:0 10px}.text-btn{padding:6px 8px}.canvas-top{top:11px;left:12px;right:12px}.canvas-bottom{left:12px;right:12px;bottom:11px}.hint{max-width:62%} }
+    @media (max-width:570px) { .content{grid-template-columns:160px minmax(0,1fr)}.brand-name{font-size:var(--vibe-text-body)}.toolbar .text-btn:not(.primary){display:none}.swatches{gap:6px}.swatch{width:25px;height:25px}.scene-title{font-size:var(--vibe-text-title)} }
+  </style>
+</head>
+<body>
+  <main id="app">
+    <header class="topbar">
+      <div class="brand" aria-label="Paint3d">
+        <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true"><path d="M32 4 57 18v29L32 60 7 47V18L32 4Z" fill="var(--vibe-accent)" opacity=".25"/><path d="m32 8 20 11-20 11-20-11L32 8Z" fill="var(--vibe-accent)"/><path d="M12 22v23l20 11V33L12 22Z" fill="var(--vibe-accent-strong)"/><path d="m32 33 20-11v23L32 56V33Z" fill="var(--vibe-accent)" opacity=".72"/><path d="M22 25 32 30l10-5" fill="none" stroke="var(--vibe-on-accent)" stroke-width="3" stroke-linecap="round"/></svg>
+        <span class="brand-name">Paint3d</span><span class="crumb">/ studio</span>
+      </div>
+      <div class="toolbar">
+        <button class="icon-btn" id="undo" title="Undo (Ctrl or Cmd + Z)" aria-label="Undo" disabled><svg viewBox="0 0 20 20" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 6 3 9.5 7 13"/><path d="M4 9.5h7a5 5 0 0 1 5 5v1"/></svg></button>
+        <button class="icon-btn" id="redo" title="Redo (Ctrl or Cmd + Shift + Z)" aria-label="Redo" disabled><svg viewBox="0 0 20 20" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m13 6 4 3.5-4 3.5"/><path d="M16 9.5H9a5 5 0 0 0-5 5v1"/></svg></button>
+        <span class="separator"></span>
+        <button class="text-btn" id="newScene">New scene</button>
+        <button class="text-btn" id="exportScene">Export</button>
+        <button class="text-btn primary" id="saveScene">Save</button>
+      </div>
+    </header>
+    <div class="content">
+      <aside class="sidebar" aria-label="Scene tools">
+        <section class="section">
+          <h2 class="section-title">Tools <span id="toolName">Brush</span></h2>
+          <div class="tool-list">
+            <button class="tool-btn active" id="brushTool" aria-pressed="true"><svg class="tool-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7"><path d="m12.7 3.1 4.2 4.2-7.8 7.8-5.1.9.9-5.1 7.8-7.8Z"/><path d="m11 4.8 4.2 4.2M5.1 13.1l1.8 1.8"/></svg>Brush</button>
+            <button class="tool-btn" id="eraseTool" aria-pressed="false"><svg class="tool-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7"><path d="m7.4 4.3 8.3 8.3-4.2 4.2H5.8L3 14l8.3-8.3a2.8 2.8 0 0 1 4 0l1 1"/><path d="M8.3 16.8 13 12"/></svg>Erase</button>
+          </div>
+          <div class="range-row"><label for="brushSize">Brush size</label><span class="range-value" id="brushSizeValue">1 × 1</span></div>
+          <input id="brushSize" type="range" min="1" max="3" value="1" aria-label="Brush size">
+          <div class="range-row"><label for="height">Paint height</label><span class="range-value" id="heightValue">Z 0</span></div>
+          <input id="height" type="range" min="0" max="5" value="0" aria-label="Paint height">
+        </section>
+        <section class="section">
+          <h2 class="section-title">Material</h2>
+          <div class="swatches" role="radiogroup" aria-label="Material color">
+            <button class="swatch active" data-color="#ff806b" style="background:#ff806b" aria-label="Coral" aria-pressed="true"></button>
+            <button class="swatch" data-color="#ffc857" style="background:#ffc857" aria-label="Gold" aria-pressed="false"></button>
+            <button class="swatch" data-color="#6ed6c0" style="background:#6ed6c0" aria-label="Mint" aria-pressed="false"></button>
+            <button class="swatch" data-color="#67a8ff" style="background:#67a8ff" aria-label="Sky" aria-pressed="false"></button>
+            <button class="swatch" data-color="#c493ff" style="background:#c493ff" aria-label="Violet" aria-pressed="false"></button>
+            <button class="swatch" data-color="#f2f3f5" style="background:#f2f3f5" aria-label="Pearl" aria-pressed="false"></button>
+            <button class="swatch" data-color="#e45a87" style="background:#e45a87" aria-label="Rose" aria-pressed="false"></button>
+            <button class="swatch" data-color="#71a64d" style="background:#71a64d" aria-label="Leaf" aria-pressed="false"></button>
+            <button class="swatch" data-color="#506078" style="background:#506078" aria-label="Slate" aria-pressed="false"></button>
+            <button class="swatch" data-color="#b77951" style="background:#b77951" aria-label="Clay" aria-pressed="false"></button>
+          </div>
+        </section>
+        <section class="section">
+          <h2 class="section-title">Layers</h2>
+          <div class="layer-card"><span class="layer-icon"><svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="m3 7 7-4 7 4-7 4-7-4Z"/><path d="m3 10 7 4 7-4M3 13l7 4 7-4"/></svg></span><div class="layer-info"><span class="layer-name">Ground</span><span class="layer-meta" id="layerMeta">0 voxels</span></div></div>
+        </section>
+        <section class="section tip"><strong>Build your scene</strong><br>Click or drag on the grid to paint. Change the height to stack shapes. <kbd>R</kbd> rotates the view, <kbd>Space</kbd> pans.</section>
+      </aside>
+      <section class="editor" aria-label="3D painting workspace">
+        <canvas id="scene" aria-label="Editable isometric 3D scene"></canvas>
+        <div class="canvas-top"><div class="scene-label"><span class="scene-title">Untitled scene</span><span class="scene-subtitle">Isometric workspace · <span id="viewLabel">Front view</span></span></div><div class="view-tools"><button class="icon-btn" id="rotateLeft" title="Rotate view left" aria-label="Rotate view left"><svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 8a6 6 0 1 1-.2 5.6"/><path d="M5 3v5h5"/></svg></button><button class="icon-btn" id="rotateRight" title="Rotate view right (R)" aria-label="Rotate view right"><svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M15 8a6 6 0 1 0 .2 5.6"/><path d="M15 3v5h-5"/></svg></button><span class="separator"></span><button class="icon-btn" id="zoomOut" title="Zoom out" aria-label="Zoom out">−</button><button class="icon-btn" id="zoomIn" title="Zoom in" aria-label="Zoom in">+</button><button class="icon-btn" id="resetView" title="Reset view" aria-label="Reset view"><svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 8a6 6 0 1 1 1.3 6.4"/><path d="M4 3v5h5"/></svg></button></div></div>
+        <div class="canvas-bottom"><div class="hint"><strong id="modeHint">Brush</strong> · <span id="colorHint">Coral</span> · click to paint</div><div class="coord" id="coord">X — · Y — · Z 0</div></div>
+      </section>
+    </div>
+    <footer class="statusbar"><span><span class="status-live">●</span> <span id="statusText">Ready to paint</span></span><span id="voxelCount">0 voxels · 14 × 14 canvas</span></footer>
+  </main>
+  <script>
+    (() => {
+      const canvas = document.getElementById('scene');
+      const ctx = canvas.getContext('2d');
+      const root = document.documentElement;
+      const bridge = window.vibeOS;
+      const storageKey = 'paint3d.scene.v1';
+      const paletteNames = {'#ff806b':'Coral','#ffc857':'Gold','#6ed6c0':'Mint','#67a8ff':'Sky','#c493ff':'Violet','#f2f3f5':'Pearl','#e45a87':'Rose','#71a64d':'Leaf','#506078':'Slate','#b77951':'Clay'};
+      const defaultVoxels = [
+        [5,5,0,'#ff806b'],[6,5,0,'#ff806b'],[7,5,0,'#ff806b'],[5,6,0,'#ff806b'],[6,6,0,'#ffc857'],[7,6,0,'#ff806b'],[5,7,0,'#ff806b'],[6,7,0,'#ff806b'],[7,7,0,'#ff806b'],
+        [6,6,1,'#6ed6c0'],[6,6,2,'#67a8ff'],[6,6,3,'#c493ff'],[4,9,0,'#ffc857'],[5,9,0,'#ffc857'],[4,10,0,'#ffc857'],[5,10,0,'#ffc857'],
+        [9,4,0,'#6ed6c0'],[10,4,0,'#6ed6c0'],[9,5,0,'#6ed6c0'],[10,5,0,'#6ed6c0']
+      ];
+      const state = { voxels: defaultVoxels.slice(), color:'#ff806b', brushSize:1, height:0, tool:'brush', orientation:0, zoom:1, panX:0, panY:16 };
+      let history = [], future = [], pointer = {x:-1,y:-1}, drawing = false, panning = false, panStart = null;
+      const viewNames = ['Front view','Right view','Back view','Left view'];
+      const $ = id => document.getElementById(id);
+      function copyVoxels() { return state.voxels.map(v => v.slice()); }
+      function snapshot() { return {voxels:copyVoxels(), color:state.color, brushSize:state.brushSize, height:state.height, tool:state.tool, orientation:state.orientation, zoom:state.zoom, panX:state.panX, panY:state.panY}; }
+      function restore(s) { state.voxels=s.voxels.map(v=>v.slice()); state.color=s.color; state.brushSize=s.brushSize; state.height=s.height; state.tool=s.tool; state.orientation=s.orientation; state.zoom=s.zoom; state.panX=s.panX; state.panY=s.panY; syncControls(); draw(); }
+      function commit() { history.push(snapshot()); if(history.length>40) history.shift(); future=[]; updateHistoryButtons(); persistSoon(); }
+      function undo() { if(!history.length)return; future.push(snapshot()); const s=history.pop(); restore(s); announce('Last stroke undone'); }
+      function redo() { if(!future.length)return; history.push(snapshot()); const s=future.pop(); restore(s); announce('Stroke restored'); }
+      function announce(message, level='info') { $('statusText').textContent=message; if(bridge?.notify) bridge.notify(message,{level,timeoutMs:1800}).catch(()=>{}); }
+      function updateHistoryButtons() { $('undo').disabled=!history.length; $('redo').disabled=!future.length; }
+      function syncControls() {
+        $('brushSize').value=state.brushSize; $('brushSizeValue').textContent=state.brushSize+' × '+state.brushSize;
+        $('height').value=state.height; $('heightValue').textContent='Z '+state.height;
+        $('toolName').textContent=state.tool==='brush'?'Brush':'Erase'; $('modeHint').textContent=state.tool==='brush'?'Brush':'Erase'; $('colorHint').textContent=paletteNames[state.color]||'Custom';
+        $('viewLabel').textContent=viewNames[state.orientation]; $('coord').textContent='X '+(pointer.x<0?'—':pointer.x)+' · Y '+(pointer.y<0?'—':pointer.y)+' · Z '+state.height;
+        document.querySelectorAll('.tool-btn').forEach(b=>{const active=b.id===(state.tool==='brush'?'brushTool':'eraseTool'); b.classList.toggle('active',active); b.setAttribute('aria-pressed',active);});
+        document.querySelectorAll('.swatch').forEach(b=>{const active=b.dataset.color.toLowerCase()===state.color.toLowerCase(); b.classList.toggle('active',active); b.setAttribute('aria-pressed',active);});
+        $('layerMeta').textContent=state.voxels.length+' voxel'+(state.voxels.length===1?'':'s'); $('voxelCount').textContent=state.voxels.length+' voxel'+(state.voxels.length===1?'':'s')+' · 14 × 14 canvas'; updateHistoryButtons();
+      }
+      let persistTimer;
+      function persistSoon() { clearTimeout(persistTimer); persistTimer=setTimeout(()=>{ if(bridge?.storage) bridge.storage.write(storageKey,{voxels:state.voxels,color:state.color,brushSize:state.brushSize,height:state.height,tool:state.tool,orientation:state.orientation,zoom:state.zoom}).catch(()=>{}); },120); }
+      async function loadSaved() { if(!bridge?.storage)return; try { const saved=await bridge.storage.read(storageKey); if(saved?.voxels && Array.isArray(saved.voxels)) { Object.assign(state,{...saved,voxels:saved.voxels}); syncControls(); draw(); announce('Saved scene restored'); } } catch(_) {} }
+      function resize() { const r=canvas.getBoundingClientRect(), d=Math.max(1,Math.min(2,window.devicePixelRatio||1)); canvas.width=Math.round(r.width*d); canvas.height=Math.round(r.height*d); ctx.setTransform(d,0,0,d,0,0); draw(); }
+      function hexToRgb(hex) { const n=parseInt(hex.slice(1),16); return {r:n>>16&255,g:n>>8&255,b:n&255}; }
+      function shade(hex, amount) { const {r,g,b}=hexToRgb(hex); const f=amount<0?1+amount:1; const off=amount>0?255*amount:0; return 'rgb('+Math.round(r*f+off)+','+Math.round(g*f+off)+','+Math.round(b*f+off)+')'; }
+      function viewCoord(x,y) { const n=14; if(state.orientation===0)return [x,y]; if(state.orientation===1)return [y,n-1-x]; if(state.orientation===2)return [n-1-x,n-1-y]; return [n-1-y,x]; }
+      function worldCoord(x,y) { const n=14; if(state.orientation===0)return [x,y]; if(state.orientation===1)return [n-1-y,x]; if(state.orientation===2)return [n-1-x,n-1-y]; return [y,n-1-x]; }
+      function metrics() { const r=canvas.getBoundingClientRect(); const z=state.zoom; const tile=Math.max(18,Math.min(52,r.width/22))*z; return {w:r.width,h:r.height,tile,halfW:tile/2,halfH:tile*.27,cubeH:tile*.56,ox:r.width/2+state.panX,oy:r.height*.58+state.panY}; }
+      function iso(x,y,m) { return [m.ox+(x-y)*m.halfW,m.oy+(x+y)*m.halfH]; }
+      function poly(points,fill,stroke) { ctx.beginPath(); ctx.moveTo(points[0][0],points[0][1]); for(let i=1;i<points.length;i++)ctx.lineTo(points[i][0],points[i][1]); ctx.closePath(); ctx.fillStyle=fill; ctx.fill(); if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=1;ctx.stroke();} }
+      function draw() {
+        const r=canvas.getBoundingClientRect(), m=metrics(); ctx.clearRect(0,0,r.width,r.height);
+        const bg=ctx.createLinearGradient(0,0,0,r.height); bg.addColorStop(0,'rgba(255,255,255,.025)'); bg.addColorStop(1,'rgba(0,0,0,.13)'); ctx.fillStyle=bg; ctx.fillRect(0,0,r.width,r.height);
+        ctx.save(); ctx.globalAlpha=.72; ctx.strokeStyle=getComputedStyle(root).getPropertyValue('--vibe-grid'); ctx.lineWidth=1;
+        for(let x=0;x<=14;x++){const a=iso(x,0,m),b=iso(x,14,m);ctx.beginPath();ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1]);ctx.stroke();}
+        for(let y=0;y<=14;y++){const a=iso(0,y,m),b=iso(14,y,m);ctx.beginPath();ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1]);ctx.stroke();} ctx.restore();
+        const sorted=state.voxels.slice().sort((a,b)=>{const av=viewCoord(a[0],a[1]),bv=viewCoord(b[0],b[1]);return av[0]+av[1]-bv[0]-bv[1] || a[2]-b[2];});
+        sorted.forEach(v=>drawVoxel(v,m));
+        if(pointer.x>=0) drawTarget(pointer.x,pointer.y,m);
+        const center=iso(7,7,m); ctx.fillStyle='rgba(255,255,255,.22)'; ctx.font='10px '+getComputedStyle(root).getPropertyValue('--vibe-font-mono'); ctx.textAlign='center'; ctx.fillText('14 × 14',center[0],center[1]+m.tile*4.2);
+      }
+      function drawVoxel(v,m) { const [vx,vy]=viewCoord(v[0],v[1]), floor=iso(vx,vy,m), top=[floor[0],floor[1]-m.cubeH*(v[2]+1)], tw=m.halfW, th=m.halfH; const diamond=[[top[0],top[1]-th],[top[0]+tw,top[1]],[top[0],top[1]+th],[top[0]-tw,top[1]]]; const bottom=[floor[0],floor[1]-m.cubeH*v[2]]; poly([diamond[3],diamond[2],bottom, [bottom[0]-tw,bottom[1]]],shade(v[3],-.2),'rgba(0,0,0,.2)'); poly([diamond[2],diamond[1],[bottom[0]+tw,bottom[1]],bottom],shade(v[3],-.08),'rgba(0,0,0,.2)'); poly(diamond,v[3],'rgba(255,255,255,.3)'); }
+      function drawTarget(x,y,m) { const [vx,vy]=viewCoord(x,y), floor=iso(vx,vy,m), top=[floor[0],floor[1]-m.cubeH*(state.height+1)],tw=m.halfW,th=m.halfH; ctx.save(); ctx.globalAlpha=.72; poly([[top[0],top[1]-th],[top[0]+tw,top[1]],[top[0],top[1]+th],[top[0]-tw,top[1]]],state.tool==='erase'?'rgba(255,150,141,.24)':state.color,'var(--vibe-accent)'); ctx.globalAlpha=.25; ctx.fillStyle=state.tool==='erase'?'#ff968d':state.color; ctx.fillRect(top[0]-2,top[1]-m.cubeH,4,m.cubeH); ctx.restore(); }
+      function cellAt(clientX,clientY) { const r=canvas.getBoundingClientRect(),m=metrics(), sx=clientX-r.left, sy=clientY-r.top+m.cubeH*state.height; const u=(sx-m.ox)/m.halfW,v=(sy-m.oy)/m.halfH; const vx=Math.floor((u+v)/2),vy=Math.floor((v-u)/2); if(vx<0||vy<0||vx>=14||vy>=14)return null; return worldCoord(vx,vy); }
+      function paintAt(x,y) { const size=state.brushSize, radius=(size-1)/2; let changed=false; for(let dx=0;dx<size;dx++)for(let dy=0;dy<size;dy++){const wx=Math.floor(x-radius+dx),wy=Math.floor(y-radius+dy);if(wx<0||wy<0||wx>=14||wy>=14)continue; const i=state.voxels.findIndex(v=>v[0]===wx&&v[1]===wy&&v[2]===state.height); if(state.tool==='erase'){if(i>=0){state.voxels.splice(i,1);changed=true;}}else if(i<0){state.voxels.push([wx,wy,state.height,state.color]);changed=true;}else if(state.voxels[i][3]!==state.color){state.voxels[i][3]=state.color;changed=true;}} if(changed){syncControls();draw();persistSoon();} }
+      function rotate(delta) { state.orientation=(state.orientation+delta+4)%4; pointer={x:-1,y:-1}; syncControls(); draw(); persistSoon(); }
+      function setTool(tool) { state.tool=tool; syncControls(); draw(); persistSoon(); }
+      function setPointer(e) { const c=cellAt(e.clientX,e.clientY); pointer=c||{x:-1,y:-1}; syncControls(); draw(); }
+      canvas.addEventListener('pointerdown', e=>{ if(e.button===1 || e.altKey || e.code==='Space'){panning=true;panStart={x:e.clientX,y:e.clientY,px:state.panX,py:state.panY};canvas.setPointerCapture(e.pointerId);canvas.style.cursor='grabbing';return;} const c=cellAt(e.clientX,e.clientY);if(!c)return;commit();drawing=true;canvas.setPointerCapture(e.pointerId);paintAt(c[0],c[1]); });
+      canvas.addEventListener('pointermove', e=>{ if(panning){state.panX=panStart.px+e.clientX-panStart.x;state.panY=panStart.py+e.clientY-panStart.y;draw();return;}setPointer(e);if(drawing&&pointer.x>=0)paintAt(pointer.x,pointer.y); });
+      canvas.addEventListener('pointerup', e=>{drawing=false;panning=false;canvas.releasePointerCapture?.(e.pointerId);canvas.style.cursor='crosshair';});
+      canvas.addEventListener('pointerleave', ()=>{if(!drawing&&!panning){pointer={x:-1,y:-1};syncControls();draw();}});
+      $('brushTool').onclick=()=>setTool('brush'); $('eraseTool').onclick=()=>setTool('erase'); $('rotateLeft').onclick=()=>rotate(-1); $('rotateRight').onclick=()=>rotate(1);
+      $('zoomIn').onclick=()=>{state.zoom=Math.min(1.8,+(state.zoom+.1).toFixed(2));syncControls();draw();persistSoon();}; $('zoomOut').onclick=()=>{state.zoom=Math.max(.65,+(state.zoom-.1).toFixed(2));syncControls();draw();persistSoon();};
+      $('resetView').onclick=()=>{state.orientation=0;state.zoom=1;state.panX=0;state.panY=16;syncControls();draw();announce('View reset');};
+      $('brushSize').oninput=e=>{state.brushSize=+e.target.value;syncControls();draw();persistSoon();}; $('height').oninput=e=>{state.height=+e.target.value;syncControls();draw();persistSoon();};
+      document.querySelectorAll('.swatch').forEach(b=>b.onclick=()=>{state.color=b.dataset.color;state.tool='brush';syncControls();draw();persistSoon();});
+      $('undo').onclick=undo; $('redo').onclick=redo;
+      $('newScene').onclick=()=>{if(state.voxels.length && !window.confirm('Start a new scene? Your current strokes will be cleared.'))return;commit();state.voxels=[];state.height=0;state.tool='brush';state.orientation=0;state.zoom=1;state.panX=0;state.panY=16;syncControls();draw();persistSoon();announce('New scene ready');};
+      $('saveScene').onclick=async()=>{try{if(bridge?.storage)await bridge.storage.write(storageKey,{voxels:state.voxels,color:state.color,brushSize:state.brushSize,height:state.height,tool:state.tool,orientation:state.orientation,zoom:state.zoom});announce('Scene saved','success');}catch(_){announce('Could not save scene','error');}};
+      $('exportScene').onclick=()=>{const data=JSON.stringify({format:'paint3d-scene',version:1,grid:[14,14,6],voxels:state.voxels},null,2);const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([data],{type:'application/json'}));a.download='paint3d-scene.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500);announce('Scene exported','success');};
+      window.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){e.preventDefault();e.shiftKey?redo():undo();} if(e.key.toLowerCase()==='r'&&!e.ctrlKey&&!e.metaKey){rotate(e.shiftKey?-1:1);} if(e.key==='Escape'){drawing=false;panning=false;}});
+      window.addEventListener('resize',resize); root.addEventListener('change',()=>{draw();});
+      syncControls(); resize(); loadSaved();
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Draw.Io — Flowboard</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app-shell" aria-label="Draw.Io diagram editor">
+    <header class="toolbar">
+      <div class="brand-block">
+        <div class="brand-mark" aria-hidden="true"><span></span><i></i><b></b></div>
+        <div><div class="brand-name">Draw.Io</div><div class="file-name" id="fileName">Untitled flowboard</div></div>
+      </div>
+      <div class="toolbar-group history-group" aria-label="History">
+        <button class="icon-button" id="undoBtn" type="button" aria-label="Undo" title="Undo (Ctrl+Z)"><svg viewBox="0 0 24 24"><path d="M9 7 4 12l5 5M5 12h8a6 6 0 0 1 6 6"/></svg></button>
+        <button class="icon-button" id="redoBtn" type="button" aria-label="Redo" title="Redo (Ctrl+Shift+Z)"><svg viewBox="0 0 24 24"><path d="m15 7 5 5-5 5M19 12h-8a6 6 0 0 0-6 6"/></svg></button>
+      </div>
+      <div class="toolbar-group actions-group">
+        <button class="text-button" id="newBtn" type="button"><span class="button-icon">＋</span> New</button>
+        <button class="text-button" id="saveBtn" type="button"><span class="button-icon">↗</span> Save</button>
+        <button class="text-button accent-button" id="exportBtn" type="button"><span class="button-icon">↓</span> Export</button>
+      </div>
+    </header>
+
+    <section class="workspace">
+      <aside class="left-panel" aria-label="Shape library">
+        <div class="panel-heading"><span>Shapes</span><button class="quiet-icon" id="collapsePalette" type="button" aria-label="Collapse shapes panel">‹</button></div>
+        <div class="shape-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.5"/><path d="m16 16 5 5"/></svg><input id="shapeSearch" type="search" placeholder="Find a shape" aria-label="Find a shape"></div>
+        <div class="shape-list" id="shapeList">
+          <button class="shape-tool" data-shape="process" type="button"><span class="shape-preview process-preview"></span><span>Process</span></button>
+          <button class="shape-tool" data-shape="decision" type="button"><span class="shape-preview decision-preview"></span><span>Decision</span></button>
+          <button class="shape-tool" data-shape="data" type="button"><span class="shape-preview data-preview"></span><span>Data</span></button>
+          <button class="shape-tool" data-shape="terminator" type="button"><span class="shape-preview terminator-preview"></span><span>Start / end</span></button>
+          <button class="shape-tool" data-shape="note" type="button"><span class="shape-preview note-preview"></span><span>Note</span></button>
+        </div>
+        <div class="panel-tip"><span class="tip-dot"></span><span>Click a shape, then drag it onto the board.</span></div>
+      </aside>
+
+      <section class="editor-area">
+        <div class="tabs" role="tablist" aria-label="Diagram tabs">
+          <button class="tab active" role="tab" aria-selected="true" data-tab="flow">Flowboard <span class="close-tab" aria-hidden="true">×</span></button>
+          <button class="add-tab" id="addTab" type="button" aria-label="Add diagram">＋</button>
+        </div>
+        <div class="canvas-wrap" id="canvasWrap">
+          <svg id="diagram" tabindex="0" role="application" aria-label="Editable diagram canvas">
+            <defs>
+              <pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0V24" fill="none" stroke="var(--grid-line)" stroke-width="1"/></pattern>
+              <filter id="softShadow" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="5" stdDeviation="6" flood-color="#0d1523" flood-opacity=".16"/></filter>
+              <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M1 1 8 5 1 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker>
+            </defs>
+            <rect id="canvasBg" x="-10000" y="-10000" width="20000" height="20000" fill="url(#grid)"/>
+            <g id="world" transform="translate(0 0) scale(1)"><g id="edges"></g><g id="nodes"></g></g>
+          </svg>
+          <div class="canvas-hint" id="canvasHint"><span>Drag from a connector dot to link shapes</span><button type="button" id="dismissHint" aria-label="Dismiss tip">×</button></div>
+          <div class="zoom-controls" aria-label="Zoom controls"><button id="zoomOut" type="button" aria-label="Zoom out">−</button><span id="zoomLabel">100%</span><button id="zoomIn" type="button" aria-label="Zoom in">＋</button><span class="zoom-rule"></span><button id="fitBtn" type="button" aria-label="Fit diagram">⌖</button></div>
+          <div class="selection-hint" id="selectionHint">Select a shape to edit its properties</div>
+        </div>
+      </section>
+
+      <aside class="right-panel" id="rightPanel" aria-label="Format panel">
+        <div class="panel-heading"><span>Format</span><button class="quiet-icon" id="closeInspector" type="button" aria-label="Close format panel">×</button></div>
+        <div id="inspectorEmpty" class="inspector-empty"><div class="empty-icon" aria-hidden="true">⌁</div><strong>No selection</strong><span>Choose a shape on the board to view and edit its properties.</span></div>
+        <form id="inspector" class="inspector" hidden>
+          <div class="inspector-type" id="inspectorType">PROCESS</div>
+          <label class="field-label" for="labelInput">Label</label>
+          <textarea id="labelInput" rows="2" maxlength="80"></textarea>
+          <div class="field-row"><div><label class="field-label" for="widthInput">Width</label><input id="widthInput" type="number" min="60" max="500" step="1"></div><div><label class="field-label" for="heightInput">Height</label><input id="heightInput" type="number" min="40" max="300" step="1"></div></div>
+          <label class="field-label" for="fillInput">Fill</label>
+          <div class="color-field"><input id="fillInput" type="color"><span id="fillValue">#E8F1FF</span></div>
+          <div class="inspector-divider"></div>
+          <div class="section-title">Alignment</div>
+          <div class="align-grid"><button type="button" data-align="left" aria-label="Align left">≡</button><button type="button" data-align="center" aria-label="Align center">☷</button><button type="button" data-align="right" aria-label="Align right">≡</button><button type="button" data-align="top" aria-label="Align top">≍</button><button type="button" data-align="middle" aria-label="Align middle">≎</button><button type="button" data-align="bottom" aria-label="Align bottom">≍</button></div>
+          <button class="delete-button" id="deleteBtn" type="button">Delete shape <span>⌫</span></button>
+        </form>
+      </aside>
+      <button class="inspector-toggle" id="inspectorToggle" type="button" aria-label="Open format panel">▤</button>
+    </section>
+    <footer class="statusbar"><span><i class="online-dot"></i><span id="statusText">All changes saved</span></span><span class="status-shortcuts"><kbd>Space</kbd> pan <kbd>Del</kbd> delete <kbd>Esc</kbd> deselect</span><span id="selectionCount">0 objects</span></footer>
+  </main>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+  <title id="title">Powerpoint presentation mark</title>
+  <desc id="desc">A presentation board with layered slides and a rising chart</desc>
+  <defs>
+    <linearGradient id="panel" x1="18" y1="16" x2="110" y2="112" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#d94832"/>
+      <stop offset="1" stop-color="#a91f26"/>
+    </linearGradient>
+    <linearGradient id="page" x1="27" y1="23" x2="99" y2="103" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fffaf5"/>
+      <stop offset="1" stop-color="#f3ddd0"/>
+    </linearGradient>
+  </defs>
+  <rect x="15" y="12" width="86" height="101" rx="12" fill="#6f1820" opacity=".22"/>
+  <rect x="21" y="8" width="86" height="101" rx="12" fill="url(#panel)"/>
+  <rect x="28" y="19" width="72" height="67" rx="5" fill="url(#page)"/>
+  <path d="M28 29h72" stroke="#d7b8aa" stroke-width="2"/>
+  <circle cx="35" cy="24" r="2" fill="#d94832"/>
+  <circle cx="42" cy="24" r="2" fill="#d94832" opacity=".55"/>
+  <path d="M39 70V57h10v13h10V45h10v25h10V36h10v34H39Z" fill="#c43b32"/>
+  <path d="M39 75h50" stroke="#a91f26" stroke-width="3" stroke-linecap="round"/>
+  <path d="M39 42h22" stroke="#b77a6b" stroke-width="3" stroke-linecap="round"/>
+  <path d="M39 48h13" stroke="#d0a99c" stroke-width="3" stroke-linecap="round"/>
+  <path d="M51 109v8M77 109v8" stroke="#6f1820" stroke-width="6" stroke-linecap="round"/>
+  <path d="M42 117h44" stroke="#6f1820" stroke-width="6" stroke-linecap="round"/>
+</svg>

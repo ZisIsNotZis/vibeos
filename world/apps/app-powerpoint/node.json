@@ -1,0 +1,9 @@
+{
+  "id": "app-powerpoint",
+  "title": "Powerpoint",
+  "kind": "app",
+  "status": "ready",
+  "icon": "icon.svg",
+  "entry": "index.html",
+  "children": []
+}

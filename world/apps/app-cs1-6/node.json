@@ -1,0 +1,9 @@
+{
+  "id": "app-cs1-6",
+  "title": "CS1.6",
+  "kind": "app",
+  "status": "ready",
+  "icon": "icon.svg",
+  "children": [],
+  "entry": "index.html"
+}

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+  <title id="title">Excel spreadsheet mark</title>
+  <desc id="desc">A green spreadsheet tile with a folded corner and white table columns.</desc>
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#217346"/>
+      <stop offset="1" stop-color="#0f5b38"/>
+    </linearGradient>
+  </defs>
+  <path d="M22 8h62l22 22v90H22a10 10 0 0 1-10-10V18A10 10 0 0 1 22 8Z" fill="url(#g)"/>
+  <path d="M84 8v22h22" fill="#54a978"/>
+  <rect x="12" y="43" width="49" height="47" rx="5" fill="#185d3e"/>
+  <path d="m25 52 9 12 9-12h9L39 67l14 18h-9l-10-13-10 13h-9l14-18-13-15h9Z" fill="#fff"/>
+  <g fill="none" stroke="#d7f0df" stroke-width="3" opacity=".9">
+    <path d="M70 48h24M70 62h24M70 76h24M70 90h24M70 104h24"/>
+    <path d="M70 48v56M82 48v56M94 48v56"/>
+  </g>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+  <title id="title">Iphone Simulator</title>
+  <desc id="desc">A compact phone silhouette with a simulated home screen grid</desc>
+  <defs>
+    <linearGradient id="shell" x1="18" y1="8" x2="110" y2="120" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#252b3b"/><stop offset="1" stop-color="#111522"/>
+    </linearGradient>
+    <linearGradient id="screen" x1="32" y1="22" x2="92" y2="104" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#526aa5"/><stop offset="1" stop-color="#26365f"/>
+    </linearGradient>
+  </defs>
+  <rect x="20" y="6" width="88" height="116" rx="18" fill="url(#shell)" stroke="#6c7896" stroke-width="3"/>
+  <rect x="27" y="15" width="74" height="98" rx="12" fill="url(#screen)"/>
+  <rect x="48" y="10" width="32" height="6" rx="3" fill="#0b0e18"/>
+  <circle cx="64" cy="118" r="3.5" fill="#8f9ab6"/>
+  <g fill="#d9e5ff">
+    <rect x="37" y="34" width="14" height="14" rx="4"/><rect x="57" y="34" width="14" height="14" rx="4"/>
+    <rect x="77" y="34" width="14" height="14" rx="4"/><rect x="37" y="54" width="14" height="14" rx="4"/>
+    <rect x="57" y="54" width="14" height="14" rx="4"/><rect x="77" y="54" width="14" height="14" rx="4"/>
+  </g>
+  <rect x="37" y="83" width="54" height="15" rx="7.5" fill="#b8c8f4" opacity=".85"/>
+  <path d="M44 90h40" stroke="#526aa5" stroke-width="3" stroke-linecap="round"/>
+</svg>

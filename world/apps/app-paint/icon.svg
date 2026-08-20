@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+  <title id="title">Paint</title>
+  <desc id="desc">A painter's palette with a vivid brush stroke</desc>
+  <defs>
+    <linearGradient id="palette" x1="18" y1="18" x2="105" y2="111" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#E8B86A"/><stop offset="1" stop-color="#B45B38"/>
+    </linearGradient>
+    <linearGradient id="brush" x1="72" y1="84" x2="111" y2="17" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#5E3B38"/><stop offset="1" stop-color="#B98B70"/>
+    </linearGradient>
+  </defs>
+  <path d="M57 17c-23 0-42 17-42 38 0 20 16 35 36 35h9c7 0 10 4 8 9-3 8 3 14 12 12 25-6 37-25 37-48 0-25-25-46-60-46Z" fill="url(#palette)" stroke="#542D2B" stroke-width="6" stroke-linejoin="round"/>
+  <circle cx="39" cy="43" r="8" fill="#D9574B"/><circle cx="64" cy="34" r="8" fill="#327F89"/><circle cx="82" cy="55" r="8" fill="#E7D35C"/><circle cx="39" cy="67" r="8" fill="#6B70BA"/>
+  <path d="M72 89 101 27l8 5-22 65c-3 7-12 10-18 5-4-3-5-8-2-13l5-9Z" fill="url(#brush)" stroke="#3E292B" stroke-width="5" stroke-linejoin="round"/>
+  <path d="m101 27 7-10c2-3 6-4 9-2l3 2c3 2 4 6 2 9l-5 10-16-9Z" fill="#D8DCE4" stroke="#3E292B" stroke-width="5"/>
+  <path d="M76 83c-5 3-9 8-10 14" fill="none" stroke="#F4D5A0" stroke-width="4" stroke-linecap="round"/>
+</svg>

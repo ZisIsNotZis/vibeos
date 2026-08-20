@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+  <title id="title">Zed</title>
+  <desc id="desc">A sharp cobalt Z mark on a warm ivory field</desc>
+  <rect width="128" height="128" rx="28" fill="#f4f0e8"/>
+  <path d="M27 31h74L43 82h58v15H27v-13l58-38H27z" fill="#123b68"/>
+  <path d="M86 31h15L43 82H27z" fill="#d7653f"/>
+  <path d="M92 91h9v6H92z" fill="#d7653f"/>
+</svg>

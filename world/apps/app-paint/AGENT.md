@@ -1,0 +1,1 @@
+- Root Paint surface uses index.html entry and provides canvas drawing, brush/eraser, colors, size, clear, undo, redo.

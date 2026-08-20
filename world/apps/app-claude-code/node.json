@@ -1,0 +1,7 @@
+{
+  "id": "app-claude-code",
+  "title": "Claude Code",
+  "kind": "app",
+  "icon": "icon.svg",
+  "entry": "index.html"
+}

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+  <title id="title">DOTA2</title>
+  <desc id="desc">Angular crimson battle sigil</desc>
+  <path fill="#17151a" d="M16 8h96a8 8 0 0 1 8 8v96a8 8 0 0 1-8 8H16a8 8 0 0 1-8-8V16a8 8 0 0 1 8-8Z"/>
+  <path fill="#b52f3d" d="m29 25 70 8-8 70-62-8-8-70Zm14 13 5 43 34 5 4-43-43-5Z"/>
+  <path fill="#df5260" d="m43 38 19 3-12 12 3 28-10-3-5-40Zm38 5 7 1-4 43-22-3 18-17 1-24Z"/>
+  <path fill="#7e202d" d="m50 53 12-12 20 3-18 17 1 21-11-3-4-26Z"/>
+  <path fill="#f07a7f" d="m62 41 19 2-17 18-12-8 10-12Z" opacity=".9"/>
+  <path fill="none" stroke="#fff1ed" stroke-opacity=".22" stroke-width="2" d="M29 25 99 33 91 103 29 95 21 25Z"/>
+</svg>

@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
-  <title id="title">Tetris 1787140388266</title><desc id="desc">A colorful falling block mark</desc>
-  <rect width="64" height="64" rx="15" fill="#142236"/>
-  <path fill="#54d9ee" d="M13 12h12v12H13zM25 24h12v12H25zM37 36h12v12H37z"/>
-  <path fill="#ffd166" d="M25 12h12v12H25zM37 12h12v12H37zM37 24h12v12H37z"/>
-  <path fill="#b98cff" d="M13 36h12v12H13zM13 48h12v5H13zM25 36h12v12H25z"/>
-</svg>

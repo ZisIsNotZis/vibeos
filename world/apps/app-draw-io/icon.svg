@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">Draw.Io</title>
+  <desc id="desc">A connected diagram node mark for Draw.Io</desc>
+  <defs>
+    <linearGradient id="bg" x1="18" y1="12" x2="238" y2="244" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#f39a3d"/><stop offset="1" stop-color="#d85a2f"/>
+    </linearGradient>
+    <linearGradient id="paper" x1="78" y1="46" x2="184" y2="212" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fffdf9"/><stop offset="1" stop-color="#f5eee5"/>
+    </linearGradient>
+  </defs>
+  <rect x="10" y="10" width="236" height="236" rx="50" fill="url(#bg)"/>
+  <path d="M52 62 112 40l91 29-58 24-93-31Z" fill="#fff" opacity=".16"/>
+  <path d="m74 86 49-21 62 20-48 22-63-21Z" fill="url(#paper)" stroke="#813f2d" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M74 86v70l63 25v-74M185 85v70l-48 26" fill="none" stroke="#813f2d" stroke-width="6" stroke-linejoin="round"/>
+  <path d="m123 65 31-19 45 18-29 21" fill="none" stroke="#813f2d" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M105 124h46M105 143h28" stroke="#d85a2f" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="74" cy="86" r="11" fill="#2c78b8" stroke="#fff" stroke-width="5"/>
+  <circle cx="185" cy="85" r="11" fill="#2c78b8" stroke="#fff" stroke-width="5"/>
+  <circle cx="137" cy="181" r="11" fill="#2c78b8" stroke="#fff" stroke-width="5"/>
+  <path d="M74 86 52 112M185 85l19 28M137 181l-1 26" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="52" cy="112" r="8" fill="#fff"/><circle cx="204" cy="113" r="8" fill="#fff"/><circle cx="136" cy="207" r="8" fill="#fff"/>
+</svg>

@@ -67,7 +67,7 @@ Effort is an execution contract enforced by worker model choice, native reasonin
 | `research` | `gh/gpt-5.6-sol` | `max` | TDD where useful, permitted research, broad interaction/state/edge-case checks, visual review, and multiple repair opportunities |
 | `ultra` | `gh/gpt-5.6-sol` | `ultra` | Largest sensible coherent slice, automatic delegation where available, adversarial review, comprehensive validation, and repeated repair within budget |
 
-The exact model identifiers include the required `gh/` prefix because VibeOS uses the OmniRoute provider. Model routing is explicit and testable; no worker may silently drop the prefix or substitute a different family. `ultra` is an engineering-assurance tier, while `research` emphasizes evidence and investigation. Both remain bounded by the selected search policy.
+The model slider stores the base family without a provider prefix. The independent `useGhPrefix` setting controls whether the runner sends `gpt-5.6-*` or `gh/gpt-5.6-*` to Codex. It defaults off for fresh settings; local OmniRoute users can enable it. Model routing is explicit and testable, and the runner sends the exact configured string without silently changing it. `ultra` is an engineering-assurance tier, while `research` emphasizes evidence and investigation. Both remain bounded by the selected search policy.
 
 Search contracts: `none` forbids Internet access and uses supplied/local context only (the default); `online_info` permits researching current facts while keeping the page locally authored; `online_content` permits online content or repositories as building material, including embedded HTML or GitHub projects serving a web app/backend. The worker must not exceed either selected tier. These are execution contracts, not an application-type enum; generated nodes still own their page behavior, descendants, and internal cache layout.
 
@@ -339,13 +339,13 @@ Ordinary jobs run in isolated staged directories containing read-only input/fram
 
 Repository repair jobs run in a disposable Git worktree or repository copy and may change any VibeOS-owned file there, but never the live checkout or host environment. Their complete diff and tests are validated before transactional publication.
 
-The Codex adapter selects explicit OmniRoute model identifiers and native reasoning effort from the effort table in section 0. It uses `gh/gpt-5.6-terra` for ultrafast through balanced and `gh/gpt-5.6-sol` for quality through ultra. The `gh/` prefix is mandatory. Structured output uses `codex exec --output-schema`; `--json` provides machine-readable trajectory events. A textual ready sentinel is not the handoff contract.
+The Codex adapter selects the configured base model, applies `useGhPrefix`, and passes that exact model identifier together with native reasoning effort. Structured output uses `codex exec --output-schema`; `--json` provides machine-readable trajectory events. A textual ready sentinel is not the handoff contract.
 
 Backend stdout/stderr shows tagged trajectory logs:
 
 ```text
 [generation] queued job=...
-[codex] starting job=... model=gh/gpt-5.6-sol effort=high
+[codex] starting job=... model=gpt-5.6-sol effort=high
 [codex] <stdout>
 [codex:err] <stderr>
 [verification] scenario=... result=...
