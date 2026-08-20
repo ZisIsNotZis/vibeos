@@ -118,42 +118,42 @@ Complexity describes the current slice, not the full real-world product it resem
 
 | App | Snapshot | What it demonstrates | Complexity | Agent time | Human time |
 |---|---|---|---|---:|---:|
-| Assistant | [snapshot](docs/screenshots/apps/assistant.png) | Natural-language repair requests against the current world | 🔵 Interactive | ~5–20 s | ~10 s |
-| App Shop | [snapshot](docs/screenshots/apps/app-shop.png) | Searchable app installation and durable launcher identity | 🔵 Interactive | ~5–15 s | ~10 s |
-| Settings | [snapshot](docs/screenshots/apps/settings.png) | Model, reasoning, effort, search, themes, scale, dock, and notification preferences | 🔵 Interactive | ~5–15 s | ~10 s |
-| Browser | [snapshot](docs/screenshots/apps/browser.png) | Locally authored destinations, search routes, and cached child pages | 🔵 Interactive | ~10–30 s | ~15 s |
-| Firefox | [snapshot](docs/screenshots/apps/firefox.png) | A replaceable browser-like app using the same core navigation | 🔵 Interactive | ~10–30 s | ~15 s |
-| Sublime Text | [snapshot](docs/screenshots/apps/sublime-text.png) | Persistent tabs, editor state, highlighting, save, run, and command palette | 🟣 Rich | ~30–90 s | ~2–5 min |
-| Zed | [snapshot](docs/screenshots/apps/zed.png) | A second editor identity generated from a short request | 🔵 Interactive | ~10–30 s | ~20 s |
-| Codex | [snapshot](docs/screenshots/apps/codex.png) | An app-shaped interface for the underlying coding agent | 🔵 Interactive | ~10–30 s | ~20 s |
-| Claude Code | [snapshot](docs/screenshots/apps/claude-code.png) | An alternative coding-agent world node | 🟢 Seed / shell | ~10–30 s | ~20 s |
-| Paint | [snapshot](docs/screenshots/apps/paint.png) | Persistent raster canvas and browser-native export path | 🟣 Rich | ~30–90 s | ~2–5 min |
-| Paint 3D | [snapshot](docs/screenshots/apps/paint3d.png) | A 3D-oriented creative-tool identity | 🔵 Interactive | ~10–30 s | ~30 s |
-| CAD Editor | [snapshot](docs/screenshots/apps/cad-editor.png) | Visual editing, file-oriented workflows, and external-file semantics | 🟣 Rich | ~30–90 s | ~5–10 min |
-| 3D Model Editor | [snapshot](docs/screenshots/apps/3d-model-editor.png) | Scene-oriented 3D editing and persistent model data | 🔴 3D / game | ~45–120 s | ~5–10 min |
-| Draw.io | [snapshot](docs/screenshots/apps/draw-io.png) | Diagram-editor identity and extensible visual-tool surface | 🟣 Rich | ~20–60 s | ~2–5 min |
-| MIDI Editor | [snapshot](docs/screenshots/apps/midi-editor.png) | Timeline/grid editing with an audio-production vocabulary | 🟣 Rich | ~20–60 s | ~2–5 min |
-| Music Studio | [snapshot](docs/screenshots/apps/music-studio.png) | Purpose-built creative studio with custom visual identity | 🟣 Rich | ~20–60 s | ~2–5 min |
-| Poetry House | [snapshot](docs/screenshots/apps/poetry-house.png) | Chinese creative writing with bespoke artwork | 🔵 Interactive | ~20–60 s | ~1–3 min |
-| Scientific Calculator | [snapshot](docs/screenshots/apps/scientific-calculator.png) | Real keypad, expressions, functions, and answer memory | 🔵 Interactive | ~20–60 s | ~1–3 min |
-| Minesweeper | [snapshot](docs/screenshots/apps/minesweeper.png) | Grid state, reveal/flag interactions, and restart flow | 🔵 Interactive | ~20–60 s | ~1–3 min |
-| FreeCell | [snapshot](docs/screenshots/apps/freecell.png) | Card-game world with deal and rules child surfaces | 🟣 Rich | ~30–90 s | ~2–5 min |
-| Tetris | [snapshot](docs/screenshots/apps/tetris.png) | Lazy game pages progressing into a real keyboard-playable board | 🔴 3D / game | ~30–120 s | ~5–15 min |
-| DOTA2 | [snapshot](docs/screenshots/apps/dota2.png) | Three lanes, river, jungle, camera, HUD, abilities, combat, and respawn | 🔴 3D / game | ~2–6 min | ~10–20 min |
-| Red Alert 3 | [snapshot](docs/screenshots/apps/red-alert-3.png) | Strategy-game lobby flow and generated child screens | 🔴 3D / game | ~45–120 s | ~5–10 min |
-| Warcraft III | [snapshot](docs/screenshots/apps/warcraft-iii.png) | Strategy-game identity and battlefield direction | 🔴 3D / game | ~20–60 s | ~2–5 min |
-| CS 1.6 | [snapshot](docs/screenshots/apps/cs1-6.png) | First-person-game shell and extensible game-world surface | 🔴 3D / game | ~20–60 s | ~2–5 min |
-| Flappy Bird | [snapshot](docs/screenshots/apps/flappy-bird.png) | Compact real-time arcade loop | 🔴 3D / game | ~20–60 s | ~1–3 min |
-| Temple Run | [snapshot](docs/screenshots/apps/temple-run.png) | Endless-runner direction, score, and progress state | 🔴 3D / game | ~20–60 s | ~1–3 min |
-| 3D Pinball: Space Cadet | [snapshot](docs/screenshots/apps/3d-pinball-space-cadet.png) | Physics-flavored 3D arcade scene | 🔴 3D / game | ~30–90 s | ~2–5 min |
-| Android Simulator | [snapshot](docs/screenshots/apps/android-simulator.png) | Nested-device environment and child world | 🟣 Rich | ~30–90 s | ~3–8 min |
-| iPhone Simulator | [snapshot](docs/screenshots/apps/iphone-simulator.png) | Another device-world interpretation | 🟣 Rich | ~30–90 s | ~3–8 min |
-| Excel | [snapshot](docs/screenshots/apps/excel.png) | Spreadsheet direction and future extensibility target | 🟢 Seed / shell | ~10–30 s | ~20 s |
-| Word | [snapshot](docs/screenshots/apps/word.png) | Document-editor identity ready for deeper lazy pages | 🟢 Seed / shell | ~10–30 s | ~20 s |
-| PowerPoint | [snapshot](docs/screenshots/apps/powerpoint.png) | Presentation-tool identity and future slide-world surface | 🟢 Seed / shell | ~10–30 s | ~20 s |
-| Outlook | [snapshot](docs/screenshots/apps/outlook.png) | Communication-tool identity for future mail/calendar flows | 🟢 Seed / shell | ~10–30 s | ~20 s |
-| Plants vs Zombies | [snapshot](docs/screenshots/apps/plants-vs-zombies.png) | Game request staged for deeper lazy implementation | 🟢 Seed / shell | ~10–30 s | ~20 s |
-| 押韵大师 ProMax | [snapshot](docs/screenshots/apps/promax.png) | Bespoke Chinese creative app from a concise concept | 🟣 Rich | ~30–90 s | ~2–5 min |
+| Assistant | ![Assistant](docs/screenshots/apps/assistant.png) | Natural-language repair requests against the current world | 🔵 Interactive | ~5–20 s | ~10 s |
+| App Shop | ![App Shop](docs/screenshots/apps/app-shop.png) | Searchable app installation and durable launcher identity | 🔵 Interactive | ~5–15 s | ~10 s |
+| Settings | ![Settings](docs/screenshots/apps/settings.png) | Model, reasoning, effort, search, themes, scale, dock, and notification preferences | 🔵 Interactive | ~5–15 s | ~10 s |
+| Browser | ![Browser](docs/screenshots/apps/browser.png) | Locally authored destinations, search routes, and cached child pages | 🔵 Interactive | ~10–30 s | ~15 s |
+| Firefox | ![Firefox](docs/screenshots/apps/firefox.png) | A replaceable browser-like app using the same core navigation | 🔵 Interactive | ~10–30 s | ~15 s |
+| Sublime Text | ![Sublime Text](docs/screenshots/apps/sublime-text.png) | Persistent tabs, editor state, highlighting, save, run, and command palette | 🟣 Rich | ~30–90 s | ~2–5 min |
+| Zed | ![Zed](docs/screenshots/apps/zed.png) | A second editor identity generated from a short request | 🔵 Interactive | ~10–30 s | ~20 s |
+| Codex | ![Codex](docs/screenshots/apps/codex.png) | An app-shaped interface for the underlying coding agent | 🔵 Interactive | ~10–30 s | ~20 s |
+| Claude Code | ![Claude Code](docs/screenshots/apps/claude-code.png) | An alternative coding-agent world node | 🟢 Seed / shell | ~10–30 s | ~20 s |
+| Paint | ![Paint](docs/screenshots/apps/paint.png) | Persistent raster canvas and browser-native export path | 🟣 Rich | ~30–90 s | ~2–5 min |
+| Paint 3D | ![Paint 3D](docs/screenshots/apps/paint3d.png) | A 3D-oriented creative-tool identity | 🔵 Interactive | ~10–30 s | ~30 s |
+| CAD Editor | ![CAD Editor](docs/screenshots/apps/cad-editor.png) | Visual editing, file-oriented workflows, and external-file semantics | 🟣 Rich | ~30–90 s | ~5–10 min |
+| 3D Model Editor | ![3D Model Editor](docs/screenshots/apps/3d-model-editor.png) | Scene-oriented 3D editing and persistent model data | 🔴 3D / game | ~45–120 s | ~5–10 min |
+| Draw.io | ![Draw.io](docs/screenshots/apps/draw-io.png) | Diagram-editor identity and extensible visual-tool surface | 🟣 Rich | ~20–60 s | ~2–5 min |
+| MIDI Editor | ![MIDI Editor](docs/screenshots/apps/midi-editor.png) | Timeline/grid editing with an audio-production vocabulary | 🟣 Rich | ~20–60 s | ~2–5 min |
+| Music Studio | ![Music Studio](docs/screenshots/apps/music-studio.png) | Purpose-built creative studio with custom visual identity | 🟣 Rich | ~20–60 s | ~2–5 min |
+| Poetry House | ![Poetry House](docs/screenshots/apps/poetry-house.png) | Chinese creative writing with bespoke artwork | 🔵 Interactive | ~20–60 s | ~1–3 min |
+| Scientific Calculator | ![Scientific Calculator](docs/screenshots/apps/scientific-calculator.png) | Real keypad, expressions, functions, and answer memory | 🔵 Interactive | ~20–60 s | ~1–3 min |
+| Minesweeper | ![Minesweeper](docs/screenshots/apps/minesweeper.png) | Grid state, reveal/flag interactions, and restart flow | 🔵 Interactive | ~20–60 s | ~1–3 min |
+| FreeCell | ![FreeCell](docs/screenshots/apps/freecell.png) | Card-game world with deal and rules child surfaces | 🟣 Rich | ~30–90 s | ~2–5 min |
+| Tetris | ![Tetris](docs/screenshots/apps/tetris.png) | Lazy game pages progressing into a real keyboard-playable board | 🔴 3D / game | ~30–120 s | ~5–15 min |
+| DOTA2 | ![DOTA2](docs/screenshots/apps/dota2.png) | Three lanes, river, jungle, camera, HUD, abilities, combat, and respawn | 🔴 3D / game | ~2–6 min | ~10–20 min |
+| Red Alert 3 | ![Red Alert 3](docs/screenshots/apps/red-alert-3.png) | Strategy-game lobby flow and generated child screens | 🔴 3D / game | ~45–120 s | ~5–10 min |
+| Warcraft III | ![Warcraft III](docs/screenshots/apps/warcraft-iii.png) | Strategy-game identity and battlefield direction | 🔴 3D / game | ~20–60 s | ~2–5 min |
+| CS 1.6 | ![CS 1.6](docs/screenshots/apps/cs1-6.png) | First-person-game shell and extensible game-world surface | 🔴 3D / game | ~20–60 s | ~2–5 min |
+| Flappy Bird | ![Flappy Bird](docs/screenshots/apps/flappy-bird.png) | Compact real-time arcade loop | 🔴 3D / game | ~20–60 s | ~1–3 min |
+| Temple Run | ![Temple Run](docs/screenshots/apps/temple-run.png) | Endless-runner direction, score, and progress state | 🔴 3D / game | ~20–60 s | ~1–3 min |
+| 3D Pinball: Space Cadet | ![3D Pinball: Space Cadet](docs/screenshots/apps/3d-pinball-space-cadet.png) | Physics-flavored 3D arcade scene | 🔴 3D / game | ~30–90 s | ~2–5 min |
+| Android Simulator | ![Android Simulator](docs/screenshots/apps/android-simulator.png) | Nested-device environment and child world | 🟣 Rich | ~30–90 s | ~3–8 min |
+| iPhone Simulator | ![iPhone Simulator](docs/screenshots/apps/iphone-simulator.png) | Another device-world interpretation | 🟣 Rich | ~30–90 s | ~3–8 min |
+| Excel | ![Excel](docs/screenshots/apps/excel.png) | Spreadsheet direction and future extensibility target | 🟢 Seed / shell | ~10–30 s | ~20 s |
+| Word | ![Word](docs/screenshots/apps/word.png) | Document-editor identity ready for deeper lazy pages | 🟢 Seed / shell | ~10–30 s | ~20 s |
+| PowerPoint | ![PowerPoint](docs/screenshots/apps/powerpoint.png) | Presentation-tool identity and future slide-world surface | 🟢 Seed / shell | ~10–30 s | ~20 s |
+| Outlook | ![Outlook](docs/screenshots/apps/outlook.png) | Communication-tool identity for future mail/calendar flows | 🟢 Seed / shell | ~10–30 s | ~20 s |
+| Plants vs Zombies | ![Plants vs Zombies](docs/screenshots/apps/plants-vs-zombies.png) | Game request staged for deeper lazy implementation | 🟢 Seed / shell | ~10–30 s | ~20 s |
+| 押韵大师 ProMax | ![押韵大师 ProMax](docs/screenshots/apps/promax.png) | Bespoke Chinese creative app from a concise concept | 🟣 Rich | ~30–90 s | ~2–5 min |
 
 The table shows the range of software VibeOS can hold, not a claim that every node is a finished commercial product. The same core supports shells, tools, editors, simulations, websites, and games.
 
