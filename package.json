@@ -11,7 +11,8 @@
   "scripts": {
     "dev": "concurrently \"npm run dev --workspace @vibeos/server\" \"npm run dev --workspace @vibeos/web\"",
     "build": "npm run build --workspaces",
-    "test": "npm run test --workspace @vibeos/server"
+    "test": "npm run test --workspace @vibeos/server",
+    "e2e": "npm run e2e --workspace @vibeos/web"
   },
   "devDependencies": {
     "@types/react": "^19.2.18",
