@@ -77,5 +77,5 @@ export type Operation = { id: string; intent: RuntimeIntent; state: OperationSta
 export type RuntimeSnapshot = { windows: WindowModel[]; operations: Operation[]; notifications: string[]; apps: AppRecord[]; surfaces: Surface[]; settings: VibeOSSettings };
 export type RuntimeEvent = { type: 'snapshot'; snapshot: RuntimeSnapshot } | { type: 'operation'; operation: Operation } | { type: 'window'; window: WindowModel } | { type: 'surface'; surface: Surface } | { type: 'world_changed'; apps: AppId[]; routes?: string[] } | { type: 'notification'; message: string } | { type: 'trace'; operationId?: string; message: string } | { type: 'bridge_result'; requestId: string; ok: boolean; value?: unknown; error?: string };
 export type AgentTask = { operationId: string; capability: string; intent: RuntimeIntent; input: unknown; target: string; context?: { parent?: unknown; node?: unknown; siblings?: unknown[]; existingFiles?: string[]; acceptance?: string[]; settings?: VibeOSSettings } };
-export type AgentResult = { ok: true; capability: string; files?: string[] } | { ok: false; message: string };
+export type AgentResult = { ok: true; capability: string; files?: string[]; result?: { status?: 'ready' | 'deferred'; summary?: string; changedApps?: AppId[]; routes?: string[]; value?: unknown } } | { ok: false; message: string };
 export * from './world.js';

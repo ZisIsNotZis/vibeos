@@ -136,9 +136,17 @@ export class OperatingSystemRuntime {
   }
   private async aiCommand(appId: string, request: Extract<import('@vibeos/shared').BridgeOperation, { type: 'ai.command' }>) {
     if (!request.command.trim()) throw new Error('AI command cannot be empty.');
-    const scope = request.scope ?? 'app'; const targetApp = typeof scope === 'object' ? scope.appId : appId;
-    const result = await this.agent.fulfill({ operationId: `ai-${appId}-${Date.now()}`, capability: `ai:command:${appId}`, intent: { type: 'assistant_request', message: request.command, context: { nodeId: targetApp } }, input: { command: request.command, scope, context: request.context, output: request.output }, target: join(worldRoot, 'apps', targetApp), context: { ...this.generationContext(targetApp, '/'), settings: this.state.settings, acceptance: ['complete the command or create an explicit deferred action'] } });
-    if (!result.ok) throw new Error(result.message); this.reloadWorld([targetApp]); return { status: 'completed', summary: 'Command completed.', changedApps: [targetApp] };
+    const scope = request.scope ?? 'app'; const index = loadWorld(worldRoot); const targetApp = typeof scope === 'object' ? scope.appId : appId;
+    if (typeof scope === 'object' && !index.nodes.some(node => node.id === targetApp)) throw new Error('AI command target app does not exist.');
+    const targets = scope === 'world' ? index.nodes.filter(node => node.kind === 'app').map(node => node.id) : scope === 'descendants' ? descendants(index.nodes, appId) : [targetApp];
+    const changedApps: string[] = []; let result: AgentResult | undefined;
+    for (const target of targets) {
+      result = await this.agent.fulfill({ operationId: `ai-${appId}-${Date.now()}-${target}`, capability: `ai:command:${appId}`, intent: { type: 'assistant_request', message: request.command, context: { nodeId: target } }, input: { command: request.command, scope, context: request.context, output: request.output }, target: join(worldRoot, 'apps', target), context: { ...this.generationContext(target, '/'), settings: this.state.settings, acceptance: ['complete the command or create an explicit deferred action'] } });
+      if (!result.ok) throw new Error(result.message); changedApps.push(target);
+    }
+    if (!result?.ok) throw new Error('AI command produced no result.');
+    this.reloadWorld(changedApps);
+    return { status: result.result?.status === 'deferred' ? 'deferred' : 'completed', summary: result.result?.summary ?? 'Command completed.', changedApps, routes: result.result?.routes, value: result.result?.value };
   }
   private assertBridgeIntent(appId: string, intent: Exclude<RuntimeIntent, { type: 'bridge_request' }>) {
     const target = 'appId' in intent ? intent.appId : undefined;
@@ -166,3 +174,4 @@ export class OperatingSystemRuntime {
     return copy as T;
   }
 }
+function descendants(nodes: ReturnType<typeof loadWorld>['nodes'], root: string) { const found: string[] = []; const visit = (parent: string) => { for (const node of nodes.filter(item => item.parentId === parent && item.kind === 'app')) { found.push(node.id); visit(node.id); } }; visit(root); return found.length ? found : [root]; }

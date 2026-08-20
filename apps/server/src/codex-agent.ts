@@ -51,7 +51,8 @@ export class CodexAgentAdapter implements AgentAdapter {
         if (!published.ok) throw new Error(`Published capability could not be loaded: ${published.errors.join('; ')}`);
       });
       log('generation', `published job=${staged.id} files=${candidate.files.length} bytes=${candidate.bytes}`); updateJobRecord(staged, 'published', { files: candidate.files, bytes: candidate.bytes });
-      return { ok: true, capability: task.capability, files: candidate.files };
+      const worker = readStructuredWorkerResult(staged.resultFile);
+      return { ok: true, capability: task.capability, files: candidate.files, result: worker };
     } catch (cause) {
       log('generation', `rejected job=${staged.id} error=${cause instanceof Error ? cause.message : String(cause)}`); updateJobRecord(staged, 'failed', { error: cause instanceof Error ? cause.message : String(cause) });
       return { ok: false, message: cause instanceof Error ? cause.message : 'The generated capability was rejected.' };

@@ -181,6 +181,11 @@ test('generated bridge binds navigation and dispatched app operations to the cal
   const rejected = await runtime.dispatch({ type: 'bridge_request', requestId: 'spoof', appId: 'app-firefox', operation: { type: 'dispatch', intent: { type: 'open_surface', appId: 'browser', route: '/baidu.com' } } });
   assert.equal(rejected.state, 'failed');
 });
+test('generated apps can request generic AI work and emit world changes', async () => {
+  const agent = new FakeAgent(); const events: RuntimeEvent[] = []; const runtime = new OperatingSystemRuntime(agent, { send: event => events.push(event) });
+  const result = await runtime.dispatch({ type: 'bridge_request', requestId: 'ai-1', appId: 'app-editor', operation: { type: 'ai.command', command: 'Create a child note', scope: 'app', context: { selection: 'hello' }, output: 'generate' } });
+  assert.equal(result.state, 'ready'); assert.equal(agent.tasks.at(-1)?.capability, 'ai:command:app-editor'); assert.equal(events.some(event => event.type === 'world_changed' && event.apps.includes('app-editor')), true);
+});
 test('settings default to quality and none, update, persist, and reach generation', async () => {
   const agent = new FakeAgent(); const store = new MemoryStore(); const runtime = new OperatingSystemRuntime(agent, { send() {} }, store);
   assert.deepEqual(runtime.snapshot().settings, { model: 'terra', reasoning: 'high', effort: 'quality', search: 'none', appearance: { mode: 'dark', backgroundMode: 'fill', autoHideChromeOnMaximize: false, dockPosition: 'bottom' } });
