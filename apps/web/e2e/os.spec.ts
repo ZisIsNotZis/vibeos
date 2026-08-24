@@ -110,6 +110,23 @@ test('keyboard shortcuts open and close global overlays', async ({ page }) => {
   await expect(page.locator('.launcher input[placeholder="Search apps"]')).not.toBeVisible();
 });
 
+test('desktop command palette submits a world-scoped command', async ({ page }) => {
+  await page.goto('/');
+  for (let attempt = 0; attempt < 12; attempt += 1) {
+    const close = page.locator('.window:not(.window-closing) .close-control');
+    if (await close.count() === 0) break;
+    await close.last().click({ force: true });
+    await page.waitForTimeout(260);
+  }
+  await page.locator('.topbar').click();
+  await page.keyboard.press('Control+k');
+  const palette = page.getByLabel('Command palette');
+  await expect(palette).toHaveAttribute('placeholder', 'Command the VibeOS desktop');
+  await palette.fill('show me the desktop state');
+  await palette.press('Enter');
+  await expect(palette).not.toBeVisible();
+});
+
 test('core Chinese IME converts pinyin without a host IME', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: /open app launcher/i }).click();
