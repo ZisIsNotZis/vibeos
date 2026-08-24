@@ -1,9 +1,10 @@
 {
   "id": "app--by-hyperframe",
-  "title": "奖状生成器 by Hyperframe",
+  "title": "Hyperframe",
   "kind": "app",
-  "status": "ready",
   "icon": "icon.svg",
-  "children": [],
-  "entry": "index.html"
+  "entry": "index.html",
+  "routes": {
+    "/": "index.html"
+  }
 }
