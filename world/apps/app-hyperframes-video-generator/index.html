@@ -5,206 +5,68 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Hyperframes Studio</title>
   <style>
-    :root {
-      --bg: var(--vibe-surface, #191923);
-      --panel: var(--vibe-raised, #242431);
-      --control: var(--vibe-control, #303044);
-      --ink: var(--vibe-text, #f1f1f6);
-      --muted: var(--vibe-muted, #aeb0c2);
-      --line: var(--vibe-border, #ffffff22);
-      --accent: var(--vibe-accent, #a89dfc);
-      --mint: #73e1d1;
-      --gold: #f6c66f;
-      --ui: var(--vibe-font-ui, Inter, ui-sans-serif, system-ui, sans-serif);
-      --mono: var(--vibe-font-mono, ui-monospace, monospace);
-    }
+    :root { --bg: var(--vibe-surface, #191923); --panel: var(--vibe-raised, #242431); --control: var(--vibe-control, #303044); --ink: var(--vibe-text, #f1f1f6); --muted: var(--vibe-muted, #aeb0c2); --line: var(--vibe-border, #ffffff22); --accent: var(--vibe-accent, #a89dfc); --mint: #73e1d1; --gold: #f6c66f; --danger: #ef9a9a; --ui: var(--vibe-font-ui, Inter, ui-sans-serif, system-ui, sans-serif); --mono: var(--vibe-font-mono, ui-monospace, monospace); }
     * { box-sizing: border-box; }
     html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--ink); }
     body { font-family: var(--ui); font-size: var(--vibe-text-body, 14px); line-height: var(--vibe-line-normal, 1.5); overflow: hidden; }
-    button, input, textarea { font: inherit; }
-    button { color: inherit; }
+    button, textarea, select { font: inherit; } button { color: inherit; }
     .app { height: 100vh; min-height: 420px; display: grid; grid-template-rows: 58px 1fr; overflow: hidden; }
-    .topbar { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 0 28px; border-bottom: 1px solid var(--line); background: color-mix(in srgb, var(--bg) 82%, var(--panel)); }
-    .brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
-    .brand img { width: 27px; height: 27px; border-radius: 8px; }
-    .brand-copy { display: grid; line-height: 1.1; }
-    .brand-name { font-size: 14px; font-weight: 700; letter-spacing: .01em; }
-    .brand-sub { margin-top: 4px; color: var(--muted); font: 10px var(--mono); letter-spacing: .08em; text-transform: uppercase; }
-    .top-actions { display: flex; align-items: center; gap: 10px; }
-    .credits { color: var(--muted); font-size: 12px; padding-right: 10px; border-right: 1px solid var(--line); }
-    .avatar { width: 28px; height: 28px; border: 0; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--mint)); color: #161522; font-size: 11px; font-weight: 800; }
-    .layout { display: grid; grid-template-columns: minmax(410px, 1fr) minmax(310px, 420px); gap: 22px; width: min(1220px, 100%); margin: 0 auto; padding: 24px 28px 30px; min-height: 0; overflow: auto; }
-    .left { min-width: 0; display: flex; flex-direction: column; gap: 22px; }
-    .eyebrow { margin: 0 0 6px; color: var(--accent); font: 11px var(--mono); letter-spacing: .14em; text-transform: uppercase; }
-    h1 { margin: 0; font-size: clamp(25px, 3vw, 37px); line-height: var(--vibe-line-tight, 1.15); letter-spacing: -.045em; }
-    .lede { max-width: 600px; margin: 9px 0 0; color: var(--muted); font-size: 14px; }
-    .prompt-card, .preview-card, .recent-card { border: 1px solid var(--line); border-radius: 18px; background: var(--panel); box-shadow: 0 18px 50px #05050c1a; }
-    .prompt-card { padding: 18px; }
-    .field-label { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 8px; color: var(--muted); font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
-    .count { color: var(--muted); font: 10px var(--mono); font-weight: 400; letter-spacing: 0; text-transform: none; }
-    textarea { display: block; width: 100%; min-height: 122px; resize: vertical; border: 1px solid var(--line); border-radius: 12px; padding: 14px; outline: none; background: color-mix(in srgb, var(--control) 75%, var(--bg)); color: var(--ink); font-size: 15px; line-height: 1.55; }
-    textarea::placeholder { color: color-mix(in srgb, var(--muted) 72%, transparent); }
-    textarea:focus, input:focus-visible, button:focus-visible { border-color: var(--accent); outline: 2px solid color-mix(in srgb, var(--accent) 45%, transparent); outline-offset: 2px; }
-    .suggestions { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 10px; }
-    .suggestion { border: 1px solid var(--line); border-radius: 999px; padding: 5px 10px; background: transparent; color: var(--muted); font-size: 11px; cursor: pointer; transition: .16s ease; }
-    .suggestion:hover { border-color: var(--accent); color: var(--ink); background: color-mix(in srgb, var(--accent) 11%, transparent); }
-    .form-row { display: flex; align-items: flex-end; gap: 18px; margin-top: 18px; }
-    .field { min-width: 0; flex: 1; }
-    .select-like { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 39px; border: 1px solid var(--line); border-radius: 10px; padding: 0 11px; background: color-mix(in srgb, var(--control) 75%, var(--bg)); color: var(--ink); }
-    .select-like select { width: 100%; border: 0; outline: 0; background: transparent; color: inherit; appearance: none; cursor: pointer; }
-    .select-like::after { content: '⌄'; color: var(--muted); pointer-events: none; }
-    option { background: var(--panel); color: var(--ink); }
-    .create { min-height: 41px; border: 0; border-radius: 10px; padding: 0 18px; background: var(--accent); color: #171529; font-weight: 800; cursor: pointer; white-space: nowrap; transition: transform .16s ease, filter .16s ease; }
-    .create:hover { filter: brightness(1.08); transform: translateY(-1px); }
-    .create:active { transform: translateY(1px); }
-    .create:disabled { cursor: wait; opacity: .7; }
-    .notice { min-height: 20px; margin: 12px 0 0; color: var(--muted); font-size: 12px; }
-    .notice[data-kind="error"] { color: #f49b9b; }
-    .notice[data-kind="success"] { color: var(--mint); }
-    .section-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-    h2 { margin: 0; font-size: 15px; letter-spacing: -.01em; }
-    .text-button { border: 0; background: transparent; color: var(--accent); font-size: 12px; cursor: pointer; }
-    .recent-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
-    .recent-item { min-width: 0; border: 1px solid var(--line); border-radius: 12px; padding: 9px; background: color-mix(in srgb, var(--control) 55%, var(--panel)); cursor: pointer; text-align: left; }
-    .thumb { aspect-ratio: 16 / 9; overflow: hidden; border-radius: 8px; background: linear-gradient(135deg, #43368d, #0f3647); position: relative; }
-    .thumb::before { content: ''; position: absolute; width: 80%; height: 140%; left: 12%; top: -20%; background: linear-gradient(90deg, transparent, #73e1d155 45%, transparent 55%); transform: rotate(25deg); }
-    .thumb.amber { background: linear-gradient(135deg, #8a4228, #2c1b41); }
-    .thumb.amber::before { background: linear-gradient(90deg, transparent, #f6c66f55 45%, transparent 55%); }
-    .thumb.mint { background: linear-gradient(135deg, #1e615d, #182d55); }
-    .recent-title { display: block; overflow: hidden; margin-top: 8px; color: var(--ink); font-size: 11px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
-    .recent-meta { display: block; margin-top: 2px; color: var(--muted); font: 10px var(--mono); }
-    .preview-card { min-width: 0; padding: 14px; align-self: start; }
-    .preview-head { display: flex; align-items: center; justify-content: space-between; padding: 3px 3px 12px; }
-    .preview-status { display: inline-flex; align-items: center; gap: 6px; color: var(--mint); font: 10px var(--mono); letter-spacing: .06em; text-transform: uppercase; }
-    .preview-status::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--mint); box-shadow: 0 0 11px var(--mint); }
-    .preview-stage { position: relative; aspect-ratio: 16 / 10; overflow: hidden; border-radius: 12px; background: #16132a; }
-    .preview-stage svg { display: block; width: 100%; height: 100%; }
-    .stage-copy { position: absolute; left: 8%; bottom: 12%; max-width: 70%; }
-    .stage-kicker { margin-bottom: 6px; color: var(--gold); font: 10px var(--mono); letter-spacing: .16em; text-transform: uppercase; }
-    .stage-title { margin: 0; color: #fff; font-size: clamp(18px, 3vw, 28px); line-height: .98; letter-spacing: -.05em; }
-    .play { position: absolute; top: 50%; left: 50%; display: grid; place-items: center; width: 46px; height: 46px; border: 1px solid #ffffff66; border-radius: 50%; background: #16132acc; color: #fff; cursor: pointer; transform: translate(-50%, -50%); transition: background .16s ease, transform .16s ease; }
-    .play:hover { background: #16132af2; transform: translate(-50%, -50%) scale(1.05); }
-    .play svg { width: 16px; height: 16px; margin-left: 2px; fill: currentColor; }
-    .preview-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 2px 1px; }
-    .preview-caption { min-width: 0; }
-    .preview-title { overflow: hidden; color: var(--ink); font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
-    .preview-sub { color: var(--muted); font: 10px var(--mono); }
-    .export { border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; background: transparent; color: var(--ink); font-size: 11px; cursor: pointer; }
-    .export:hover { border-color: var(--accent); }
-    .tips { display: grid; grid-template-columns: repeat(2, 1fr); gap: 9px; margin-top: 12px; }
-    .tip { border-top: 1px solid var(--line); padding-top: 10px; color: var(--muted); font-size: 11px; }
-    .tip strong { display: block; margin-bottom: 3px; color: var(--ink); font-size: 12px; }
-    @media (max-width: 820px) {
-      body { overflow: auto; }
-      .app { height: auto; min-height: 100vh; }
-      .topbar { padding: 0 18px; }
-      .layout { grid-template-columns: 1fr; padding: 22px 18px 28px; }
-      .preview-card { order: -1; }
-      .preview-stage { aspect-ratio: 16 / 8; }
-    }
-    @media (max-width: 520px) {
-      .credits { display: none; }
-      .form-row { align-items: stretch; flex-direction: column; gap: 12px; }
-      .create { width: 100%; }
-      .recent-grid { grid-template-columns: 1fr; }
-      .recent-item { display: grid; grid-template-columns: 96px 1fr; gap: 9px; align-items: center; }
-      .recent-title { margin: 0; }
-      .recent-meta { grid-column: 2; }
-    }
+    .topbar { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 0 28px; border-bottom: 1px solid var(--line); background: color-mix(in srgb, var(--bg) 84%, var(--panel)); }
+    .brand { display: flex; align-items: center; gap: 10px; min-width: 0; } .brand img { width: 28px; height: 28px; border-radius: 8px; }
+    .brand-copy { display: grid; line-height: 1.1; } .brand-name { font-size: 14px; font-weight: 750; letter-spacing: .01em; } .brand-sub { margin-top: 4px; color: var(--muted); font: 10px var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+    .top-actions { display: flex; align-items: center; gap: 11px; } .credits { color: var(--muted); font-size: 12px; padding-right: 12px; border-right: 1px solid var(--line); } .avatar { display: grid; place-items: center; width: 29px; height: 29px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--mint)); color: #17162b; font-size: 11px; font-weight: 800; }
+    .layout { display: grid; grid-template-columns: minmax(400px, 1fr) minmax(320px, 450px); gap: 24px; width: min(1240px, 100%); margin: 0 auto; padding: 26px 28px 32px; min-height: 0; overflow: auto; }
+    .left { min-width: 0; display: flex; flex-direction: column; gap: 20px; } .eyebrow { margin: 0 0 7px; color: var(--accent); font: 11px var(--mono); letter-spacing: .14em; text-transform: uppercase; }
+    h1 { max-width: 680px; margin: 0; font-size: clamp(27px, 3vw, 42px); line-height: var(--vibe-line-tight, 1.15); letter-spacing: -.045em; } .lede { max-width: 640px; margin: 10px 0 0; color: var(--muted); font-size: 14px; }
+    .prompt-card, .preview-card, .recent-card { border: 1px solid var(--line); border-radius: 18px; background: var(--panel); box-shadow: 0 18px 50px #05050c1a; } .prompt-card { padding: 18px; }
+    .field-label { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 8px; color: var(--muted); font-size: 11px; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; } .count { color: var(--muted); font: 10px var(--mono); font-weight: 400; letter-spacing: 0; text-transform: none; }
+    textarea { display: block; width: 100%; min-height: 124px; resize: vertical; border: 1px solid var(--line); border-radius: 12px; padding: 14px; outline: none; background: color-mix(in srgb, var(--control) 75%, var(--bg)); color: var(--ink); font-size: 15px; line-height: 1.55; } textarea::placeholder { color: color-mix(in srgb, var(--muted) 72%, transparent); }
+    textarea:focus, select:focus-visible, button:focus-visible { border-color: var(--accent); outline: 2px solid color-mix(in srgb, var(--accent) 45%, transparent); outline-offset: 2px; }
+    .suggestions { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 10px; } .suggestion { border: 1px solid var(--line); border-radius: 999px; padding: 5px 10px; background: transparent; color: var(--muted); font-size: 11px; cursor: pointer; transition: .16s ease; } .suggestion:hover { border-color: var(--accent); color: var(--ink); background: color-mix(in srgb, var(--accent) 11%, transparent); }
+    .form-row { display: flex; align-items: flex-end; gap: 16px; margin-top: 18px; } .field { min-width: 0; flex: 1; } .select-wrap { position: relative; display: flex; min-height: 40px; border: 1px solid var(--line); border-radius: 10px; background: color-mix(in srgb, var(--control) 75%, var(--bg)); } select { width: 100%; min-width: 0; border: 0; outline: 0; padding: 0 32px 0 11px; appearance: none; background: transparent; color: var(--ink); cursor: pointer; } .select-wrap::after { content: '⌄'; position: absolute; right: 11px; top: 7px; color: var(--muted); pointer-events: none; } option { background: var(--panel); color: var(--ink); }
+    .create { min-height: 41px; border: 0; border-radius: 10px; padding: 0 18px; background: var(--accent); color: #171529; font-weight: 800; cursor: pointer; white-space: nowrap; transition: transform .16s ease, filter .16s ease; } .create:hover { filter: brightness(1.08); transform: translateY(-1px); } .create:active { transform: translateY(1px); } .create:disabled { cursor: wait; opacity: .7; }
+    .notice { min-height: 20px; margin: 12px 0 0; color: var(--muted); font-size: 12px; } .notice[data-kind="error"] { color: var(--danger); } .notice[data-kind="success"] { color: var(--mint); }
+    .section-head, .preview-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; } h2 { margin: 0; font-size: 15px; letter-spacing: -.01em; } .text-button { border: 0; background: transparent; color: var(--accent); font-size: 12px; cursor: pointer; }
+    .recent-card { padding: 16px 18px 17px; } .recent-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 12px; } .recent-item { min-width: 0; border: 1px solid var(--line); border-radius: 12px; padding: 9px; background: color-mix(in srgb, var(--control) 55%, var(--panel)); cursor: pointer; text-align: left; } .recent-item:hover { border-color: var(--accent); }
+    .thumb { aspect-ratio: 16 / 9; overflow: hidden; border-radius: 8px; background: linear-gradient(135deg, #43368d, #0f3647); position: relative; } .thumb::before { content: ''; position: absolute; width: 80%; height: 140%; left: 12%; top: -20%; background: linear-gradient(90deg, transparent, #73e1d155 45%, transparent 55%); transform: rotate(25deg); } .thumb.amber { background: linear-gradient(135deg, #8a4228, #2c1b41); } .thumb.amber::before { background: linear-gradient(90deg, transparent, #f6c66f55 45%, transparent 55%); } .thumb.mint { background: linear-gradient(135deg, #1e615d, #182d55); }
+    .recent-title { display: block; overflow: hidden; margin-top: 8px; color: var(--ink); font-size: 11px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; } .recent-meta { display: block; margin-top: 2px; color: var(--muted); font: 10px var(--mono); }
+    .preview-card { min-width: 0; align-self: start; padding: 14px; } .preview-head { padding: 3px 3px 12px; } .preview-status { display: inline-flex; align-items: center; gap: 6px; color: var(--mint); font: 10px var(--mono); letter-spacing: .06em; text-transform: uppercase; } .preview-status::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--mint); box-shadow: 0 0 11px var(--mint); }
+    .preview-stage { position: relative; aspect-ratio: 16 / 10; overflow: hidden; border-radius: 12px; background: #15182c; isolation: isolate; } .preview-stage svg { display: block; width: 100%; height: 100%; }
+    .preview-stage.is-playing .cat { animation: cat-prowl 2.5s cubic-bezier(.4,0,.2,1) infinite; transform-box: fill-box; transform-origin: center bottom; } .preview-stage.is-playing .tail { animation: tail-swish .8s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: left center; } .preview-stage.is-playing .moon { animation: moon-breathe 3s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: center; } .preview-stage.is-playing .firefly { animation: firefly-float 1.7s ease-in-out infinite alternate; } .preview-stage.is-playing .spark { animation: spark-drift 1.5s linear infinite; }
+    @keyframes cat-prowl { 0%, 100% { transform: translate(0, 7px) scale(.98); } 45% { transform: translate(33px, -3px) scale(1.02); } 70% { transform: translate(47px, 1px) scale(1); } } @keyframes tail-swish { from { transform: rotate(-10deg); } to { transform: rotate(14deg); } } @keyframes moon-breathe { from { opacity: .78; transform: scale(.97); } to { opacity: 1; transform: scale(1.04); } } @keyframes firefly-float { from { transform: translate(0, 4px); opacity: .32; } to { transform: translate(7px, -9px); opacity: 1; } } @keyframes spark-drift { to { transform: translate(32px, -18px); opacity: 0; } }
+    .stage-copy { position: absolute; left: 7%; bottom: 10%; max-width: 78%; pointer-events: none; } .stage-kicker { margin-bottom: 5px; color: var(--gold); font: 10px var(--mono); letter-spacing: .12em; text-transform: uppercase; } .stage-title { margin: 0; color: #fff; font-size: clamp(19px, 3vw, 29px); line-height: .98; letter-spacing: -.05em; white-space: pre-line; }
+    .play { position: absolute; top: 50%; left: 50%; display: grid; place-items: center; width: 48px; height: 48px; border: 1px solid #ffffff66; border-radius: 50%; background: #16132acc; color: #fff; cursor: pointer; transform: translate(-50%, -50%); transition: background .16s ease, transform .16s ease; } .play:hover { background: #16132af2; transform: translate(-50%, -50%) scale(1.05); } .play svg { width: 16px; height: 16px; margin-left: 2px; fill: currentColor; }
+    .beats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; margin-top: 13px; } .beat { min-width: 0; border: 1px solid var(--line); border-radius: 8px; padding: 8px; background: color-mix(in srgb, var(--control) 42%, var(--panel)); cursor: pointer; text-align: left; } .beat:hover, .beat[data-active="true"] { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, var(--panel)); } .beat-time { display: block; color: var(--accent); font: 10px var(--mono); } .beat-name { display: block; margin-top: 3px; overflow: hidden; font-size: 11px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; } .beat-detail { display: block; margin-top: 3px; overflow: hidden; color: var(--muted); font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+    .preview-footer { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 12px 2px 1px; } .preview-caption { min-width: 0; } .preview-title { overflow: hidden; color: var(--ink); font-weight: 700; text-overflow: ellipsis; white-space: nowrap; } .preview-sub { color: var(--muted); font: 10px var(--mono); } .preview-result { max-width: 42ch; max-height: 11em; margin-top: 8px; overflow: auto; color: var(--ink); font-size: 12px; white-space: pre-wrap; } .preview-result:empty { display: none; } .result-video { display: block; width: min(100%, 420px); margin-top: 10px; border-radius: 10px; background: #10111e; }
+    .export-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 7px; } .export { border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; background: transparent; color: var(--ink); font-size: 11px; cursor: pointer; white-space: nowrap; } .export:hover:not(:disabled) { border-color: var(--accent); } .export:disabled { cursor: not-allowed; opacity: .45; } .tips { display: grid; grid-template-columns: repeat(2, 1fr); gap: 9px; margin-top: 13px; } .tip { border-top: 1px solid var(--line); padding-top: 10px; color: var(--muted); font-size: 11px; } .tip strong { display: block; margin-bottom: 3px; color: var(--ink); font-size: 12px; }
+    @media (max-width: 820px) { body { overflow: auto; } .app { height: auto; min-height: 100vh; } .topbar { padding: 0 18px; } .layout { grid-template-columns: 1fr; padding: 22px 18px 28px; } .preview-card { order: -1; } .preview-stage { aspect-ratio: 16 / 8; } }
+    @media (max-width: 520px) { .credits { display: none; } .form-row { align-items: stretch; flex-direction: column; gap: 12px; } .create { width: 100%; } .recent-grid { grid-template-columns: 1fr; } .recent-item { display: grid; grid-template-columns: 96px 1fr; gap: 9px; align-items: center; } .recent-title { margin: 0; } .recent-meta { grid-column: 2; } }
   </style>
 </head>
 <body>
   <main class="app" aria-label="Hyperframes Studio">
-    <header class="topbar">
-      <div class="brand"><img src="icon.svg" alt="Hyperframes mark"><div class="brand-copy"><span class="brand-name">Hyperframes</span><span class="brand-sub">Studio / 01</span></div></div>
-      <div class="top-actions"><span class="credits">12 credits available</span><button class="avatar" aria-label="Account">HS</button></div>
-    </header>
+    <header class="topbar"><div class="brand"><img src="icon.svg" alt="Hyperframes mark"><div class="brand-copy"><span class="brand-name">Hyperframes</span><span class="brand-sub">Studio / 01</span></div></div><div class="top-actions"><span class="credits">12 credits available</span><span class="avatar" aria-label="Account">HS</span></div></header>
     <div class="layout">
-      <section class="left" aria-labelledby="page-title">
-        <div>
-          <p class="eyebrow">Text to motion</p>
-          <h1 id="page-title">Turn a thought into a<br>scene with a pulse.</h1>
-          <p class="lede">Describe the moment, choose the frame, and let the timeline take shape.</p>
-        </div>
-        <form class="prompt-card" id="create-form">
-          <label class="field-label" for="prompt">Your direction <span class="count" id="count">0 / 600</span></label>
-          <textarea id="prompt" maxlength="600" placeholder="A slow aerial drift over a coastal city at blue hour…" required></textarea>
-          <div class="suggestions" aria-label="Prompt suggestions">
-            <button class="suggestion" type="button" data-prompt="A quiet coffee ritual in a sunlit studio, tactile details, 35mm film grain">Coffee ritual</button>
-            <button class="suggestion" type="button" data-prompt="An electric night market after rain, reflections, handheld documentary energy">Night market</button>
-            <button class="suggestion" type="button" data-prompt="A bold product reveal on a sculptural stage, crisp light, premium editorial pace">Product reveal</button>
-          </div>
-          <div class="form-row">
-            <div class="field"><label class="field-label" for="format">Frame</label><div class="select-like"><select id="format"><option value="16:9">Landscape · 16:9</option><option value="9:16">Portrait · 9:16</option><option value="1:1">Square · 1:1</option></select></div></div>
-            <div class="field"><label class="field-label" for="duration">Length</label><div class="select-like"><select id="duration"><option value="8">8 seconds</option><option value="12">12 seconds</option><option value="20">20 seconds</option></select></div></div>
-            <button class="create" id="create" type="submit">Create video <span aria-hidden="true">↗</span></button>
-          </div>
-          <p class="notice" id="notice" role="status" aria-live="polite">Your direction stays editable until you’re ready.</p>
-        </form>
-        <section class="recent-card" aria-labelledby="recent-heading" style="padding: 16px 18px 17px">
-          <div class="section-head"><h2 id="recent-heading">Recent scenes</h2><button class="text-button" id="clear-recent" type="button">Clear all</button></div>
-          <div class="recent-grid" id="recent-grid">
-            <button class="recent-item" type="button" data-recent="Coastal city at blue hour"><span class="thumb"></span><span><span class="recent-title">Coastal city at blue hour</span><span class="recent-meta">16:9 · 8s</span></span></button>
-            <button class="recent-item" type="button" data-recent="Light finds the room"><span class="thumb amber"></span><span><span class="recent-title">Light finds the room</span><span class="recent-meta">1:1 · 12s</span></span></button>
-            <button class="recent-item" type="button" data-recent="Motion in the margins"><span class="thumb mint"></span><span><span class="recent-title">Motion in the margins</span><span class="recent-meta">9:16 · 8s</span></span></button>
-          </div>
-        </section>
+      <section class="left" aria-labelledby="page-title"><div><p class="eyebrow">Text to motion</p><h1 id="page-title">Give a simple idea a<br>cinematic arc.</h1><p class="lede">Describe the subject and its movement. The cut is shaped across time, with a clear opening, escalation, and payoff.</p></div>
+        <form class="prompt-card" id="create-form"><label class="field-label" for="prompt">Your direction <span class="count" id="count">0 / 600</span></label><textarea id="prompt" maxlength="600" placeholder="Describe the subject, movement, light, and atmosphere…" required>cat</textarea><div class="suggestions" aria-label="Prompt suggestions"><button class="suggestion" type="button" data-prompt="A cat springs from a moonlit windowsill, chases a firefly through a rain-wet garden, then lands beside a glowing lantern. Low tracking camera, orbiting push-in, drifting leaves, reflected light, tactile night cinematography.">Moonlit cat</button><button class="suggestion" type="button" data-prompt="A barista pulls a silky espresso in one fluid motion, steam curls, a fast handheld push-in, sunlit studio, tactile 35mm grain">Coffee ritual</button><button class="suggestion" type="button" data-prompt="An electric night market after rain, a cyclist cuts through frame, umbrellas turn, reflections ripple, whip pans and handheld documentary energy">Night market</button></div><div class="form-row"><div class="field"><label class="field-label" for="format">Frame</label><div class="select-wrap"><select id="format"><option value="16:9">Landscape · 16:9</option><option value="9:16">Portrait · 9:16</option><option value="1:1">Square · 1:1</option></select></div></div><div class="field"><label class="field-label" for="duration">Length</label><div class="select-wrap"><select id="duration"><option value="8">8 seconds</option><option value="12">12 seconds</option><option value="20">20 seconds</option></select></div></div><button class="create" id="create" type="submit">Create video <span aria-hidden="true">↗</span></button></div><p class="notice" id="notice" role="status" aria-live="polite">Your direction stays editable until you’re ready.</p></form>
+        <section class="recent-card" aria-labelledby="recent-heading"><div class="section-head"><h2 id="recent-heading">Recent scenes</h2><button class="text-button" id="clear-recent" type="button">Clear all</button></div><div class="recent-grid" id="recent-grid"><button class="recent-item" type="button" data-recent="Coastal city at blue hour"><span class="thumb"></span><span><span class="recent-title">Coastal city at blue hour</span><span class="recent-meta">16:9 · 8s</span></span></button><button class="recent-item" type="button" data-recent="Light finds the room"><span class="thumb amber"></span><span><span class="recent-title">Light finds the room</span><span class="recent-meta">1:1 · 12s</span></span></button><button class="recent-item" type="button" data-recent="Motion in the margins"><span class="thumb mint"></span><span><span class="recent-title">Motion in the margins</span><span class="recent-meta">9:16 · 8s</span></span></button></div></section>
       </section>
-      <aside class="preview-card" aria-label="Scene preview">
-        <div class="preview-head"><h2>Scene preview</h2><span class="preview-status">Ready</span></div>
-        <div class="preview-stage" id="preview-stage">
-          <svg viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="sky" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#2b2460"/><stop offset=".55" stop-color="#14526a"/><stop offset="1" stop-color="#e07e5f"/></linearGradient><linearGradient id="sea" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#173d59"/><stop offset="1" stop-color="#0b172b"/></linearGradient><filter id="blur"><feGaussianBlur stdDeviation="16"/></filter></defs><rect width="800" height="500" fill="url(#sky)"/><circle cx="660" cy="150" r="82" fill="#f7c66d" opacity=".78" filter="url(#blur)"/><path d="M0 292c122-20 196-4 297-24 134-27 240-2 503-64v296H0Z" fill="url(#sea)"/><path d="m0 363 182-54 90 17 108-62 142 21 110-58 168 13v263H0Z" fill="#111a31" opacity=".9"/><path d="M0 406c155-25 230 7 360-17 112-20 243-5 440-45" fill="none" stroke="#73e1d1" stroke-opacity=".34" stroke-width="3"/><path d="M55 430h690" stroke="#f6c66f" stroke-opacity=".18"/><g fill="#f6c66f"><circle cx="262" cy="340" r="4"/><circle cx="320" cy="325" r="3"/><circle cx="480" cy="306" r="4"/><circle cx="584" cy="280" r="3"/></g></svg>
-          <div class="stage-copy"><div class="stage-kicker">Opening frame</div><h3 class="stage-title">A city that<br>never settles.</h3></div>
-          <button class="play" id="play" type="button" aria-label="Preview scene"><svg viewBox="0 0 18 18"><path d="M5 3.4v11.2a1 1 0 0 0 1.53.85l7.9-5.6a1 1 0 0 0 0-1.64l-7.9-5.6A1 1 0 0 0 5 3.4Z"/></svg></button>
-        </div>
-        <div class="preview-footer"><div class="preview-caption"><div class="preview-title" id="preview-title">Coastal city at blue hour</div><div class="preview-sub" id="preview-sub">16:9 · 8 seconds · cinematic</div></div><button class="export" id="export" type="button">Export still</button></div>
-        <div class="tips"><div class="tip"><strong>Keep it visual</strong>Use light, movement, texture, and lens language.</div><div class="tip"><strong>Shape the pace</strong>Shorter scenes land with a sharper rhythm.</div></div>
-      </aside>
+      <aside class="preview-card" aria-label="Scene preview"><div class="preview-head"><h2>Scene preview</h2><span class="preview-status" id="preview-status">Ready</span></div><div class="preview-stage" id="preview-stage"><svg viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="night-sky" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#101b3b"/><stop offset=".55" stop-color="#243c66"/><stop offset="1" stop-color="#d17e63"/></linearGradient><linearGradient id="garden" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#284b55"/><stop offset="1" stop-color="#101d2b"/></linearGradient><radialGradient id="moon-glow"><stop stop-color="#fff3bf" stop-opacity=".8"/><stop offset="1" stop-color="#f6c66f" stop-opacity="0"/></radialGradient></defs><rect width="800" height="500" fill="url(#night-sky)"/><circle class="moon" cx="637" cy="105" r="96" fill="url(#moon-glow)"/><circle cx="637" cy="105" r="31" fill="#ffedb0" opacity=".9"/><path d="M0 286c126-49 235-24 348-48 123-26 282-8 452-73v335H0Z" fill="url(#garden)"/><path d="M0 405c138-44 241-17 393-36 137-17 268-8 407-53v184H0Z" fill="#0c1923" opacity=".78"/><path d="M0 386c141-33 279 3 409-19 139-23 248-3 391-47" fill="none" stroke="#f6c66f" stroke-opacity=".32" stroke-width="4" stroke-dasharray="17 19" class="path-line"/><g fill="#73e1d1" opacity=".8"><circle class="firefly" cx="150" cy="310" r="4"/><circle class="firefly" cx="252" cy="351" r="3"/><circle class="firefly" cx="710" cy="310" r="4"/></g><g class="spark" fill="#f6c66f"><circle cx="269" cy="298" r="3"/><circle cx="281" cy="285" r="2"/><circle cx="292" cy="303" r="2"/></g><g class="cat" fill="#171824" stroke="#171824" stroke-linecap="round" stroke-linejoin="round"><path d="M292 319c10-41 51-58 103-51 41 6 73 29 79 56 6 27-13 47-48 51-44 5-104-2-129-22-11-9-12-21-5-34Z"/><path d="M361 274c-11-29-5-67 16-82 20-15 50-3 61 24 10 27-4 61-25 76Z"/><path d="M366 197c-4-25 3-47 18-59 13 17 18 40 11 62Z"/><path d="M416 207c14-25 34-36 50-30 1 25-15 45-37 54Z"/><path class="tail" d="M455 301c47-24 80-14 86 9 6 24-23 37-50 22" fill="none" stroke-width="18"/><path d="M321 363c-13 24-15 50-5 65 7 10 18 6 21-5 5-18 4-39-1-61Z"/><path d="M375 369c-6 25-1 51 12 62 8 6 17-1 16-12-1-18-9-39-15-57Z"/><path d="M431 368c7 23 21 45 36 50 9 3 15-6 8-15-10-14-27-30-38-44Z"/><circle cx="412" cy="226" r="4" fill="#f6c66f" stroke="none"/><path d="M453 255c9 7 20 9 29 4" fill="none" stroke="#f6c66f" stroke-width="3"/></g><path d="M74 346c36-26 54-18 77-3M625 373c44-28 78-20 105-5" fill="none" stroke="#73e1d1" stroke-opacity=".28" stroke-width="7"/></svg><div class="stage-copy"><div class="stage-kicker" id="stage-kicker">Beat 01 / 03 · 00:00–02:20</div><h3 class="stage-title" id="stage-title">The cat spots
+the first light.</h3></div><button class="play" id="play" type="button" aria-label="Play scene preview"><svg viewBox="0 0 18 18"><path d="M5 3.4v11.2a1 1 0 0 0 1.53.85l7.9-5.6a1 1 0 0 0 0-1.64l-7.9-5.6A1 1 0 0 0 5 3.4Z"/></svg></button></div><div class="beats" aria-label="Scene beats"><button class="beat" type="button" data-beat="0" data-active="true"><span class="beat-time">00:00</span><span class="beat-name">Spotlight</span><span class="beat-detail">A sudden pounce</span></button><button class="beat" type="button" data-beat="1"><span class="beat-time">02:20</span><span class="beat-name">Chase</span><span class="beat-detail">Tracking through leaves</span></button><button class="beat" type="button" data-beat="2"><span class="beat-time">05:10</span><span class="beat-name">Payoff</span><span class="beat-detail">Lantern-side landing</span></button></div><div class="preview-footer"><div class="preview-caption"><div class="preview-title" id="preview-title">Cat, in motion</div><div class="preview-sub" id="preview-sub">16:9 · 8 seconds · 3 beats</div><div class="preview-result" id="preview-result" role="status" aria-live="polite"></div></div><button class="export" id="export" type="button">Download plan</button></div><div class="tips"><div class="tip"><strong>Motion first</strong>Each beat changes the subject, camera, and world.</div><div class="tip"><strong>Full duration</strong>Timing covers the complete cut, start to finish.</div></div></aside>
     </div>
   </main>
   <script>
     (() => {
-      const prompt = document.querySelector('#prompt');
-      const count = document.querySelector('#count');
-      const form = document.querySelector('#create-form');
-      const notice = document.querySelector('#notice');
-      const create = document.querySelector('#create');
-      const format = document.querySelector('#format');
-      const duration = document.querySelector('#duration');
-      const previewTitle = document.querySelector('#preview-title');
-      const previewSub = document.querySelector('#preview-sub');
-      const play = document.querySelector('#play');
-      const exportButton = document.querySelector('#export');
-      const recentGrid = document.querySelector('#recent-grid');
-      const storageKey = 'hyperframes-studio-draft';
-      let state = { prompt: '', format: '16:9', duration: '8' };
-      const setNotice = (message, kind = '') => { notice.textContent = message; notice.dataset.kind = kind; };
-      const updateCount = () => { count.textContent = `${prompt.value.length} / 600`; };
-      const save = () => { state = { prompt: prompt.value, format: format.value, duration: duration.value }; window.vibeOS?.storage?.write(storageKey, state).catch(() => {}); };
-      const updatePreview = (title = 'Coastal city at blue hour') => { previewTitle.textContent = title; previewSub.textContent = `${format.value} · ${duration.value} seconds · cinematic`; };
-      prompt.addEventListener('input', () => { updateCount(); save(); if (prompt.value.trim()) updatePreview(prompt.value.trim().split(/[.!?]/)[0].slice(0, 42)); });
-      [format, duration].forEach((control) => control.addEventListener('change', () => { updatePreview(previewTitle.textContent); save(); }));
-      document.querySelectorAll('[data-prompt]').forEach((button) => button.addEventListener('click', () => { prompt.value = button.dataset.prompt; prompt.focus(); updateCount(); updatePreview(button.textContent); save(); }));
-      document.querySelectorAll('[data-recent]').forEach((button) => button.addEventListener('click', () => { prompt.value = `A cinematic scene called “${button.dataset.recent}”, with deliberate camera movement and rich atmosphere.`; updateCount(); updatePreview(button.dataset.recent); save(); setNotice('Scene direction restored. Make it yours, then create the next cut.'); }));
-      form.addEventListener('submit', async (event) => {
-        event.preventDefault();
-        const value = prompt.value.trim();
-        if (!value) { prompt.focus(); setNotice('Add a direction before creating your scene.', 'error'); return; }
-        create.disabled = true; create.textContent = 'Sending direction…'; setNotice('Your scene request is on its way.');
-        try {
-          const result = await window.vibeOS.ai.command(`Create a ${duration.value}-second ${format.value} video from this direction: ${value}`, { scope: 'app', context: { prompt: value, format: format.value, duration: duration.value }, output: 'navigate' });
-          setNotice(result?.summary || 'Scene request sent.', 'success');
-        } catch (error) { setNotice(error?.message || 'The scene could not be created right now.', 'error'); }
-        create.disabled = false; create.innerHTML = 'Create video <span aria-hidden="true">↗</span>';
-      });
-      play.addEventListener('click', () => { play.classList.toggle('is-playing'); play.setAttribute('aria-label', play.classList.contains('is-playing') ? 'Pause preview' : 'Preview scene'); setNotice(play.classList.contains('is-playing') ? 'Preview playing.' : 'Preview paused.'); });
-      exportButton.addEventListener('click', () => {
-        const svg = document.querySelector('.preview-stage svg').outerHTML;
-        const blob = new Blob([svg], { type: 'image/svg+xml' }); const url = URL.createObjectURL(blob); const link = document.createElement('a'); link.href = url; link.download = 'hyperframes-scene.svg'; link.click(); URL.revokeObjectURL(url); setNotice('Still exported as SVG.', 'success');
-      });
-      document.querySelector('#clear-recent').addEventListener('click', () => { recentGrid.innerHTML = '<p style="grid-column:1/-1;color:var(--muted);font-size:12px;margin:8px 0">Your next scene will appear here.</p>'; setNotice('Recent scenes cleared.'); });
-      window.vibeOS?.storage?.read(storageKey).then((saved) => { if (!saved) return; state = saved; prompt.value = saved.prompt || ''; format.value = saved.format || '16:9'; duration.value = saved.duration || '8'; updateCount(); updatePreview(); }).catch(() => {});
-      updateCount();
+      const $ = (selector) => document.querySelector(selector); const prompt = $('#prompt'); const count = $('#count'); const form = $('#create-form'); const notice = $('#notice'); const create = $('#create'); const format = $('#format'); const duration = $('#duration'); const previewStage = $('#preview-stage'); const previewTitle = $('#preview-title'); const previewSub = $('#preview-sub'); const previewResult = $('#preview-result'); const previewStatus = $('#preview-status'); const stageKicker = $('#stage-kicker'); const stageTitle = $('#stage-title'); const play = $('#play'); const exportButton = $('#export'); const recentGrid = $('#recent-grid'); const storageKey = 'hyperframes-studio-draft'; const downloadVideo = document.createElement('button'); downloadVideo.className = 'export'; downloadVideo.type = 'button'; downloadVideo.textContent = 'Download video'; downloadVideo.disabled = true; exportButton.parentElement.insertBefore(downloadVideo, exportButton);
+      const beats = [{ kicker: 'Beat 01 / 03 · 00:00–02:20', title: 'The cat spots\nthe first light.' }, { kicker: 'Beat 02 / 03 · 02:20–05:10', title: 'A firefly pulls\nit through the garden.' }, { kicker: 'Beat 03 / 03 · 05:10–08:00', title: 'A quiet landing\nunder the lantern.' }]; let state = { prompt: 'cat', format: '16:9', duration: '8', result: '' };
+      const setNotice = (message, kind = '') => { notice.textContent = message; notice.dataset.kind = kind; }; const updateCount = () => { count.textContent = `${prompt.value.length} / 600`; }; const save = () => { state = { ...state, prompt: prompt.value, format: format.value, duration: duration.value }; const write = window.vibeOS?.storage?.write(storageKey, state); write?.catch?.(() => {}); }; const updatePreview = (title = 'Cat, in motion') => { previewTitle.textContent = title; previewSub.textContent = `${format.value} · ${duration.value} seconds · 3 beats`; }; const titleFromPrompt = () => prompt.value.trim().split(/[.!?]/)[0].slice(0, 44) || 'Cat, in motion';
+      const buildBrief = (direction, seconds, aspect) => `Create the actual ${seconds}-second ${aspect} video from this direction: "${direction}".\n\nTreat this as motion-first video generation, never as a still image with a slow zoom. Build a clear temporal arc across the full duration: a strong opening action, escalating movement, and a satisfying visual payoff. The subject must perform specific, varied actions with readable cause and effect across at least three distinct beats. Give the camera purposeful movement such as tracking, orbiting, a motivated push-in, crane, or whip pan; use parallax, reframing, and changing shot scale to create depth. Make the world move too with secondary action, wind, particles, reflections, lighting shifts, and believable inertia where appropriate. Keep poses, expressions, and anatomy continuously alive with natural motion blur and coherent physical transitions.\n\nReturn the concrete generated video result for this page. If the video service uses a scene specification, include timed shots covering the full ${seconds} seconds with subject action, camera motion, environment motion, and transitions. Do not return a generic acknowledgement, a static keyframe, a slideshow-like sequence, or a description of future work.`;
+      const renderResult = (value) => { previewResult.textContent = ''; downloadVideo.disabled = true; downloadVideo.dataset.url = ''; const raw = typeof value === 'string' ? value : value ? JSON.stringify(value, null, 2) : ''; if (!raw) return; let mediaUrl = ''; try { const parsed = JSON.parse(raw); mediaUrl = parsed?.videoUrl || parsed?.url || parsed?.artifact?.url || ''; } catch (_) {} if (/^(https?:|blob:|data:video\/)/i.test(mediaUrl)) { const video = document.createElement('video'); video.className = 'result-video'; video.controls = true; video.playsInline = true; video.src = mediaUrl; video.setAttribute('aria-label', 'Generated video result'); previewResult.appendChild(video); const caption = document.createElement('div'); caption.textContent = raw; previewResult.appendChild(caption); downloadVideo.disabled = false; downloadVideo.dataset.url = mediaUrl; } else previewResult.textContent = raw; };
+      prompt.addEventListener('input', () => { updateCount(); save(); if (prompt.value.trim()) updatePreview(titleFromPrompt()); }); [format, duration].forEach((control) => control.addEventListener('change', () => { updatePreview(previewTitle.textContent); save(); })); document.querySelectorAll('[data-prompt]').forEach((button) => button.addEventListener('click', () => { prompt.value = button.dataset.prompt; prompt.focus(); updateCount(); updatePreview(button.textContent); save(); setNotice('Direction updated.'); })); document.querySelectorAll('[data-recent]').forEach((button) => button.addEventListener('click', () => { prompt.value = `A cinematic scene called “${button.dataset.recent}”, with deliberate camera movement and rich atmosphere.`; updateCount(); updatePreview(button.dataset.recent); save(); setNotice('Scene direction restored.'); }));
+      document.querySelectorAll('[data-beat]').forEach((button) => button.addEventListener('click', () => { const beat = beats[Number(button.dataset.beat)]; document.querySelectorAll('[data-beat]').forEach((item) => item.dataset.active = String(item === button)); stageKicker.textContent = beat.kicker; stageTitle.textContent = beat.title; setNotice(`${beat.kicker} selected.`); }));
+      form.addEventListener('submit', async (event) => { event.preventDefault(); const value = prompt.value.trim(); if (!value) { prompt.focus(); setNotice('Add a direction before creating your scene.', 'error'); return; } if (!window.vibeOS?.ai?.command) { setNotice('Video service is unavailable in this window.', 'error'); return; } create.disabled = true; create.textContent = 'Creating video…'; previewStatus.textContent = 'Working'; setNotice('Creating your full motion cut.'); try { const result = await window.vibeOS.ai.command(buildBrief(value, duration.value, format.value), { scope: 'app', context: { prompt: value, format: format.value, duration: duration.value, currentPreview: previewTitle.textContent, generationStyle: 'motion-first: active subject, moving camera, animated environment, temporal arc' }, output: 'result' }); const generated = typeof result?.value === 'string' ? result.value : result?.value ? JSON.stringify(result.value, null, 2) : ''; renderResult(generated || result?.summary || ''); state = { ...state, result: generated || result?.summary || '' }; save(); previewStatus.textContent = 'Ready'; setNotice('Video result received.', 'success'); } catch (error) { previewStatus.textContent = 'Ready'; setNotice(error?.message || 'The video could not be created.', 'error'); } create.disabled = false; create.innerHTML = 'Create video <span aria-hidden="true">↗</span>'; });
+      play.addEventListener('click', () => { const playing = previewStage.classList.toggle('is-playing'); play.setAttribute('aria-label', playing ? 'Pause scene preview' : 'Play scene preview'); setNotice(playing ? 'Preview playing.' : 'Preview paused.'); }); downloadVideo.addEventListener('click', () => { const url = downloadVideo.dataset.url; if (!url) return; const link = document.createElement('a'); link.href = url; link.download = `hyperframes-${titleFromPrompt().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'video'}.mp4`; link.target = '_blank'; link.rel = 'noopener'; link.click(); setNotice('Video download started.', 'success'); }); exportButton.addEventListener('click', () => { const plan = { prompt: prompt.value.trim(), format: format.value, duration: Number(duration.value), beats: beats.map((beat) => ({ time: beat.kicker.split('· ')[1], title: beat.title.replace('\n', ' ') })) }; const blob = new Blob([JSON.stringify(plan, null, 2)], { type: 'application/json' }); const url = URL.createObjectURL(blob); const link = document.createElement('a'); link.href = url; link.download = 'hyperframes-scene-plan.json'; link.click(); URL.revokeObjectURL(url); setNotice('Scene plan downloaded.', 'success'); }); $('#clear-recent').addEventListener('click', () => { recentGrid.innerHTML = '<p style="grid-column:1/-1;color:var(--muted);font-size:12px;margin:8px 0">Your next scene will appear here.</p>'; setNotice('Recent scenes cleared.'); });
+      const restore = window.vibeOS?.storage?.read(storageKey); if (restore) restore.then((saved) => { if (!saved) return; state = { ...state, ...saved }; prompt.value = saved.prompt || 'cat'; format.value = saved.format || '16:9'; duration.value = saved.duration || '8'; updateCount(); updatePreview(titleFromPrompt()); if (saved.result) renderResult(saved.result); }).catch(() => {}); updatePreview('Cat, in motion'); updateCount();
     })();
   </script>
 </body>

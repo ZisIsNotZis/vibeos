@@ -6,6 +6,7 @@ import { tmpdir } from 'node:os';
 import { homedir } from 'node:os';
 import type { AgentTask, EffortLevel, SearchLevel, VibeOSSettings } from '@vibeos/shared';
 import { buildCodexInvocation, createStagedJob, inspectExplicitReferences, modelName, publishCandidate, readStructuredWorkerResult, selectWorkerProfile, validateCandidateTree } from './generation-harness.js';
+import { buildPrompt } from './codex-agent.js';
 
 const appearance = { mode: 'dark' as const, backgroundMode: 'fill' as const, autoHideChromeOnMaximize: false, dockPosition: 'bottom' as const, uiTypeface: 'modern' as const, monoTypeface: 'modern' as const, displayScale: 'default' as const, notificationDuration: 20 };
 const task = (target: string, effort: EffortLevel = 'quality', search: SearchLevel = 'none'): AgentTask => ({
@@ -82,6 +83,17 @@ test("staged jobs contain a complete versioned worker kit and executable accepta
   const order = JSON.parse(readFileSync(staged.workOrder, "utf8"));
   assert.equal(order.profile.model, "gpt-5.6-terra");
   assert.match(order.outcome, /usable/);
+});
+
+test('assembled worker prompt requires creator pages to produce observable results', () => {
+  const root = mkdtempSync(join(tmpdir(), 'vibeos-creator-prompt-')); const world = join(root, 'world'); const live = join(world, 'apps', 'app-creator');
+  mkdirSync(live, { recursive: true }); writeFileSync(live + '/node.json', JSON.stringify({ id: 'app-creator', title: 'Creator', kind: 'app', children: [] }));
+  const staged = createStagedJob({ ...task(live), input: { name: 'Creator', request: 'make something' } }, { worldRoot: world, jobsRoot: join(world, '.jobs') });
+  const prompt = buildPrompt({ ...task(live), input: { name: 'Creator', request: 'make something' } }, 'none', staged);
+  assert.match(prompt, /create, generate, edit, transform, analyze, or export/);
+  assert.match(prompt, /input→action→observable-result loop/);
+  assert.match(prompt, /output=result returns actual answer\/artifact\/data/);
+  assert.match(prompt, /decorative preview.*not a result/);
 });
 
 test('candidate validation rejects links and special filesystem objects', () => {
