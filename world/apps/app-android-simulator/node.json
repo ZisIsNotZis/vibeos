@@ -5,5 +5,8 @@
   "status": "ready",
   "icon": "icon.svg",
   "children": [],
-  "entry": "index.html"
+  "entry": "index.html",
+  "routes": [
+    { "path": "/", "entry": "index.html" }
+  ]
 }

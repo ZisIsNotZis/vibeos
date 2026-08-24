@@ -73,6 +73,9 @@
     .action-stack { display: grid; gap: 8px; }
     .small-btn { min-height: 35px; padding: 7px 10px; text-align: left; font-size: var(--vibe-text-label, 12px); }
     .small-btn.primary { background: color-mix(in srgb, var(--accent) 25%, var(--control)); border-color: color-mix(in srgb, var(--accent) 60%, var(--line)); }
+    .desktop-readout { margin-top: 10px; padding: 9px; min-height: 42px; max-height: 142px; overflow: auto; border: 1px solid var(--line); border-radius: 8px; background: color-mix(in srgb, var(--bg) 46%, transparent); color: var(--muted); font-size: var(--vibe-text-caption, 11px); line-height: var(--vibe-line-normal, 1.5); white-space: pre-wrap; overflow-wrap: anywhere; }
+    .desktop-readout:empty { display: none; }
+    .desktop-readout.error { color: var(--red); border-color: color-mix(in srgb, var(--red) 55%, var(--line)); }
     .table-wrap { min-width: 0; min-height: 0; display: grid; place-items: center; position: relative; }
     .table-frame { position: relative; width: min(100%, 460px); height: 100%; min-height: 300px; display: grid; place-items: center; }
     canvas { display: block; width: 100%; height: 100%; max-height: 100%; touch-action: none; border-radius: 20px; filter: drop-shadow(0 16px 28px #0007); }
@@ -125,6 +128,7 @@
       <aside class="rail right" aria-label="Table actions">
         <section class="card"><div class="eyebrow">Table status</div><div class="data-row"><span class="data-label">Mode</span><span class="mode"><i class="mode-dot" id="modeDot"></i><span id="modeValue">Ready</span></span></div><div class="data-row"><span class="data-label">Targets</span><span class="data-value" id="targetValue">0 / 3</span></div><div class="data-row"><span class="data-label">Last hit</span><span class="data-value" id="lastHit">—</span></div></section>
         <section class="card action-stack"><div class="eyebrow">Table actions</div><button class="small-btn primary" id="launchBtn" type="button">Launch ball <span aria-hidden="true">· Space</span></button><button class="small-btn" id="newBtn" type="button">New game</button></section>
+        <section class="card action-stack"><div class="eyebrow">Desktop readout</div><button class="small-btn" id="desktopBtn" type="button">Show desktop state</button><div class="desktop-readout" id="desktopReadout" aria-live="polite"></div></section>
         <section class="card help"><div class="eyebrow">Cadet briefing</div><p style="margin:10px 0 0">Clear all three orbit targets to raise the mission multiplier. Keep the ball in play with both flippers.</p></section>
       </aside>
     </main>
@@ -217,6 +221,20 @@
     document.addEventListener('keydown', e => { if (e.code==='ArrowLeft'||e.code==='KeyA') {e.preventDefault();setFlipper('left',true);} if(e.code==='ArrowRight'||e.code==='KeyD'){e.preventDefault();setFlipper('right',true);} if(e.code==='Space'){e.preventDefault();launch();} if(e.code==='KeyP')togglePause(); });
     document.addEventListener('keyup', e => { if(e.code==='ArrowLeft'||e.code==='KeyA')setFlipper('left',false); if(e.code==='ArrowRight'||e.code==='KeyD')setFlipper('right',false); });
     document.getElementById('launchBtn').addEventListener('click', launch); document.getElementById('newBtn').addEventListener('click', newGame); document.getElementById('pauseBtn').addEventListener('click', togglePause);
+    document.getElementById('desktopBtn').addEventListener('click', async () => {
+      const button = document.getElementById('desktopBtn'), readout = document.getElementById('desktopReadout');
+      if (!bridge || !bridge.ai || !bridge.ai.command) { readout.className = 'desktop-readout error'; readout.textContent = 'Desktop state is unavailable in this window.'; return; }
+      button.disabled = true; button.setAttribute('aria-busy', 'true'); readout.className = 'desktop-readout'; readout.textContent = 'Requesting desktop readout...';
+      try {
+        const result = await bridge.ai.command('show me the desktop state', { scope: 'world', output: 'result' });
+        const value = typeof result?.value === 'string' ? result.value : result?.summary;
+        if (!value) throw new Error('No desktop state was returned.');
+        readout.textContent = value;
+      } catch (error) {
+        readout.className = 'desktop-readout error';
+        readout.textContent = `Desktop readout failed: ${error?.message || 'request unavailable'}`;
+      } finally { button.disabled = false; button.removeAttribute('aria-busy'); }
+    });
     document.getElementById('soundBtn').addEventListener('click', ()=>{state.sound=!state.sound;renderUI();save();}); bindHold(document.getElementById('leftTouch'),'left'); bindHold(document.getElementById('rightTouch'),'right');
     canvas.addEventListener('pointerdown', e => { const r=canvas.getBoundingClientRect(), x=(e.clientX-r.left)/r.width*game.w; if(x<180)setFlipper('left',true);else setFlipper('right',true); }); canvas.addEventListener('pointerup',()=>{setFlipper('left',false);setFlipper('right',false);}); canvas.addEventListener('pointercancel',()=>{setFlipper('left',false);setFlipper('right',false);});
     window.addEventListener('resize', resize); if (window.ResizeObserver) new ResizeObserver(resize).observe(canvas); load(); renderUI(); resize(); game.raf=requestAnimationFrame(loop);

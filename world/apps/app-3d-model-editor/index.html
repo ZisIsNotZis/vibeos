@@ -16,7 +16,7 @@
         <button class="tool" data-mode="rotate" title="Rotate (R)">⟳ <span>Rotate</span></button>
         <button class="tool" data-mode="scale" title="Scale (S)">↗ <span>Scale</span></button>
       </div>
-      <div class="toolbar-actions"><button id="undo" class="icon-button" title="Undo">↶</button><button id="redo" class="icon-button" title="Redo">↷</button><button id="save" class="primary">Save scene</button><button id="export" class="outline">Export</button></div>
+      <div class="toolbar-actions"><button id="undo" class="icon-button" title="Undo">↶</button><button id="redo" class="icon-button" title="Redo">↷</button><button id="save" class="primary">Save scene</button><button id="export" class="outline">Export</button><button id="desktop-state" class="outline">Desktop state</button></div>
     </header>
     <div class="workspace">
       <aside class="panel scene-panel">
@@ -33,6 +33,11 @@
           <div class="gizmo" id="gizmo"><span class="gizmo-x">X</span><span class="gizmo-y">Y</span><span class="gizmo-z">Z</span><i></i></div>
           <div class="viewport-hint">Drag to orbit&nbsp; · &nbsp;Scroll to zoom&nbsp; · &nbsp; <kbd>F</kbd> frame</div>
           <div class="view-cube" aria-hidden="true"><b>TOP</b><span>FRONT</span><em>RIGHT</em></div>
+          <section class="desktop-state-card hidden" id="desktop-state-card" aria-live="polite">
+            <div class="desktop-state-head"><div><span class="eyebrow">WORKSPACE</span><h2>Desktop state</h2></div><button id="close-desktop-state" class="card-close" aria-label="Close desktop state">×</button></div>
+            <p id="desktop-state-result">Request a current overview of the desktop.</p>
+            <button id="refresh-desktop-state" class="primary state-action">Show current state</button>
+          </section>
         </div>
         <div class="timeline"><button id="play" class="play" title="Play animation">▶</button><span class="timecode" id="timecode">00:00.00</span><div class="track"><div class="track-fill"></div><div class="playhead"></div><span class="key key-a"></span><span class="key key-b"></span><span class="key key-c"></span></div><span class="fps">24 fps</span><button class="small-button" id="add-key">＋ Keyframe</button></div>
       </section>

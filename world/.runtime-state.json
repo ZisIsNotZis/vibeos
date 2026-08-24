@@ -1,31 +1,15 @@
 {
   "windows": [
     {
-      "id": "window-77174",
-      "appId": "app--promax",
-      "title": "押韵大师ProMax",
-      "route": "/",
-      "state": "normal",
-      "focused": false,
-      "position": {
-        "x": 176,
-        "y": 120
-      },
-      "size": {
-        "width": 760,
-        "height": 500
-      }
-    },
-    {
-      "id": "window-77176",
-      "appId": "settings",
-      "title": "Settings",
+      "id": "window-77319",
+      "appId": "app-hyperframes-video-generator",
+      "title": "Hyperframes Video Generator",
       "route": "/",
       "state": "normal",
       "focused": true,
       "position": {
-        "x": 120,
-        "y": 72
+        "x": 487,
+        "y": 492
       },
       "size": {
         "width": 760,
@@ -34,190 +18,6 @@
     }
   ],
   "operations": [
-    {
-      "id": "op-77048",
-      "intent": {
-        "type": "close_window",
-        "windowId": "window-77043"
-      },
-      "state": "ready"
-    },
-    {
-      "id": "op-77049",
-      "intent": {
-        "type": "open_app",
-        "appId": "assistant"
-      },
-      "state": "ready"
-    },
-    {
-      "id": "op-77051",
-      "intent": {
-        "type": "close_window",
-        "windowId": "window-77050"
-      },
-      "state": "ready"
-    },
-    {
-      "id": "op-77052",
-      "intent": {
-        "type": "open_app",
-        "appId": "shop"
-      },
-      "state": "ready"
-    },
-    {
-      "id": "op-77054",
-      "intent": {
-        "type": "close_window",
-        "windowId": "window-77053"
-      },
-      "state": "ready"
-    },
-    {
-      "id": "op-77055",
-      "intent": {
-        "type": "open_app",
-        "appId": "settings"
-      },
-      "state": "ready"
-    },
-    {
-      "id": "op-77057",
-      "intent": {
-        "type": "close_window",
-        "windowId": "window-77056"
-      },
-      "state": "ready"
-    },
-    {
-      "id": "op-77058",
-      "intent": {
-        "type": "open_app",
-        "appId": "browser"
-      },
-      "state": "ready"
-    },
-    {
-      "id": "op-77060",
-      "intent": {
-        "type": "close_window",
-        "windowId": "window-77059"
-      },
-      "state": "ready"
-    },
-    {
-      "id": "op-77061",
-      "intent": {
-        "type": "open_app",
-        "appId": "app-firefox"
-      },
-      "state": "ready"
-    },
-    {
-      "id": "op-77063",
-      "intent": {
-        "type": "close_window",
-        "windowId": "window-77062"
-      },
-      "state": "ready"
-    },
-    {
-      "id": "op-77064",
-      "intent": {
-        "type": "open_app",
-        "appId": "app-sublime-text"
-      },
-      "state": "ready"
-    },
-    {
-      "id": "op-77066",
-      "intent": {
-        "type": "bridge_request",
-        "requestId": "28795800-d138-4a66-911b-0adb34ecf27b",
-        "appId": "app-sublime-text",
-        "operation": {
-          "type": "state.read"
-        }
-      },
-      "state": "ready"
-    },
-    {
-      "id": "op-77067",
-      "intent": {
-        "type": "bridge_request",
-        "requestId": "a6354e75-f6ec-4a4a-86e4-d814f1b2c09e",
-        "appId": "app-sublime-text",
-        "operation": {
-          "type": "state.read"
-        }
-      },
-      "state": "ready"
-    },
-    {
-      "id": "op-77068",
-      "intent": {
-        "type": "bridge_request",
-        "requestId": "d039a2dc-2ab4-4b0e-890b-74e6d7e2f503",
-        "appId": "app-sublime-text",
-        "operation": {
-          "type": "state.read"
-        }
-      },
-      "state": "ready"
-    },
-    {
-      "id": "op-77069",
-      "intent": {
-        "type": "bridge_request",
-        "requestId": "dfcd8f08-979f-4b86-bb39-c5c77aef1412",
-        "appId": "app-sublime-text",
-        "operation": {
-          "type": "state.read"
-        }
-      },
-      "state": "ready"
-    },
-    {
-      "id": "op-77070",
-      "intent": {
-        "type": "close_window",
-        "windowId": "window-77065"
-      },
-      "state": "ready"
-    },
-    {
-      "id": "op-77071",
-      "intent": {
-        "type": "open_app",
-        "appId": "app-zed"
-      },
-      "state": "ready"
-    },
-    {
-      "id": "op-77073",
-      "intent": {
-        "type": "close_window",
-        "windowId": "window-77072"
-      },
-      "state": "ready"
-    },
-    {
-      "id": "op-77074",
-      "intent": {
-        "type": "open_app",
-        "appId": "app-codex"
-      },
-      "state": "ready"
-    },
-    {
-      "id": "op-77076",
-      "intent": {
-        "type": "close_window",
-        "windowId": "window-77075"
-      },
-      "state": "ready"
-    },
     {
       "id": "op-77077",
       "intent": {
@@ -941,10 +741,521 @@
         "value": true
       },
       "state": "ready"
+    },
+    {
+      "id": "op-77213",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-77176"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-77216",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-77174"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-77217",
+      "intent": {
+        "type": "open_app",
+        "appId": "shop"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-77253",
+      "intent": {
+        "type": "install_app",
+        "app": {
+          "id": "app--by-hypermaker",
+          "name": "奖状生成器 by Hypermaker",
+          "description": "Imagine and explore 奖状生成器 by Hypermaker",
+          "icon": "sparkles"
+        }
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-77255",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-77218"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-77256",
+      "intent": {
+        "type": "open_app",
+        "appId": "assistant"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-77260",
+      "intent": {
+        "type": "assistant_request",
+        "message": "Change “奖状生成器 by Hypermaker” to by Hyperframes, it's typo",
+        "context": {
+          "windowId": "window-77257"
+        }
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-77262",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-77257"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-77263",
+      "intent": {
+        "type": "open_app",
+        "appId": "app--by-hypermaker"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-77290",
+      "intent": {
+        "type": "bridge_request",
+        "requestId": "3861b9e0-bd6c-4222-a6f7-d90fa679c480",
+        "appId": "app--by-hypermaker",
+        "operation": {
+          "type": "storage.write",
+          "key": "hypermaker.workspace.v1",
+          "value": {
+            "page": "editor",
+            "query": "",
+            "sort": "Recently edited",
+            "projectId": "composition-1787547811362",
+            "playing": false,
+            "projects": [
+              {
+                "id": "composition-1787547811362",
+                "title": "Untitled composition",
+                "kind": "New composition",
+                "edited": "Just now",
+                "status": "In progress",
+                "scenes": 1,
+                "headline": "A clear point of view",
+                "body": "Start with one strong frame."
+              },
+              {
+                "id": "orbit",
+                "title": "Orbit / Product reveal",
+                "kind": "Launch film",
+                "edited": "Today, 10:42",
+                "status": "In progress",
+                "scenes": 6,
+                "headline": "Move at the speed of ideas",
+                "body": "A launch story in motion."
+              },
+              {
+                "id": "signals",
+                "title": "Signals / Brand system",
+                "kind": "Identity study",
+                "edited": "Yesterday",
+                "status": "In progress",
+                "scenes": 4,
+                "headline": "Find your signal",
+                "body": "Shape the space between moments."
+              },
+              {
+                "id": "field-notes",
+                "title": "Field notes — Kyoto",
+                "kind": "Editorial cut",
+                "edited": "Aug 18",
+                "status": "Ready to share",
+                "scenes": 8,
+                "headline": "A slower point of view",
+                "body": "Notes from the edge of the city."
+              }
+            ]
+          }
+        }
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-77291",
+      "intent": {
+        "type": "bridge_request",
+        "requestId": "09d1408f-ca51-447c-a20c-8877b5cc3e7c",
+        "appId": "app--by-hypermaker",
+        "operation": {
+          "type": "notify",
+          "message": "New composition created.",
+          "level": "success",
+          "timeoutMs": 2200
+        }
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-77298",
+      "intent": {
+        "type": "bridge_request",
+        "requestId": "2f681d95-84d4-473f-9889-0585fc62ca25",
+        "appId": "app--by-hypermaker",
+        "operation": {
+          "type": "storage.write",
+          "key": "hypermaker.workspace.v1",
+          "value": {
+            "page": "projects",
+            "query": "",
+            "sort": "Recently edited",
+            "projectId": "composition-1787547811362",
+            "playing": false,
+            "projects": [
+              {
+                "id": "composition-1787547811362",
+                "title": "Untitled composition",
+                "kind": "New composition",
+                "edited": "Just now",
+                "status": "In progress",
+                "scenes": 1,
+                "headline": "A clear point of view",
+                "body": "Start with one strong frame."
+              },
+              {
+                "id": "orbit",
+                "title": "Orbit / Product reveal",
+                "kind": "Launch film",
+                "edited": "Today, 10:42",
+                "status": "In progress",
+                "scenes": 6,
+                "headline": "Move at the speed of ideas",
+                "body": "A launch story in motion."
+              },
+              {
+                "id": "signals",
+                "title": "Signals / Brand system",
+                "kind": "Identity study",
+                "edited": "Yesterday",
+                "status": "In progress",
+                "scenes": 4,
+                "headline": "Find your signal",
+                "body": "Shape the space between moments."
+              },
+              {
+                "id": "field-notes",
+                "title": "Field notes — Kyoto",
+                "kind": "Editorial cut",
+                "edited": "Aug 18",
+                "status": "Ready to share",
+                "scenes": 8,
+                "headline": "A slower point of view",
+                "body": "Notes from the edge of the city."
+              }
+            ]
+          }
+        }
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-77300",
+      "intent": {
+        "type": "bridge_request",
+        "requestId": "913fd4ca-e272-4fe0-822b-09dccad17328",
+        "appId": "app--by-hypermaker",
+        "operation": {
+          "type": "storage.write",
+          "key": "hypermaker.workspace.v1",
+          "value": {
+            "page": "assets",
+            "query": "",
+            "sort": "Recently edited",
+            "projectId": "composition-1787547811362",
+            "playing": false,
+            "projects": [
+              {
+                "id": "composition-1787547811362",
+                "title": "Untitled composition",
+                "kind": "New composition",
+                "edited": "Just now",
+                "status": "In progress",
+                "scenes": 1,
+                "headline": "A clear point of view",
+                "body": "Start with one strong frame."
+              },
+              {
+                "id": "orbit",
+                "title": "Orbit / Product reveal",
+                "kind": "Launch film",
+                "edited": "Today, 10:42",
+                "status": "In progress",
+                "scenes": 6,
+                "headline": "Move at the speed of ideas",
+                "body": "A launch story in motion."
+              },
+              {
+                "id": "signals",
+                "title": "Signals / Brand system",
+                "kind": "Identity study",
+                "edited": "Yesterday",
+                "status": "In progress",
+                "scenes": 4,
+                "headline": "Find your signal",
+                "body": "Shape the space between moments."
+              },
+              {
+                "id": "field-notes",
+                "title": "Field notes — Kyoto",
+                "kind": "Editorial cut",
+                "edited": "Aug 18",
+                "status": "Ready to share",
+                "scenes": 8,
+                "headline": "A slower point of view",
+                "body": "Notes from the edge of the city."
+              }
+            ]
+          }
+        }
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-77302",
+      "intent": {
+        "type": "bridge_request",
+        "requestId": "d87d9267-83fc-4151-8c1d-566cc4ca50d3",
+        "appId": "app--by-hypermaker",
+        "operation": {
+          "type": "storage.write",
+          "key": "hypermaker.workspace.v1",
+          "value": {
+            "page": "team",
+            "query": "",
+            "sort": "Recently edited",
+            "projectId": "composition-1787547811362",
+            "playing": false,
+            "projects": [
+              {
+                "id": "composition-1787547811362",
+                "title": "Untitled composition",
+                "kind": "New composition",
+                "edited": "Just now",
+                "status": "In progress",
+                "scenes": 1,
+                "headline": "A clear point of view",
+                "body": "Start with one strong frame."
+              },
+              {
+                "id": "orbit",
+                "title": "Orbit / Product reveal",
+                "kind": "Launch film",
+                "edited": "Today, 10:42",
+                "status": "In progress",
+                "scenes": 6,
+                "headline": "Move at the speed of ideas",
+                "body": "A launch story in motion."
+              },
+              {
+                "id": "signals",
+                "title": "Signals / Brand system",
+                "kind": "Identity study",
+                "edited": "Yesterday",
+                "status": "In progress",
+                "scenes": 4,
+                "headline": "Find your signal",
+                "body": "Shape the space between moments."
+              },
+              {
+                "id": "field-notes",
+                "title": "Field notes — Kyoto",
+                "kind": "Editorial cut",
+                "edited": "Aug 18",
+                "status": "Ready to share",
+                "scenes": 8,
+                "headline": "A slower point of view",
+                "body": "Notes from the edge of the city."
+              }
+            ]
+          }
+        }
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-77304",
+      "intent": {
+        "type": "bridge_request",
+        "requestId": "5c349c30-b8ea-45fb-b4be-794aad515e0a",
+        "appId": "app--by-hypermaker",
+        "operation": {
+          "type": "storage.write",
+          "key": "hypermaker.workspace.v1",
+          "value": {
+            "page": "projects",
+            "query": "",
+            "sort": "Recently edited",
+            "projectId": "composition-1787547811362",
+            "playing": false,
+            "projects": [
+              {
+                "id": "composition-1787547811362",
+                "title": "Untitled composition",
+                "kind": "New composition",
+                "edited": "Just now",
+                "status": "In progress",
+                "scenes": 1,
+                "headline": "A clear point of view",
+                "body": "Start with one strong frame."
+              },
+              {
+                "id": "orbit",
+                "title": "Orbit / Product reveal",
+                "kind": "Launch film",
+                "edited": "Today, 10:42",
+                "status": "In progress",
+                "scenes": 6,
+                "headline": "Move at the speed of ideas",
+                "body": "A launch story in motion."
+              },
+              {
+                "id": "signals",
+                "title": "Signals / Brand system",
+                "kind": "Identity study",
+                "edited": "Yesterday",
+                "status": "In progress",
+                "scenes": 4,
+                "headline": "Find your signal",
+                "body": "Shape the space between moments."
+              },
+              {
+                "id": "field-notes",
+                "title": "Field notes — Kyoto",
+                "kind": "Editorial cut",
+                "edited": "Aug 18",
+                "status": "Ready to share",
+                "scenes": 8,
+                "headline": "A slower point of view",
+                "body": "Notes from the edge of the city."
+              }
+            ]
+          }
+        }
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-77306",
+      "intent": {
+        "type": "bridge_request",
+        "requestId": "6f10b2a1-112a-4142-8b25-73adb3c4c513",
+        "appId": "app--by-hypermaker",
+        "operation": {
+          "type": "storage.write",
+          "key": "hypermaker.workspace.v1",
+          "value": {
+            "page": "overview",
+            "query": "",
+            "sort": "Recently edited",
+            "projectId": "composition-1787547811362",
+            "playing": false,
+            "projects": [
+              {
+                "id": "composition-1787547811362",
+                "title": "Untitled composition",
+                "kind": "New composition",
+                "edited": "Just now",
+                "status": "In progress",
+                "scenes": 1,
+                "headline": "A clear point of view",
+                "body": "Start with one strong frame."
+              },
+              {
+                "id": "orbit",
+                "title": "Orbit / Product reveal",
+                "kind": "Launch film",
+                "edited": "Today, 10:42",
+                "status": "In progress",
+                "scenes": 6,
+                "headline": "Move at the speed of ideas",
+                "body": "A launch story in motion."
+              },
+              {
+                "id": "signals",
+                "title": "Signals / Brand system",
+                "kind": "Identity study",
+                "edited": "Yesterday",
+                "status": "In progress",
+                "scenes": 4,
+                "headline": "Find your signal",
+                "body": "Shape the space between moments."
+              },
+              {
+                "id": "field-notes",
+                "title": "Field notes — Kyoto",
+                "kind": "Editorial cut",
+                "edited": "Aug 18",
+                "status": "Ready to share",
+                "scenes": 8,
+                "headline": "A slower point of view",
+                "body": "Notes from the edge of the city."
+              }
+            ]
+          }
+        }
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-77308",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-77264"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-77309",
+      "intent": {
+        "type": "open_app",
+        "appId": "shop"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-77315",
+      "intent": {
+        "type": "install_app",
+        "app": {
+          "id": "app-hyperframes-video-generator",
+          "name": "Hyperframes Video Generator",
+          "description": "Imagine and explore Hyperframes Video Generator",
+          "icon": "sparkles"
+        }
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-77317",
+      "intent": {
+        "type": "close_window",
+        "windowId": "window-77310"
+      },
+      "state": "ready"
+    },
+    {
+      "id": "op-77318",
+      "intent": {
+        "type": "open_app",
+        "appId": "app-hyperframes-video-generator"
+      },
+      "state": "ready"
     }
   ],
   "notifications": [
-    "Your changes could not be saved.",
     "App state changed; reload before writing.",
     "Your changes could not be saved.",
     "App state changed; reload before writing.",
@@ -963,9 +1274,19 @@
     "App state changed; reload before writing.",
     "Your changes could not be saved.",
     "App state changed; reload before writing.",
-    "Your changes could not be saved."
+    "Your changes could not be saved.",
+    "New composition created."
   ],
   "apps": [
+    {
+      "id": "app--by-hypermaker",
+      "name": "奖状生成器 by Hypermaker",
+      "description": "",
+      "icon": "icon.svg",
+      "category": "app",
+      "installed": true,
+      "status": "available"
+    },
     {
       "id": "app--promax",
       "name": "押韵大师ProMax",
@@ -978,6 +1299,15 @@
     {
       "id": "app-3d-model-editor",
       "name": "3d Model Editor",
+      "description": "",
+      "icon": "icon.svg",
+      "category": "app",
+      "installed": true,
+      "status": "ready"
+    },
+    {
+      "id": "app-3d-pinball-space-cadet",
+      "name": "3D Pinball: Space Cadet",
       "description": "",
       "icon": "icon.svg",
       "category": "app",
@@ -1054,7 +1384,7 @@
       "icon": "icon.svg",
       "category": "app",
       "installed": true,
-      "status": "available"
+      "status": "ready"
     },
     {
       "id": "app-excel",
@@ -1063,7 +1393,7 @@
       "icon": "icon.svg",
       "category": "app",
       "installed": true,
-      "status": "available"
+      "status": "ready"
     },
     {
       "id": "app-firefox",
@@ -1073,6 +1403,15 @@
       "category": "app",
       "installed": true,
       "status": "available"
+    },
+    {
+      "id": "app-flappy-bird",
+      "name": "Flappy Bird",
+      "description": "",
+      "icon": "icon.svg",
+      "category": "app",
+      "installed": true,
+      "status": "ready"
     },
     {
       "id": "app-freecell",
@@ -1126,7 +1465,7 @@
       "icon": "icon.svg",
       "category": "app",
       "installed": true,
-      "status": "available"
+      "status": "ready"
     },
     {
       "id": "app-paint",
@@ -1144,7 +1483,7 @@
       "icon": "icon.svg",
       "category": "app",
       "installed": true,
-      "status": "available"
+      "status": "ready"
     },
     {
       "id": "app-plants-vs-zombies",
@@ -1153,7 +1492,7 @@
       "icon": "icon.svg",
       "category": "app",
       "installed": true,
-      "status": "available"
+      "status": "ready"
     },
     {
       "id": "app-poetry",
@@ -1171,7 +1510,7 @@
       "icon": "icon.svg",
       "category": "app",
       "installed": true,
-      "status": "available"
+      "status": "ready"
     },
     {
       "id": "app-scientific-calculator",
@@ -1190,6 +1529,15 @@
       "category": "app",
       "installed": true,
       "status": "ready"
+    },
+    {
+      "id": "app-temple-run",
+      "name": "Temple Run",
+      "description": "",
+      "icon": "icon.svg",
+      "category": "app",
+      "installed": true,
+      "status": "available"
     },
     {
       "id": "app-tetris",
@@ -1216,7 +1564,7 @@
       "icon": "icon.svg",
       "category": "app",
       "installed": true,
-      "status": "available"
+      "status": "ready"
     },
     {
       "id": "app-zed",
@@ -1264,31 +1612,29 @@
       "status": "available"
     },
     {
-      "id": "app-3d-pinball-space-cadet",
-      "name": "3D Pinball: Space Cadet",
-      "description": "Imagine and explore 3D Pinball: Space Cadet",
-      "icon": "icon.svg",
-      "status": "available",
-      "installed": true
-    },
-    {
-      "id": "app-flappy-bird",
-      "name": "Flappy Bird",
-      "description": "Imagine and explore flappy bird",
-      "icon": "icon.svg",
-      "status": "available",
-      "installed": true
-    },
-    {
-      "id": "app-temple-run",
-      "name": "Temple Run",
-      "description": "Imagine and explore Temple Run",
+      "id": "app-hyperframes-video-generator",
+      "name": "Hyperframes Video Generator",
+      "description": "Imagine and explore Hyperframes Video Generator",
       "icon": "icon.svg",
       "status": "available",
       "installed": true
     }
   ],
   "surfaces": [
+    {
+      "id": "app--by-hyperframe-surface",
+      "appId": "app--by-hyperframe",
+      "route": "/",
+      "title": "奖状生成器 by Hyperframe",
+      "status": "ready",
+      "entry": "index.html",
+      "content": {
+        "heading": "奖状生成器 by Hyperframe",
+        "body": "",
+        "entry": "index.html",
+        "controls": []
+      }
+    },
     {
       "id": "app--promax-surface",
       "appId": "app--promax",
@@ -2811,6 +3157,34 @@
         "body": "Find and install applications.",
         "controls": []
       }
+    },
+    {
+      "id": "surface-77265",
+      "appId": "app--by-hypermaker",
+      "route": "/",
+      "title": "奖状生成器 by Hypermaker",
+      "status": "ready",
+      "content": {
+        "heading": "HyperMaker",
+        "body": "",
+        "entry": "index.html",
+        "controls": []
+      },
+      "entry": "index.html"
+    },
+    {
+      "id": "surface-77320",
+      "appId": "app-hyperframes-video-generator",
+      "route": "/",
+      "title": "Hyperframes Video Generator",
+      "status": "ready",
+      "content": {
+        "heading": "Hyperframes Video Generator",
+        "body": "",
+        "entry": "index.html",
+        "controls": []
+      },
+      "entry": "index.html"
     }
   ],
   "settings": {

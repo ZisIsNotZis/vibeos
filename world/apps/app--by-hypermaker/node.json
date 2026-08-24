@@ -1,0 +1,10 @@
+{
+  "id": "app--by-hypermaker",
+  "title": "HyperMaker",
+  "kind": "app",
+  "icon": "icon.svg",
+  "entry": "index.html",
+  "routes": {
+    "/": "index.html"
+  }
+}

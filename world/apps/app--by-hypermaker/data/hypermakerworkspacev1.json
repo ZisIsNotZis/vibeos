@@ -1,0 +1,49 @@
+{
+  "page": "overview",
+  "query": "",
+  "sort": "Recently edited",
+  "projectId": "composition-1787547811362",
+  "playing": false,
+  "projects": [
+    {
+      "id": "composition-1787547811362",
+      "title": "Untitled composition",
+      "kind": "New composition",
+      "edited": "Just now",
+      "status": "In progress",
+      "scenes": 1,
+      "headline": "A clear point of view",
+      "body": "Start with one strong frame."
+    },
+    {
+      "id": "orbit",
+      "title": "Orbit / Product reveal",
+      "kind": "Launch film",
+      "edited": "Today, 10:42",
+      "status": "In progress",
+      "scenes": 6,
+      "headline": "Move at the speed of ideas",
+      "body": "A launch story in motion."
+    },
+    {
+      "id": "signals",
+      "title": "Signals / Brand system",
+      "kind": "Identity study",
+      "edited": "Yesterday",
+      "status": "In progress",
+      "scenes": 4,
+      "headline": "Find your signal",
+      "body": "Shape the space between moments."
+    },
+    {
+      "id": "field-notes",
+      "title": "Field notes — Kyoto",
+      "kind": "Editorial cut",
+      "edited": "Aug 18",
+      "status": "Ready to share",
+      "scenes": 8,
+      "headline": "A slower point of view",
+      "body": "Notes from the edge of the city."
+    }
+  ]
+}

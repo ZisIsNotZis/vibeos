@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">Hyperframes Video Generator</title>
+  <desc id="desc">A cinematic frame aperture surrounding a play marker and editing timeline.</desc>
+  <defs>
+    <linearGradient id="field" x1="24" y1="18" x2="232" y2="238" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#17162f"/>
+      <stop offset="1" stop-color="#312268"/>
+    </linearGradient>
+    <linearGradient id="beam" x1="56" y1="44" x2="204" y2="216" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#b7a8ff"/>
+      <stop offset="1" stop-color="#6e5bea"/>
+    </linearGradient>
+    <linearGradient id="timeline" x1="52" y1="202" x2="204" y2="202" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#73e1d1"/>
+      <stop offset="1" stop-color="#a89dfc"/>
+    </linearGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="170%">
+      <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#090714" flood-opacity=".42"/>
+    </filter>
+  </defs>
+
+  <rect x="8" y="8" width="240" height="240" rx="54" fill="url(#field)"/>
+  <path d="M8 92C53 65 80 52 127 52c48 0 82 15 121 42v47c-37-29-74-43-121-43-47 0-82 14-119 43V92Z" fill="#5e4aca" opacity=".15"/>
+
+  <g filter="url(#shadow)">
+    <rect x="39" y="39" width="178" height="148" rx="22" fill="#111021" stroke="#b7a8ff" stroke-opacity=".35" stroke-width="3"/>
+    <rect x="54" y="54" width="148" height="112" rx="13" fill="#27214c" stroke="url(#beam)" stroke-width="3"/>
+
+    <path d="M75 67v12M93 67v12M111 67v12M129 67v12M147 67v12M165 67v12M183 67v12M75 141v12M93 141v12M111 141v12M129 141v12M147 141v12M165 141v12M183 141v12" stroke="#b7a8ff" stroke-opacity=".66" stroke-width="7" stroke-linecap="round"/>
+    <path d="M67 87h122M67 134h122" stroke="#8e7cf2" stroke-opacity=".22" stroke-width="2"/>
+
+    <path d="M113 91.5a8 8 0 0 1 12.1-6.9l29.6 17.7a8 8 0 0 1 0 13.8l-29.6 17.7a8 8 0 0 1-12.1-6.9V91.5Z" fill="url(#beam)"/>
+    <path d="M120 94v30l24-15-24-15Z" fill="#17162f" opacity=".82"/>
+  </g>
+
+  <g fill="none" stroke="url(#timeline)" stroke-linecap="round">
+    <path d="M52 204h152" stroke-width="8"/>
+    <path d="M67 194v20M92 198v12M117 194v20M143 198v12M168 194v20M193 198v12" stroke-width="4"/>
+  </g>
+  <circle cx="117" cy="204" r="7" fill="#f6c66f" stroke="#17162f" stroke-width="4"/>
+</svg>

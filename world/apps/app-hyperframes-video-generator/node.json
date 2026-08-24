@@ -1,0 +1,9 @@
+{
+  "id": "app-hyperframes-video-generator",
+  "title": "Hyperframes Video Generator",
+  "kind": "app",
+  "status": "ready",
+  "icon": "icon.svg",
+  "children": [],
+  "entry": "index.html"
+}

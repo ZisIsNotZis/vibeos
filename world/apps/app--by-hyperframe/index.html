@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>桌面状态</title>
+  <style>
+    :root {
+      --bg: var(--vibe-surface, #191923);
+      --panel: var(--vibe-raised, #242431);
+      --control: var(--vibe-control, #303044);
+      --text: var(--vibe-text, #f1f1f6);
+      --muted: var(--vibe-muted, #aeb0c2);
+      --line: var(--vibe-border, #ffffff22);
+      --accent: var(--vibe-accent, #a89dfc);
+      --good: #55c897;
+      --warm: #e4ae56;
+      font-family: var(--vibe-font-ui, Inter, ui-sans-serif, system-ui, sans-serif);
+      color: var(--text);
+      background: var(--bg);
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-width: 0; background: var(--bg); color: var(--text); font-size: var(--vibe-text-body, 14px); line-height: var(--vibe-line-normal, 1.5); }
+    button, input { font: inherit; }
+    button { color: inherit; }
+    .page { min-height: 100vh; padding: clamp(18px, 3vw, 34px); overflow: auto; }
+    .wrap { width: min(1120px, 100%); margin: 0 auto; }
+    .masthead { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; padding-bottom: 24px; border-bottom: 1px solid var(--line); }
+    .eyebrow { display: flex; align-items: center; gap: 9px; color: var(--muted); font-size: var(--vibe-text-label, 12px); letter-spacing: .09em; text-transform: uppercase; }
+    .pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--good); box-shadow: 0 0 0 5px color-mix(in srgb, var(--good) 15%, transparent); }
+    h1 { margin: 8px 0 5px; font-size: clamp(26px, 4vw, var(--vibe-text-display, 34px)); line-height: var(--vibe-line-tight, 1.15); letter-spacing: -.035em; }
+    .subtitle { margin: 0; color: var(--muted); max-width: 580px; }
+    .stamp { color: var(--muted); text-align: right; font-family: var(--vibe-font-mono, monospace); font-size: var(--vibe-text-caption, 11px); white-space: nowrap; }
+    .toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 20px 0 15px; }
+    .search { flex: 1 1 240px; position: relative; }
+    .search svg { position: absolute; width: 17px; height: 17px; left: 13px; top: 12px; color: var(--muted); pointer-events: none; }
+    input[type="search"] { width: 100%; height: 42px; border: 1px solid var(--line); border-radius: 11px; outline: none; padding: 0 14px 0 40px; background: var(--panel); color: var(--text); }
+    input[type="search"]::placeholder { color: var(--muted); }
+    input[type="search"]:focus { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent); }
+    .tool-button, .tab { border: 1px solid var(--line); background: var(--panel); border-radius: 10px; cursor: pointer; transition: background .18s, border-color .18s, transform .18s; }
+    .tool-button { display: inline-flex; align-items: center; gap: 8px; height: 42px; padding: 0 13px; color: var(--muted); }
+    .tool-button:hover, .tool-button:focus-visible { color: var(--text); border-color: var(--accent); background: var(--control); }
+    .tool-button:active { transform: translateY(1px); }
+    .tool-button svg { width: 16px; height: 16px; }
+    .tabs { display: flex; gap: 8px; overflow-x: auto; padding: 0 0 6px; scrollbar-width: thin; scrollbar-color: var(--control) transparent; }
+    .tab { padding: 7px 13px; white-space: nowrap; color: var(--muted); font-size: var(--vibe-text-label, 12px); }
+    .tab.active { color: var(--text); border-color: color-mix(in srgb, var(--accent) 60%, var(--line)); background: color-mix(in srgb, var(--accent) 16%, var(--panel)); }
+    .tab:hover, .tab:focus-visible { color: var(--text); border-color: var(--accent); }
+    .overview { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 17px 0 25px; }
+    .metric { min-width: 0; padding: 16px 17px; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; }
+    .metric-label { color: var(--muted); font-size: var(--vibe-text-caption, 11px); }
+    .metric-value { margin-top: 4px; font-size: var(--vibe-text-heading, 24px); font-weight: 700; letter-spacing: -.03em; }
+    .metric-note { color: var(--muted); font-size: var(--vibe-text-caption, 11px); }
+    .section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 11px; }
+    h2 { margin: 0; font-size: var(--vibe-text-title, 18px); line-height: var(--vibe-line-tight, 1.15); }
+    .result-count { color: var(--muted); font-size: var(--vibe-text-caption, 11px); }
+    .apps { display: grid; grid-template-columns: repeat(auto-fill, minmax(215px, 1fr)); gap: 12px; }
+    .apps.compact { grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 8px; }
+    .apps.compact .app-card { min-height: 62px; padding: 9px 10px; }
+    .apps.compact .app-icon { flex-basis: 36px; width: 36px; height: 36px; border-radius: 9px; }
+    .app-card { display: flex; align-items: center; gap: 12px; min-width: 0; min-height: 78px; padding: 13px; border: 1px solid var(--line); border-radius: 14px; background: color-mix(in srgb, var(--panel) 88%, var(--bg)); cursor: pointer; text-align: left; transition: border-color .18s, transform .18s, background .18s; }
+    .app-card:hover, .app-card:focus-visible { border-color: color-mix(in srgb, var(--accent) 72%, var(--line)); background: var(--panel); transform: translateY(-2px); outline: none; }
+    .app-card:active { transform: translateY(0); }
+    .app-icon { flex: 0 0 42px; width: 42px; height: 42px; border-radius: 11px; display: grid; place-items: center; color: var(--icon-fg); background: var(--icon-bg); }
+    .app-icon svg { width: 22px; height: 22px; }
+    .app-copy { min-width: 0; }
+    .app-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--vibe-text-label, 12px); font-weight: 650; }
+    .app-kind { margin-top: 3px; color: var(--muted); font-size: var(--vibe-text-caption, 11px); }
+    .empty { padding: 30px 18px; color: var(--muted); text-align: center; border: 1px dashed var(--line); border-radius: 14px; }
+    .footer { display: flex; justify-content: space-between; gap: 15px; margin-top: 26px; padding-top: 15px; border-top: 1px solid var(--line); color: var(--muted); font-size: var(--vibe-text-caption, 11px); }
+    kbd { padding: 2px 6px; border: 1px solid var(--line); border-radius: 5px; background: var(--control); font-family: var(--vibe-font-mono, monospace); }
+    @media (max-width: 600px) { .masthead { display: block; } .stamp { margin-top: 14px; text-align: left; } .overview { gap: 8px; } .metric { padding: 13px 12px; } .metric-value { font-size: 20px; } .apps { grid-template-columns: repeat(auto-fill, minmax(175px, 1fr)); gap: 8px; } .app-card { padding: 10px; } }
+    @media (max-width: 410px) { .overview { grid-template-columns: 1fr; } .overview .metric { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; } .footer { display: block; } .footer span + span { display: block; margin-top: 6px; } }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="wrap">
+      <header class="masthead">
+        <div>
+          <div class="eyebrow"><span class="pulse" aria-hidden="true"></span>桌面状态</div>
+          <h1>现在，桌面上有什么？</h1>
+          <p class="subtitle">查看可用应用、运行状况与最近一次同步时间。点击任意应用即可进入。</p>
+        </div>
+        <div class="stamp" id="stamp" aria-live="polite"></div>
+      </header>
+
+      <section class="toolbar" aria-label="应用筛选">
+        <label class="search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 5 5"></path></svg>
+          <input id="search" type="search" placeholder="搜索应用" autocomplete="off">
+        </label>
+        <button class="tool-button" id="refresh" type="button" title="重新读取当前列表">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.8-4L3 10"></path><path d="M3 5v5h5"></path><path d="M4 13a8 8 0 0 0 14.8 4L21 14"></path><path d="M21 19v-5h-5"></path></svg>
+          <span>刷新</span>
+        </button>
+        <button class="tool-button" id="density" type="button" aria-pressed="false" title="切换卡片密度">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1"></rect><rect x="14" y="4" width="6" height="6" rx="1"></rect><rect x="4" y="14" width="6" height="6" rx="1"></rect><rect x="14" y="14" width="6" height="6" rx="1"></rect></svg>
+          <span>紧凑视图</span>
+        </button>
+      </section>
+      <nav class="tabs" id="tabs" aria-label="应用类别"></nav>
+
+      <section class="overview" aria-label="桌面概览">
+        <div class="metric"><div class="metric-label">可用应用</div><div class="metric-value" id="app-total">—</div><div class="metric-note">当前世界树条目</div></div>
+        <div class="metric"><div class="metric-label">工作区</div><div class="metric-value">就绪</div><div class="metric-note">可随时进入应用</div></div>
+        <div class="metric"><div class="metric-label">同步状态</div><div class="metric-value" id="sync-state">刚刚</div><div class="metric-note">本地状态已读取</div></div>
+      </section>
+
+      <section aria-labelledby="apps-heading">
+        <div class="section-head"><h2 id="apps-heading">应用</h2><span class="result-count" id="result-count"></span></div>
+        <div class="apps" id="apps"></div>
+      </section>
+      <footer class="footer"><span>点击应用卡片进入对应工作区</span><span>筛选 <kbd>/</kbd>　清除 <kbd>Esc</kbd></span></footer>
+    </div>
+  </main>
+  <script>
+    const world = [
+      ['app--by-hyperframe', '奖状生成器', '创作', 'certificate'], ['app-promax', '押韵大师ProMax', '创作', 'music'], ['app-3d-model-editor', '3D Model Editor', '创作', 'cube'], ['app-3d-pinball-space-cadet', '3D Pinball: Space Cadet', '游戏', 'game'], ['app-android-simulator', 'Android Simulator', '工具', 'mobile'], ['app-cad-editor', 'CAD Editor', '创作', 'cad'], ['app-claude-code', 'Claude Code', '开发', 'code'], ['app-command-conquer-red-alert-3', 'Command & Conquer: Red Alert 3', '游戏', 'game'], ['app-cs1-6', 'CS1.6', '游戏', 'game'], ['app-dota2', 'DOTA2', '游戏', 'game'], ['app-draw-io', 'Draw.Io', '创作', 'draw'], ['app-excel', 'Excel', '办公', 'sheet'], ['app-firefox', 'Firefox', '工具', 'browser'], ['app-flappy-bird', 'Flappy Bird', '游戏', 'game'], ['app-freecell', 'FreeCell', '游戏', 'game'], ['app-iphone-simulator', 'Iphone Simulator', '工具', 'mobile'], ['app-midi-editor', 'Midi editor', '创作', 'music'], ['app-minesweeper', 'Minesweeper', '游戏', 'game'], ['app-music', 'Music Studio', '创作', 'music'], ['app-outlook', 'Outlook', '办公', 'mail'], ['app-paint', 'Paint', '创作', 'paint'], ['app-paint3d', 'Paint3d', '创作', 'cube'], ['app-plants-vs-zombies', 'Plants Vs Zombies', '游戏', 'game'], ['app-poetry', 'Poetry House', '创作', 'book'], ['app-powerpoint', 'Powerpoint', '办公', 'slides'], ['app-scientific-calculator', 'Scientific Calculator', '工具', 'calculator'], ['app-sublime-text', 'Sublime Text', '开发', 'code'], ['app-temple-run', 'Temple Run', '游戏', 'game'], ['app-tetris', 'Tetris', '游戏', 'game'], ['app-warcraft3', 'Warcraft III', '游戏', 'game'], ['app-word', 'Word', '办公', 'document'], ['app-zed', 'Zed', '开发', 'code'], ['assistant', 'Assistant', '工具', 'assistant'], ['browser', 'Browser', '工具', 'browser'], ['settings', 'Settings', '系统', 'settings'], ['shop', 'App Shop', '系统', 'shop']
+    ].map(([id, name, category, icon]) => ({id, name, category, icon}));
+    const iconPaths = {
+      certificate: '<path d="M5 4.5h14v15H5z"/><path d="M8 8h8M8 11h8M8 14h5"/><path d="m17 16 2.5 4-2.5-1-2.5 1z"/>', music: '<path d="M9 18V6l10-2v12"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/>', cube: '<path d="m12 3 8 4.5v9L12 21l-8-4.5v-9z"/><path d="m4.4 7.7 7.6 4.4 7.6-4.4M12 12.1V21"/>', game: '<rect x="4" y="7" width="16" height="11" rx="5"/><path d="M8 12h4M10 10v4M16 11h.01M18 13h.01"/>', mobile: '<rect x="7" y="3" width="10" height="18" rx="2"/><path d="M10 6h4M11 18h2"/>', cad: '<path d="M5 19 19 5M5 5l14 14"/><circle cx="12" cy="12" r="7"/>', code: '<path d="m9 7-5 5 5 5M15 7l5 5-5 5M13 4l-2 16"/>', draw: '<path d="M5 19 4 15 16 3l4 4L8 19z"/><path d="m13 6 4 4"/>', sheet: '<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/>', browser: '<circle cx="12" cy="12" r="8"/><path d="M4 9h16M12 4c2 2 3 5 3 8s-1 6-3 8"/>', mail: '<rect x="4" y="6" width="16" height="13" rx="2"/><path d="m5 8 7 5 7-5"/>', paint: '<path d="M5 16c-1 3 1 5 4 4 2-1 2-3 4-3h3a5 5 0 0 0 0-10H9a5 5 0 0 0-4 9z"/><circle cx="9" cy="8" r=".6" fill="currentColor"/><circle cx="13" cy="7" r=".6" fill="currentColor"/>', book: '<path d="M5 5.5A2.5 2.5 0 0 1 7.5 3H19v16H7.5A2.5 2.5 0 0 0 5 21z"/><path d="M5 5.5v15M9 7h6"/>', slides: '<rect x="4" y="4" width="16" height="12" rx="2"/><path d="M12 16v4M8 20h8M8 9h8M8 12h5"/>', calculator: '<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 12h2M14 12h2M8 16h2M14 16h2"/>', document: '<path d="M7 3h7l4 4v14H7z"/><path d="M14 3v5h4M9 12h6M9 16h6"/>', assistant: '<circle cx="12" cy="12" r="7"/><path d="M9 12h.01M15 12h.01M9 15c2 1 4 1 6 0"/>', settings: '<path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/><circle cx="12" cy="12" r="4"/>', shop: '<path d="M5 10h14v10H5zM4 10l2-5h12l2 5M9 10v3h6v-3"/>'
+    };
+    const categories = ['全部', '创作', '办公', '工具', '开发', '游戏', '系统'];
+    let active = '全部', query = '', compact = false, syncedAt = new Date();
+    const $ = id => document.getElementById(id);
+    function esc(s) { return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+    function drawTabs() { $('tabs').innerHTML = categories.map(c => `<button type="button" class="tab ${active === c ? 'active' : ''}" aria-pressed="${active === c}">${c}</button>`).join(''); }
+    function filtered() { return world.filter(a => (active === '全部' || a.category === active) && a.name.toLocaleLowerCase().includes(query.toLocaleLowerCase())); }
+    function draw() {
+      const items = filtered();
+      $('app-total').textContent = world.length;
+      $('result-count').textContent = `${items.length} 个结果`;
+      $('apps').innerHTML = items.length ? items.map(a => `<button type="button" class="app-card" data-app="${esc(a.id)}" aria-label="进入 ${esc(a.name)}"><span class="app-icon" style="--icon-bg:${color(a.category)};--icon-fg:${iconColor(a.category)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${iconPaths[a.icon]}</svg></span><span class="app-copy"><span class="app-name">${esc(a.name)}</span><span class="app-kind">${esc(a.category)} · 可用</span></span></button>`).join('') : '<div class="empty">没有找到匹配的应用，请换一个关键词。</div>';
+      $('apps').classList.toggle('compact', compact);
+    }
+    function color(c) { return ({'创作':'color-mix(in srgb, #d47b58 22%, var(--panel))','办公':'color-mix(in srgb, #5c9fce 22%, var(--panel))','工具':'color-mix(in srgb, #8e7ed6 22%, var(--panel))','开发':'color-mix(in srgb, #6db48f 22%, var(--panel))','游戏':'color-mix(in srgb, #d5a253 22%, var(--panel))','系统':'color-mix(in srgb, #a4aab5 22%, var(--panel))'})[c] || 'var(--control)'; }
+    function iconColor(c) { return ({'创作':'#e9a27f','办公':'#8bc7ec','工具':'#b8acf4','开发':'#91dab1','游戏':'#efc275','系统':'var(--text)'})[c] || 'var(--text)'; }
+    function updateStamp() { $('stamp').textContent = `SYNC ${syncedAt.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}`; $('sync-state').textContent = '刚刚'; }
+    $('tabs').addEventListener('click', e => { const b = e.target.closest('.tab'); if (!b) return; active = b.textContent; drawTabs(); draw(); });
+    $('search').addEventListener('input', e => { query = e.target.value.trim(); draw(); });
+    $('refresh').addEventListener('click', () => { syncedAt = new Date(); updateStamp(); draw(); window.vibeOS?.notify?.('桌面列表已更新', {level:'success', timeoutMs:1800}); });
+    $('density').addEventListener('click', () => { compact = !compact; $('density').setAttribute('aria-pressed', String(compact)); $('density span').textContent = compact ? '舒适视图' : '紧凑视图'; document.body.classList.toggle('is-compact', compact); });
+    $('apps').addEventListener('click', async e => { const card = e.target.closest('[data-app]'); if (!card) return; const app = world.find(a => a.id === card.dataset.app); if (!app) return; try { await window.vibeOS?.dispatch?.({type:'open_surface', appId: app.id, route:'/'}); } catch (err) { window.vibeOS?.notify?.('暂时无法进入该应用', {level:'error', timeoutMs:2200}); } });
+    window.addEventListener('keydown', e => { if (e.key === '/' && document.activeElement !== $('search')) { e.preventDefault(); $('search').focus(); } if (e.key === 'Escape' && document.activeElement === $('search')) { $('search').value = ''; query = ''; $('search').blur(); draw(); } });
+    drawTabs(); draw(); updateStamp();
+  </script>
+</body>
+</html>
