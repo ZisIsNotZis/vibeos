@@ -64,8 +64,16 @@
     .top-stats { display: flex; gap: 22px; align-items: center; color: var(--vibe-muted); font-size: var(--vibe-text-label); }
     .stat { display: flex; gap: 7px; align-items: baseline; white-space: nowrap; }
     .stat strong { color: var(--vibe-text); font-family: var(--vibe-font-mono); font-size: var(--vibe-text-body); }
+    .desktop-btn {
+      display: inline-flex; align-items: center; gap: 7px; padding: 8px 11px; border: 1px solid var(--vibe-border);
+      border-radius: 10px; color: var(--vibe-text); background: var(--vibe-raised); cursor: pointer;
+      font-size: var(--vibe-text-label); font-weight: 750; transition: background .16s, border-color .16s, transform .16s;
+    }
+    .desktop-btn:hover { background: var(--vibe-control); border-color: color-mix(in srgb, var(--vibe-accent) 55%, var(--vibe-border)); transform: translateY(-1px); }
+    .desktop-btn:focus-visible, .panel-close:focus-visible, .surface-link:focus-visible { outline: 3px solid var(--vibe-accent); outline-offset: 3px; }
+    .desktop-btn svg { width: 15px; height: 15px; flex: 0 0 15px; }
     .stage {
-      min-height: 0; flex: 1 1 auto; display: flex; align-items: center; justify-content: center;
+      min-height: 0; flex: 1 1 auto; display: flex; align-items: center; justify-content: center; position: relative;
       padding: 4px clamp(12px, 3vw, 38px) 22px; overflow: hidden;
     }
     .game-shell {
@@ -114,9 +122,39 @@
     .hint { position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); color: #fff; text-shadow: 0 2px 4px #16374c99; font-size: var(--vibe-text-label); font-weight: 700; white-space: nowrap; pointer-events: none; opacity: .88; }
     .footer { flex: 0 0 auto; padding: 0 22px 17px; display: flex; justify-content: center; color: var(--vibe-muted); font-size: var(--vibe-text-caption); }
     .footer kbd { border: 1px solid var(--vibe-border); border-radius: 5px; padding: 1px 5px; font-family: var(--vibe-font-mono); color: var(--vibe-text); }
+    .desktop-panel {
+      position: absolute; z-index: 5; top: 9px; right: clamp(12px, 3vw, 38px); width: min(395px, calc(100% - 24px));
+      height: min(600px, calc(100% - 20px)); display: flex; flex-direction: column; overflow: hidden;
+      border: 1px solid var(--vibe-border); border-radius: 18px; background: color-mix(in srgb, var(--vibe-raised) 94%, transparent);
+      box-shadow: 0 24px 60px color-mix(in srgb, var(--vibe-text) 20%, transparent), 0 4px 16px #00000018;
+      backdrop-filter: blur(18px); animation: panel-in .18s ease-out;
+    }
+    .desktop-panel[hidden] { display: none; }
+    @keyframes panel-in { from { opacity: 0; transform: translateY(-6px) scale(.985); } to { opacity: 1; transform: none; } }
+    .panel-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 18px 18px 13px; border-bottom: 1px solid var(--vibe-border); }
+    .panel-kicker { color: var(--vibe-accent); font-size: var(--vibe-text-caption); letter-spacing: .13em; text-transform: uppercase; font-weight: 800; }
+    .panel-title { margin: 3px 0 0; font-size: var(--vibe-text-heading); letter-spacing: -.045em; line-height: var(--vibe-line-tight); }
+    .panel-close { appearance: none; display: grid; place-items: center; width: 30px; height: 30px; flex: 0 0 30px; border: 1px solid var(--vibe-border); border-radius: 9px; color: var(--vibe-muted); background: transparent; cursor: pointer; }
+    .panel-close:hover { color: var(--vibe-text); background: var(--vibe-control); }
+    .panel-close svg { width: 15px; height: 15px; }
+    .panel-meta { display: flex; gap: 9px; flex-wrap: wrap; padding: 13px 18px 11px; }
+    .meta-chip { padding: 5px 8px; border: 1px solid var(--vibe-border); border-radius: 7px; color: var(--vibe-muted); font-size: var(--vibe-text-caption); }
+    .meta-chip strong { color: var(--vibe-text); font-family: var(--vibe-font-mono); }
+    .surface-list { min-height: 0; overflow: auto; padding: 0 10px 12px; scrollbar-color: var(--vibe-control) transparent; }
+    .surface-group { margin: 8px 8px 6px; color: var(--vibe-muted); font-size: var(--vibe-text-caption); font-weight: 800; letter-spacing: .09em; text-transform: uppercase; }
+    .surface-link { width: 100%; display: flex; align-items: center; gap: 10px; padding: 9px 8px; border: 0; border-radius: 10px; color: var(--vibe-text); background: transparent; text-align: left; cursor: pointer; }
+    .surface-link:hover { background: var(--vibe-control); }
+    .surface-link[aria-current="page"] { background: color-mix(in srgb, var(--vibe-accent) 16%, transparent); }
+    .surface-icon { display: grid; place-items: center; width: 27px; height: 27px; flex: 0 0 27px; border-radius: 8px; background: var(--vibe-control); color: var(--vibe-accent); font-size: var(--vibe-text-caption); font-weight: 850; }
+    .surface-copy { min-width: 0; flex: 1; }
+    .surface-name { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--vibe-text-label); font-weight: 700; }
+    .surface-revision { display: block; color: var(--vibe-muted); font-family: var(--vibe-font-mono); font-size: var(--vibe-text-caption); }
+    .surface-arrow { color: var(--vibe-muted); font-size: 16px; }
     @media (max-width: 560px) {
       .topbar { padding-top: 12px; }
       .top-stats { gap: 10px; }
+      .desktop-btn span { display: none; }
+      .desktop-btn { padding: 8px; }
       .game-shell { border-radius: 16px; }
       .stage { padding-inline: 8px; padding-bottom: 12px; }
       .footer { padding-bottom: 10px; }
@@ -141,9 +179,13 @@
         </svg>
         <div class="brand-copy"><div class="brand-name">Flappy Bird</div><div class="brand-tag">Skyline run</div></div>
       </div>
-      <div class="top-stats" aria-label="Personal records">
+      <div class="top-stats" aria-label="Personal records and desktop">
         <div class="stat"><span>Best</span><strong id="bestScore">0</strong></div>
         <div class="stat"><span>Runs</span><strong id="runs">0</strong></div>
+        <button class="desktop-btn" id="desktopBtn" type="button" aria-expanded="true" aria-controls="desktopPanel" title="Show desktop state">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2.5" y="3" width="15" height="10.5" rx="2" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M7 16h6M10 13.5V16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+          <span>Desktop state</span>
+        </button>
       </div>
     </header>
     <section class="stage">
@@ -168,6 +210,20 @@
           </div>
         </div>
       </div>
+      <aside class="desktop-panel" id="desktopPanel" aria-label="Desktop state">
+        <div class="panel-head">
+          <div><div class="panel-kicker">World overview</div><h2 class="panel-title">Desktop state</h2></div>
+          <button class="panel-close" id="desktopClose" type="button" aria-label="Close desktop state" title="Close">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+        <div class="panel-meta" aria-label="Desktop summary">
+          <span class="meta-chip"><strong id="surfaceCount">0</strong> surfaces</span>
+          <span class="meta-chip"><strong id="readyCount">0</strong> ready</span>
+          <span class="meta-chip">active: <strong>Flappy Bird</strong></span>
+        </div>
+        <div class="surface-list" id="surfaceList"></div>
+      </aside>
     </section>
     <footer class="footer"><span><kbd>Space</kbd> flap &nbsp;·&nbsp; <kbd>P</kbd> pause</span></footer>
   </main>
@@ -190,6 +246,12 @@
       const finalScoreEl = document.getElementById('finalScore');
       const runsEl = document.getElementById('runs');
       const hint = document.getElementById('hint');
+      const desktopBtn = document.getElementById('desktopBtn');
+      const desktopPanel = document.getElementById('desktopPanel');
+      const desktopClose = document.getElementById('desktopClose');
+      const surfaceList = document.getElementById('surfaceList');
+      const surfaceCount = document.getElementById('surfaceCount');
+      const readyCount = document.getElementById('readyCount');
       const bridge = window.vibeOS;
       const storeKey = 'flappy-bird-progress';
       let progress = { best: 0, runs: 0 };
@@ -204,6 +266,22 @@
       let score = 0;
       let elapsed = 0;
       let shake = 0;
+
+      const desktopSurfaces = [
+        ['Applications', [
+          ['app--by-hyperframe', 'Hyperframe', 0], ['app--promax', '押韵大师ProMax', 0], ['app-3d-model-editor', '3d Model Editor', 0],
+          ['app-3d-pinball-space-cadet', '3D Pinball: Space Cadet', 16], ['app-android-simulator', 'Android Simulator', 0], ['app-cad-editor', 'CAD Editor', 0],
+          ['app-claude-code', 'Claude Code', 0], ['app-codex', 'Codex', 0], ['app-command-conquer-red-alert-3', 'Command & Conquer: Red Alert 3', 3],
+          ['app-cs1-6', 'CS1.6', 0], ['app-dota2', 'DOTA2', 1], ['app-draw-io', 'Draw.Io', 0], ['app-excel', 'Excel', 0],
+          ['app-firefox', 'Firefox', 1], ['app-flappy-bird', 'Flappy Bird', 0], ['app-freecell', 'FreeCell', 0],
+          ['app-hyperframes-video-generator', 'Hyperframes Video Generator', 0], ['app-iphone-simulator', 'Iphone Simulator', 0], ['app-midi-editor', 'Midi editor', 0],
+          ['app-minesweeper', 'Minesweeper', 0], ['app-music', 'Music Studio', 0], ['app-outlook', 'Outlook', 0], ['app-paint', 'Paint', 0],
+          ['app-paint3d', 'Paint3d', 0], ['app-plants-vs-zombies', 'Plants Vs Zombies', 0], ['app-poetry', 'Poetry House', 0], ['app-powerpoint', 'Powerpoint', 0],
+          ['app-scientific-calculator', 'Scientific Calculator', 0], ['app-sublime-text', 'Sublime Text', 37], ['app-temple-run', 'Temple Run', 0],
+          ['app-tetris', 'Tetris', 0], ['app-warcraft3', 'Warcraft III', 0], ['app-word', 'Word', 2], ['app-zed', 'Zed', 0]
+        ]],
+        ['System surfaces', [['assistant', 'Assistant', 0], ['browser', 'Browser', 0], ['settings', 'Settings', 0], ['shop', 'App Shop', 0]]]
+      ];
 
       const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
       const colors = () => {
@@ -226,6 +304,37 @@
         updateStats();
       }
       function updateStats() { bestScoreEl.textContent = progress.best; runsEl.textContent = progress.runs; }
+      function initials(name) { return name.replace(/[^A-Za-z0-9\u4e00-\u9fff ]/g, '').trim().split(/\s+/).map(part => part[0]).join('').slice(0, 2).toUpperCase() || '•'; }
+      function renderDesktopState() {
+        const all = desktopSurfaces.flatMap(([, items]) => items);
+        surfaceCount.textContent = all.length;
+        readyCount.textContent = all.length;
+        surfaceList.replaceChildren();
+        for (const [group, items] of desktopSurfaces) {
+          const heading = document.createElement('div'); heading.className = 'surface-group'; heading.textContent = group; surfaceList.append(heading);
+          for (const [id, name, revision] of items) {
+            const button = document.createElement('button'); button.className = 'surface-link'; button.type = 'button';
+            if (id === 'app-flappy-bird') button.setAttribute('aria-current', 'page');
+            button.innerHTML = `<span class="surface-icon" aria-hidden="true">${initials(name)}</span><span class="surface-copy"><span class="surface-name"></span><span class="surface-revision">revision ${revision}</span></span><span class="surface-arrow" aria-hidden="true">›</span>`;
+            button.querySelector('.surface-name').textContent = name;
+            button.addEventListener('click', () => openSurface(id));
+            surfaceList.append(button);
+          }
+        }
+      }
+      function setDesktopOpen(open) {
+        desktopPanel.hidden = !open; desktopBtn.setAttribute('aria-expanded', String(open));
+        if (open) desktopClose.focus({ preventScroll: true });
+      }
+      async function openSurface(appId) {
+        if (appId === 'app-flappy-bird') { setDesktopOpen(false); return; }
+        try {
+          if (!bridge?.dispatch) throw new Error('Navigation is unavailable');
+          await bridge.dispatch({ type: 'open_surface', appId, route: '/' });
+        } catch (_) {
+          if (bridge?.notify) bridge.notify('This surface could not be opened.', { level: 'error', timeoutMs: 2600 });
+        }
+      }
       function resize() {
         const rect = shell.getBoundingClientRect();
         width = Math.max(280, rect.width); height = Math.max(250, rect.height);
@@ -347,11 +456,13 @@
       primaryBtn.addEventListener('click', () => { if (state === 'paused') togglePause(); else startGame(); });
       menuBtn.addEventListener('click', showMenu);
       pauseBtn.addEventListener('click', togglePause);
+      desktopBtn.addEventListener('click', () => setDesktopOpen(desktopPanel.hidden));
+      desktopClose.addEventListener('click', () => setDesktopOpen(false));
       window.addEventListener('keydown', event => {
         if (event.code === 'Space') { event.preventDefault(); flap(); }
         if (event.key.toLowerCase() === 'p' && (state === 'playing' || state === 'paused')) { event.preventDefault(); togglePause(); }
       });
-      new ResizeObserver(resize).observe(shell); loadProgress(); resetWorld(); resize();
+      new ResizeObserver(resize).observe(shell); loadProgress(); resetWorld(); resize(); renderDesktopState(); setDesktopOpen(true);
     })();
   </script>
 </body>

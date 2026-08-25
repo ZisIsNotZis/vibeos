@@ -5,7 +5,7 @@ import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { homedir } from 'node:os';
 import type { AgentTask, EffortLevel, SearchLevel, VibeOSSettings } from '@vibeos/shared';
-import { buildCodexInvocation, createStagedJob, inspectExplicitReferences, modelName, publishCandidate, readStructuredWorkerResult, selectWorkerProfile, validateCandidateTree } from './generation-harness.js';
+import { buildCodexInvocation, createStagedJob, inspectExplicitReferences, modelName, publishCandidate, readStructuredWorkerResult, selectResourcePolicy, selectWorkerProfile, validateCandidateTree } from './generation-harness.js';
 import { buildPrompt } from './codex-agent.js';
 
 const appearance = { mode: 'dark' as const, backgroundMode: 'fill' as const, autoHideChromeOnMaximize: false, dockPosition: 'bottom' as const, uiTypeface: 'modern' as const, monoTypeface: 'modern' as const, displayScale: 'default' as const, notificationDuration: 20 };
@@ -19,9 +19,15 @@ test('worker profiles use the selected base model and native reasoning efforts',
     ['fast', 'gpt-5.6-terra', 'low'], ['balanced', 'gpt-5.6-terra', 'medium'],
     ['quality', 'gpt-5.6-terra', 'high'], ['ultra', 'gpt-5.6-terra', 'max']
   ];
-  for (const [effort, model, reasoning] of expected) assert.deepEqual(selectWorkerProfile(effort), { effort, model, reasoning, repairBudget: effort === 'fast' ? 0 : effort === 'balanced' ? 1 : effort === 'quality' ? 2 : 3 });
+  for (const [effort, model, reasoning] of expected) assert.deepEqual(selectWorkerProfile(effort), { effort, model, reasoning, repairBudget: effort === 'fast' ? 0 : effort === 'balanced' ? 1 : effort === 'quality' ? 2 : 3, ...(effort === 'ultra' ? { cooperativeBudgetMs: 60 * 60 * 1000 } : {}) });
   assert.equal(modelName('terra', false), 'gpt-5.6-terra');
   assert.equal(modelName('terra', true), 'gh/gpt-5.6-terra');
+});
+
+test('resource policy is independent from legacy search and explicit references raise only their resources', () => {
+  assert.deepEqual(selectResourcePolicy('none'), { knowledge: 'off', assets: 'off', code: 'off', packages: 'off' });
+  assert.deepEqual(selectResourcePolicy('online_info'), { knowledge: 'recommended', assets: 'off', code: 'off', packages: 'off' });
+  assert.deepEqual(selectResourcePolicy('none', { packages: 'allowed' }, { local: [], urls: [], libraries: ['three.js'], forceSearch: true }), { knowledge: 'off', assets: 'off', code: 'allowed', packages: 'allowed' });
 });
 
 test('Codex invocation is contained, structured, and enables search only when selected', () => {
@@ -74,7 +80,9 @@ test('staging copies only the owned source subtree and excludes mutable data', (
 test("staged jobs contain a complete versioned worker kit and executable acceptance contract", () => {
   const root = mkdtempSync(join(tmpdir(), "vibeos-kit-")); const world = join(root, "world"); const live = join(world, "apps", "app-example");
   mkdirSync(live, { recursive: true }); writeFileSync(join(live, "node.json"), JSON.stringify({ id: "app-example", title: "Example", kind: "app", children: [] }));
-  const staged = createStagedJob(task(live, "ultra", "online_content"), { worldRoot: world, jobsRoot: join(world, ".jobs") });
+  const ultraTask = task(live, "ultra", "online_content");
+  ultraTask.context!.settings!.generationAccess = { knowledge: 'recommended', assets: 'recommended', code: 'recommended', packages: 'recommended' };
+  const staged = createStagedJob(ultraTask, { worldRoot: world, jobsRoot: join(world, ".jobs") });
   assert.equal(existsSync(join(staged.framework, "bridge.d.ts")), true);
   assert.equal(existsSync(join(staged.framework, "bridge.js")), true);
   assert.equal(existsSync(join(staged.framework, "theme.css")), true);
@@ -82,6 +90,9 @@ test("staged jobs contain a complete versioned worker kit and executable accepta
   assert.equal(existsSync(join(staged.input, "current-node", "node.json")), true);
   const order = JSON.parse(readFileSync(staged.workOrder, "utf8"));
   assert.equal(order.profile.model, "gpt-5.6-terra");
+  assert.equal(order.profile.cooperativeBudgetMs, 60 * 60 * 1000);
+  assert.deepEqual(order.resourcePolicy, { knowledge: 'recommended', assets: 'recommended', code: 'recommended', packages: 'recommended' });
+  assert.deepEqual(order.deferredCapabilities, { requiredWhenUsed: true, mechanisms: ['child_surface', 'ai_command'] });
   assert.match(order.outcome, /usable/);
 });
 
@@ -94,6 +105,18 @@ test('assembled worker prompt requires creator pages to produce observable resul
   assert.match(prompt, /input→action→observable-result loop/);
   assert.match(prompt, /output=result returns actual answer\/artifact\/data/);
   assert.match(prompt, /decorative preview.*not a result/);
+});
+
+test('assembled worker prompt carries the cooperative ultra budget and deferred-capability contract', () => {
+  const root = mkdtempSync(join(tmpdir(), 'vibeos-ultra-prompt-')); const world = join(root, 'world'); const live = join(world, 'apps', 'app-example');
+  mkdirSync(live, { recursive: true }); writeFileSync(join(live, 'node.json'), JSON.stringify({ id: 'app-example', title: 'Example', kind: 'app', children: [] }));
+  const ultraTask = task(live, 'ultra', 'none');
+  const staged = createStagedJob(ultraTask, { worldRoot: world, jobsRoot: join(world, '.jobs') });
+  const prompt = buildPrompt(ultraTask, 'none', staged);
+  assert.match(prompt, /60 minutes/);
+  assert.match(prompt, /deferred capability/);
+  assert.match(prompt, /child surface.*AI command/);
+  assert.match(prompt, /knowledge.*assets.*code.*packages/);
 });
 
 test('candidate validation rejects links and special filesystem objects', () => {

@@ -226,15 +226,15 @@ test('holds a generic agent question and resumes the same worker on answer', asy
 });
 test('settings default to quality and none, update, persist, and reach generation', async () => {
   const agent = new FakeAgent(); const store = new MemoryStore(); const runtime = new OperatingSystemRuntime(agent, { send() {} }, store);
-  assert.deepEqual(runtime.snapshot().settings, { model: 'terra', useGhPrefix: false, reasoning: 'high', effort: 'quality', search: 'none', generationVisibility: 'completion', appearance: { mode: 'dark', backgroundMode: 'fill', autoHideChromeOnMaximize: false, dockPosition: 'bottom', uiTypeface: 'modern', monoTypeface: 'modern', displayScale: 'default' } });
+  assert.deepEqual(runtime.snapshot().settings, { model: 'terra', useGhPrefix: false, reasoning: 'high', effort: 'quality', search: 'none', generationAccess: { knowledge: 'off', assets: 'off', code: 'off', packages: 'off' }, generationVisibility: 'completion', appearance: { mode: 'dark', backgroundMode: 'fill', autoHideChromeOnMaximize: false, dockPosition: 'bottom', uiTypeface: 'modern', monoTypeface: 'modern', displayScale: 'default' } });
   await runtime.dispatch({ type: 'set_setting', key: 'effort', value: 'ultra' });
   await runtime.dispatch({ type: 'set_setting', key: 'search', value: 'online_info' });
   await runtime.dispatch({ type: 'set_setting', key: 'generationVisibility', value: 'tools' });
-  assert.deepEqual(runtime.snapshot().settings, { model: 'terra', useGhPrefix: false, reasoning: 'high', effort: 'ultra', search: 'online_info', generationVisibility: 'tools', appearance: { mode: 'dark', backgroundMode: 'fill', autoHideChromeOnMaximize: false, dockPosition: 'bottom', uiTypeface: 'modern', monoTypeface: 'modern', displayScale: 'default' } });
+  assert.deepEqual(runtime.snapshot().settings, { model: 'terra', useGhPrefix: false, reasoning: 'high', effort: 'ultra', search: 'online_info', generationAccess: { knowledge: 'recommended', assets: 'off', code: 'off', packages: 'off' }, generationVisibility: 'tools', appearance: { mode: 'dark', backgroundMode: 'fill', autoHideChromeOnMaximize: false, dockPosition: 'bottom', uiTypeface: 'modern', monoTypeface: 'modern', displayScale: 'default' } });
   const restored = new OperatingSystemRuntime(agent, { send() {} }, store);
-  assert.deepEqual(restored.snapshot().settings, { model: 'terra', useGhPrefix: false, reasoning: 'high', effort: 'ultra', search: 'online_info', generationVisibility: 'tools', appearance: { mode: 'dark', backgroundMode: 'fill', autoHideChromeOnMaximize: false, dockPosition: 'bottom', uiTypeface: 'modern', monoTypeface: 'modern', displayScale: 'default' } });
+  assert.deepEqual(restored.snapshot().settings, { model: 'terra', useGhPrefix: false, reasoning: 'high', effort: 'ultra', search: 'online_info', generationAccess: { knowledge: 'recommended', assets: 'off', code: 'off', packages: 'off' }, generationVisibility: 'tools', appearance: { mode: 'dark', backgroundMode: 'fill', autoHideChromeOnMaximize: false, dockPosition: 'bottom', uiTypeface: 'modern', monoTypeface: 'modern', displayScale: 'default' } });
   await restored.dispatch({ type: 'open_surface', appId: 'app-future', route: '/settings-check' });
-  assert.deepEqual(agent.tasks.at(-1)?.context?.settings, { model: 'terra', useGhPrefix: false, reasoning: 'high', effort: 'ultra', search: 'online_info', generationVisibility: 'tools', appearance: { mode: 'dark', backgroundMode: 'fill', autoHideChromeOnMaximize: false, dockPosition: 'bottom', uiTypeface: 'modern', monoTypeface: 'modern', displayScale: 'default' } });
+  assert.deepEqual(agent.tasks.at(-1)?.context?.settings, { model: 'terra', useGhPrefix: false, reasoning: 'high', effort: 'ultra', search: 'online_info', generationAccess: { knowledge: 'recommended', assets: 'off', code: 'off', packages: 'off' }, generationVisibility: 'tools', appearance: { mode: 'dark', backgroundMode: 'fill', autoHideChromeOnMaximize: false, dockPosition: 'bottom', uiTypeface: 'modern', monoTypeface: 'modern', displayScale: 'default' } });
 });
 test('gh model prefix is independently toggleable and persistent', async () => {
   const store = new MemoryStore(); const agent = new FakeAgent(); const runtime = new OperatingSystemRuntime(agent, { send() {} }, store);
@@ -245,6 +245,36 @@ test('gh model prefix is independently toggleable and persistent', async () => {
   assert.equal(restored.snapshot().settings.useGhPrefix, true);
   await restored.dispatch({ type: 'set_setting', key: 'useGhPrefix', value: false });
   assert.equal(new OperatingSystemRuntime(agent, { send() {} }, store).snapshot().settings.useGhPrefix, false);
+});
+
+test('resource-specific generation access defaults, persists, and reaches generation', async () => {
+  const agent = new FakeAgent(); const store = new MemoryStore(); const runtime = new OperatingSystemRuntime(agent, { send() {} }, store);
+  assert.deepEqual((runtime.snapshot().settings as any).generationAccess, { knowledge: 'off', assets: 'off', code: 'off', packages: 'off' });
+  const access = { knowledge: 'recommended', assets: 'allowed', code: 'off', packages: 'allowed' };
+  await runtime.dispatch({ type: 'set_setting', key: 'generationAccess', value: access } as any);
+  assert.deepEqual((runtime.snapshot().settings as any).generationAccess, access);
+  assert.deepEqual(new OperatingSystemRuntime(agent, { send() {} }, store).snapshot().settings.generationAccess, access);
+  await runtime.dispatch({ type: 'open_surface', appId: 'app-future', route: '/access-policy' });
+  assert.deepEqual((agent.tasks.at(-1)?.context?.settings as any)?.generationAccess, access);
+});
+
+test('resource-specific generation access rejects malformed policies without persistence', async () => {
+  const store = new MemoryStore(); const runtime = new OperatingSystemRuntime(new FakeAgent(), { send() {} }, store);
+  const before = (runtime.snapshot().settings as any).generationAccess;
+  const rejected = await runtime.dispatch({ type: 'set_setting', key: 'generationAccess', value: { knowledge: 'sometimes', assets: 'off', code: 'off', packages: 'off' } } as any);
+  assert.equal(rejected.state, 'failed');
+  assert.deepEqual((runtime.snapshot().settings as any).generationAccess, before);
+  assert.deepEqual((new OperatingSystemRuntime(new FakeAgent(), { send() {} }, store).snapshot().settings as any).generationAccess, before);
+});
+
+test('legacy search settings migrate to resource-specific generation access and remain compatible', async () => {
+  const store = new MemoryStore(); store.value = { windows: [], operations: [], notifications: [], apps: [], surfaces: [], settings: { model: 'terra', useGhPrefix: false, reasoning: 'high', effort: 'quality', search: 'online_info' } };
+  const runtime = new OperatingSystemRuntime(new FakeAgent(), { send() {} }, store);
+  assert.equal(runtime.snapshot().settings.search, 'online_info');
+  assert.deepEqual((runtime.snapshot().settings as any).generationAccess, { knowledge: 'recommended', assets: 'off', code: 'off', packages: 'off' });
+  const updated = await runtime.dispatch({ type: 'set_setting', key: 'search', value: 'online_content' });
+  assert.equal(updated.state, 'ready');
+  assert.deepEqual((runtime.snapshot().settings as any).generationAccess, { knowledge: 'recommended', assets: 'recommended', code: 'recommended', packages: 'recommended' });
 });
 
 test('emits a coalescible live task trace with a terminal status', () => {

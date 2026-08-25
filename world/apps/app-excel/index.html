@@ -47,6 +47,13 @@
     .primary-btn, .quiet-btn { border:1px solid var(--vibe-border); border-radius:5px; cursor:pointer; height:31px; padding:0 11px; font-size:var(--vibe-text-label); font-weight:600; white-space:nowrap; }
     .primary-btn { background:var(--brand-green); border-color:var(--brand-green); color:#fff; }
     .quiet-btn { background:var(--vibe-raised); }
+    .desktop-panel { position:absolute; z-index:10; top:70px; right:18px; width:min(410px,calc(100% - 36px)); max-height:calc(100% - 116px); display:flex; flex-direction:column; border:1px solid var(--vibe-border); border-radius:8px; background:var(--vibe-raised); box-shadow:0 14px 35px color-mix(in srgb, var(--vibe-text) 18%, transparent); overflow:hidden; }
+    .desktop-panel[hidden] { display:none; }
+    .desktop-panel-head { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:13px 15px 11px; border-bottom:1px solid var(--vibe-border); }
+    .desktop-panel-title { margin:0; font-size:var(--vibe-text-body); font-weight:700; }
+    .desktop-panel-close { width:28px; height:28px; border:0; border-radius:4px; background:transparent; color:var(--vibe-muted); cursor:pointer; font-size:18px; }
+    .desktop-panel-close:hover { background:var(--vibe-control); color:var(--vibe-text); }
+    .desktop-panel-body { margin:0; padding:15px; overflow:auto; white-space:pre-wrap; overflow-wrap:anywhere; color:var(--vibe-text); font:var(--vibe-text-label)/var(--vibe-line-normal) var(--vibe-font-mono); }
     button:hover { filter:brightness(1.06); }
     button:focus-visible, input:focus-visible, [contenteditable="true"]:focus-visible { outline:2px solid var(--vibe-accent); outline-offset:1px; }
     .toolbar { flex:none; min-height:50px; display:flex; align-items:center; gap:5px; padding:8px 18px; background:var(--vibe-raised); border-bottom:1px solid var(--vibe-border); overflow:auto hidden; }
@@ -100,7 +107,7 @@
       <span class="brand-name">Excel</span>
     </div>
     <div class="book-name"><input id="book-name" value="Book1" aria-label="Workbook name"><span class="save-state" id="save-state">Saved locally</span></div>
-    <div class="top-actions"><button class="quiet-btn" id="new-book" type="button">New</button><button class="quiet-btn" id="download" type="button">Download</button><button class="primary-btn" id="save" type="button">Save</button></div>
+    <div class="top-actions"><button class="quiet-btn" id="desktop-state" type="button">Desktop state</button><button class="quiet-btn" id="new-book" type="button">New</button><button class="quiet-btn" id="download" type="button">Download</button><button class="primary-btn" id="save" type="button">Save</button></div>
   </header>
   <section class="toolbar" aria-label="Formatting toolbar">
     <div class="tool-group"><button class="tool-btn" id="undo" type="button" title="Undo (Ctrl+Z)">Undo</button><button class="tool-btn" id="redo" type="button" title="Redo (Ctrl+Y)">Redo</button></div>
@@ -112,6 +119,10 @@
   <section class="sheet-viewport" id="sheet-viewport" tabindex="0" aria-label="Spreadsheet grid"><div class="grid" id="grid"></div></section>
   <nav class="sheetbar" id="sheetbar" aria-label="Worksheets"><button class="add-sheet" id="add-sheet" type="button" title="Add worksheet">+</button></nav>
   <footer class="statusbar"><div class="status-left"><span class="status-item" id="status-cell">Ready</span><span class="status-item" id="status-message">Select a cell to begin</span></div><div class="status-right"><span class="status-item" id="status-summary"></span><span class="status-item">Enter to edit · Tab to move</span></div></footer>
+  <aside class="desktop-panel" id="desktop-panel" hidden aria-labelledby="desktop-panel-title">
+    <div class="desktop-panel-head"><h2 class="desktop-panel-title" id="desktop-panel-title">Desktop state</h2><button class="desktop-panel-close" id="desktop-panel-close" type="button" aria-label="Close desktop state">×</button></div>
+    <pre class="desktop-panel-body" id="desktop-panel-body">Select Desktop state to view the current desktop.</pre>
+  </aside>
 </main>
 <script>
 (() => {
@@ -170,7 +181,20 @@
   }
   function renderSheets(){ sheetbar.querySelectorAll('.sheet-tab').forEach(x=>x.remove()); workbook.sheets.forEach((s,i)=>{const b=document.createElement('button');b.className='sheet-tab'+(i===workbook.activeSheet?' active':'');b.type='button';b.textContent=s.name;b.addEventListener('click',()=>{workbook.activeSheet=i;selected='A1';render();markDirty();});sheetbar.insertBefore(b,document.getElementById('add-sheet'));}); }
   function updateSummary(){ const c=cellObject(selected), raw=rawValue(selected); statusSummary.textContent=typeof raw==='number'?'Value '+displayValue(selected):c.value?'Text':' '; }
+  async function showDesktopState(){
+    const panel=document.getElementById('desktop-panel'), body=document.getElementById('desktop-panel-body');
+    panel.hidden=false;
+    body.textContent='Requesting the current desktop state…';
+    if(!bridge?.ai?.command){ body.textContent='Desktop state is unavailable in this window.'; return; }
+    try{
+      const result=await bridge.ai.command('show me the desktop state',{scope:'world',output:'result'});
+      const value=String(result?.value||result?.summary||'').trim();
+      body.textContent=value||'The desktop returned no state details.';
+    }catch{ body.textContent='Could not retrieve the desktop state.'; }
+  }
   async function openCellMenu(e,key){ e.preventDefault(); const items=[{id:'clear',label:'Clear cell'},{id:'copy',label:'Copy value'},{id:'bold',label:'Toggle bold'}]; const pick=bridge?.contextMenu?await bridge.contextMenu.open(items,{x:e.clientX,y:e.clientY}):null; if(pick==='clear'){selectCell(key,false);commit(key,'')} if(pick==='bold'){selectCell(key,false);document.getElementById('bold').click()} if(pick==='copy'){navigator.clipboard?.writeText(String(cellObject(key).value||''));} }
+  document.getElementById('desktop-state').addEventListener('click',showDesktopState);
+  document.getElementById('desktop-panel-close').addEventListener('click',()=>{document.getElementById('desktop-panel').hidden=true;});
   document.getElementById('accept-edit').addEventListener('click',()=>{commit(selected,formula.value);});
   document.getElementById('cancel-edit').addEventListener('click',()=>{formula.value=cellObject(selected).value||'';});
   formula.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();commit(selected,formula.value);selectCell(selected);}});

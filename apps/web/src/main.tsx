@@ -27,6 +27,8 @@ import type {
   RuntimeIntent,
   AppearanceMode,
   BackgroundMode,
+  GenerationAccess,
+  GenerationAccessLevel,
 } from "@vibeos/shared";
 import "./styles.css";
 import { captureElement, captureScreen } from "./capture";
@@ -1277,6 +1279,13 @@ function SettingsView({
   ] as const;
   const effort = ["fast", "balanced", "quality", "ultra"] as const;
   const search = ["none", "online_info", "online_content"] as const;
+  const accessLevels: GenerationAccessLevel[] = ["off", "allowed", "recommended"];
+  const accessResources: Array<{ key: keyof GenerationAccess; label: string; description: string }> = [
+    { key: "knowledge", label: "Knowledge", description: "Facts, documentation, and references." },
+    { key: "assets", label: "Assets", description: "Media, fonts, models, and textures." },
+    { key: "code", label: "Code", description: "Repositories, examples, and engines." },
+    { key: "packages", label: "Packages", description: "npm, uv, pip, and system tools." },
+  ];
   const visibility = ["completion", "messages", "tools", "reasoning"] as const;
   const [tab, setTab] = useState<"generation" | "appearance">("generation");
   const effortText = {
@@ -1300,6 +1309,12 @@ function SettingsView({
     reasoning: "Also show model-provided reasoning summaries.",
   };
   const appearance = snapshot.settings.appearance;
+  const generationAccess: GenerationAccess = snapshot.settings.generationAccess ?? {
+    knowledge: "off",
+    assets: "off",
+    code: "off",
+    packages: "off",
+  };
   const notificationDuration = appearance.notificationDuration ?? 20;
   const updateAppearance = (
     key:
@@ -1314,6 +1329,12 @@ function SettingsView({
       | "notificationDuration",
     value?: string | boolean | number,
   ) => onAction({ type: "set_appearance", key, value } as RuntimeIntent);
+  const updateGenerationAccess = (key: keyof GenerationAccess, value: GenerationAccessLevel) =>
+    onAction({
+      type: "set_setting",
+      key: "generationAccess",
+      value: { ...generationAccess, [key]: value },
+    });
   const durationControl = (
     <>
       <h3>Notification duration</h3>
@@ -1436,7 +1457,54 @@ function SettingsView({
             </div>
             <strong>{snapshot.settings.effort}</strong>
             <small>{effortText[snapshot.settings.effort]}</small>
-            <h3>Search level</h3>
+            <section className="settings-info" aria-labelledby="effort-guide-heading">
+              <h3 id="effort-guide-heading">Effort guide</h3>
+              <dl>
+                {effort.map((level) => (
+                  <div key={level}>
+                    <dt>{level}</dt>
+                    <dd>{effortText[level]}</dd>
+                  </div>
+                ))}
+              </dl>
+              <p>
+                Effort changes implementation scope and verification depth. It
+                never removes the primary workflow or permission to use a
+                capability.
+              </p>
+            </section>
+            <h3>Generation access</h3>
+            <p>Choose access independently for each kind of resource. Explicit user references still take priority.</p>
+            <div className="generation-access">
+              {accessResources.map(({ key, label, description }) => (
+                <label key={key}>
+                  <span>{label}</span>
+                  <small>{description}</small>
+                  <select
+                    aria-label={`${label} generation access`}
+                    value={generationAccess[key]}
+                    onChange={(event) =>
+                      updateGenerationAccess(key, event.target.value as GenerationAccessLevel)
+                    }
+                  >
+                    {accessLevels.map((level) => (
+                      <option key={level} value={level}>{level}</option>
+                    ))}
+                  </select>
+                </label>
+              ))}
+            </div>
+            <section className="settings-info" aria-labelledby="deferred-capability-heading">
+              <h3 id="deferred-capability-heading">Deferred capabilities stay reachable</h3>
+              <p>
+                When breadth is deferred, its normal action remains available
+                and opens a concrete child capability or app-owned AI command.
+                Deferred work is never a dead button, dummy dialog, or hidden
+                feature.
+              </p>
+            </section>
+            <h3>Legacy Search level</h3>
+            <small>Legacy preset: changing this maps all four resource controls together. Use Generation access above for independent settings.</small>
             <input
               aria-label="Search level"
               type="range"

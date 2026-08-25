@@ -1,4 +1,4 @@
-import type { AgentResult, AgentTask, AppRecord, Intent, Operation, RuntimeEvent, RuntimeSnapshot, Surface, WindowModel, RuntimeIntent, VibeOSSettings } from '@vibeos/shared';
+import type { AgentResult, AgentTask, AppRecord, Intent, Operation, RuntimeEvent, RuntimeSnapshot, Surface, WindowModel, RuntimeIntent, VibeOSSettings, GenerationAccess, GenerationAccessLevel } from '@vibeos/shared';
 import { log, recentLog } from './logging.js';
 import { loadWorld } from './world-loader.js';
 import { dirname, join } from 'node:path';
@@ -10,18 +10,35 @@ import { spawn } from 'node:child_process';
 export interface AgentAdapter { fulfill(task: AgentTask): Promise<AgentResult>; resume?(questionId: string, answer: string): Promise<AgentResult>; }
 export interface RuntimePort { send(event: RuntimeEvent): void; requestWindowCapture?(target: { appId: string; windowId?: string }): Promise<{ path: string; capturedAt: string } | undefined>; }
 export interface WorldStore { root?: string; load(): RuntimeSnapshot; save(snapshot: RuntimeSnapshot): void; }
-export const defaultSettings: VibeOSSettings = { model: 'terra', useGhPrefix: false, reasoning: 'high', effort: 'quality', search: 'none', generationVisibility: 'completion', appearance: { mode: 'dark', backgroundMode: 'fill', autoHideChromeOnMaximize: false, dockPosition: 'bottom', uiTypeface: 'modern', monoTypeface: 'modern', displayScale: 'default' } };
+export const defaultGenerationAccess: GenerationAccess = { knowledge: 'off', assets: 'off', code: 'off', packages: 'off' };
+export const defaultSettings: VibeOSSettings = { model: 'terra', useGhPrefix: false, reasoning: 'high', effort: 'quality', search: 'none', generationAccess: defaultGenerationAccess, generationVisibility: 'completion', appearance: { mode: 'dark', backgroundMode: 'fill', autoHideChromeOnMaximize: false, dockPosition: 'bottom', uiTypeface: 'modern', monoTypeface: 'modern', displayScale: 'default' } };
 const effortLevels: VibeOSSettings['effort'][] = ['fast', 'balanced', 'quality', 'ultra'];
 const modelLevels = ['luna', 'terra', 'sol']; const reasoningLevels = ['none', 'low', 'medium', 'high', 'xhigh', 'max', 'ultra'];
 const appearanceModes: VibeOSSettings['appearance']['mode'][] = ['dark', 'light', 'desert'];
+const generationAccessLevels: GenerationAccessLevel[] = ['off', 'allowed', 'recommended'];
+const legacySearchAccess: Record<VibeOSSettings['search'], GenerationAccess> = {
+  none: { ...defaultGenerationAccess },
+  online_info: { knowledge: 'recommended', assets: 'off', code: 'off', packages: 'off' },
+  online_content: { knowledge: 'recommended', assets: 'recommended', code: 'recommended', packages: 'recommended' }
+};
+function isGenerationAccess(value: unknown): value is GenerationAccess {
+  if (!value || typeof value !== 'object') return false;
+  const item = value as Record<string, unknown>;
+  return Object.keys(defaultGenerationAccess).length === Object.keys(item).length
+    && Object.keys(defaultGenerationAccess).every(resource => generationAccessLevels.includes(item[resource] as GenerationAccessLevel));
+}
 function normalizeSettings(value: Partial<VibeOSSettings> | undefined): VibeOSSettings {
   const appearance = value?.appearance;
+  const access = isGenerationAccess(value?.generationAccess)
+    ? value.generationAccess
+    : legacySearchAccess[value?.search ?? 'none'];
   return {
     model: modelLevels.includes(value?.model ?? '') ? value!.model! : defaultSettings.model,
     useGhPrefix: typeof value?.useGhPrefix === 'boolean' ? value.useGhPrefix : defaultSettings.useGhPrefix,
     reasoning: reasoningLevels.includes(value?.reasoning ?? '') ? value!.reasoning! : defaultSettings.reasoning,
     effort: effortLevels.includes(value?.effort as VibeOSSettings['effort']) ? value!.effort! : defaultSettings.effort,
     search: ['none', 'online_info', 'online_content'].includes(value?.search ?? '') ? value!.search! : defaultSettings.search,
+    generationAccess: { ...access },
     generationVisibility: ['completion', 'messages', 'tools', 'reasoning'].includes(value?.generationVisibility ?? '') ? value!.generationVisibility! : defaultSettings.generationVisibility,
     appearance: {
       mode: appearanceModes.includes(appearance?.mode as VibeOSSettings['appearance']['mode']) ? appearance!.mode : defaultSettings.appearance.mode,
@@ -226,7 +243,7 @@ export class OperatingSystemRuntime {
     if (target !== undefined && target !== appId) throw new Error('Generated app cannot act as another app.');
     if (intent.type === 'storage_read' || intent.type === 'storage_write') throw new Error('Use bridge storage operations.');
   }
-  private setSetting(key: 'model' | 'useGhPrefix' | 'reasoning' | 'effort' | 'search' | 'generationVisibility', value: string | boolean) { if (key === 'model' && typeof value === 'string' && modelLevels.includes(value)) this.state.settings.model = value as VibeOSSettings['model']; else if (key === 'useGhPrefix' && typeof value === 'boolean') this.state.settings.useGhPrefix = value; else if (key === 'reasoning' && typeof value === 'string' && reasoningLevels.includes(value)) this.state.settings.reasoning = value as VibeOSSettings['reasoning']; else if (key === 'effort' && typeof value === 'string' && effortLevels.includes(value as VibeOSSettings['effort'])) this.state.settings.effort = value as VibeOSSettings['effort']; else if (key === 'search' && typeof value === 'string' && ['none','online_info','online_content'].includes(value)) this.state.settings.search = value as VibeOSSettings['search']; else if (key === 'generationVisibility' && typeof value === 'string' && ['completion','messages','tools','reasoning'].includes(value)) this.state.settings.generationVisibility = value as VibeOSSettings['generationVisibility']; else throw new Error('Invalid Settings value.'); log('runtime', 'settings updated', this.state.settings); this.persist(); this.emit({ type: 'snapshot', snapshot: this.snapshot() }); }
+  private setSetting(key: 'model' | 'useGhPrefix' | 'reasoning' | 'effort' | 'search' | 'generationAccess' | 'generationVisibility', value: string | boolean | GenerationAccess) { if (key === 'model' && typeof value === 'string' && modelLevels.includes(value)) this.state.settings.model = value as VibeOSSettings['model']; else if (key === 'useGhPrefix' && typeof value === 'boolean') this.state.settings.useGhPrefix = value; else if (key === 'reasoning' && typeof value === 'string' && reasoningLevels.includes(value)) this.state.settings.reasoning = value as VibeOSSettings['reasoning']; else if (key === 'effort' && typeof value === 'string' && effortLevels.includes(value as VibeOSSettings['effort'])) this.state.settings.effort = value as VibeOSSettings['effort']; else if (key === 'search' && typeof value === 'string' && ['none','online_info','online_content'].includes(value)) { this.state.settings.search = value as VibeOSSettings['search']; this.state.settings.generationAccess = { ...legacySearchAccess[this.state.settings.search] }; } else if (key === 'generationAccess' && isGenerationAccess(value)) this.state.settings.generationAccess = { ...value }; else if (key === 'generationVisibility' && typeof value === 'string' && ['completion','messages','tools','reasoning'].includes(value)) this.state.settings.generationVisibility = value as VibeOSSettings['generationVisibility']; else throw new Error('Invalid Settings value.'); log('runtime', 'settings updated', this.state.settings); this.persist(); this.emit({ type: 'snapshot', snapshot: this.snapshot() }); }
   private setAppearance(key: 'mode' | 'backgroundMode' | 'backgroundImage' | 'autoHideChromeOnMaximize' | 'dockPosition' | 'uiTypeface' | 'monoTypeface' | 'displayScale' | 'notificationDuration', value: string | boolean | number | undefined) { if (key === 'mode' && appearanceModes.includes(value as VibeOSSettings['appearance']['mode'])) this.state.settings.appearance.mode = value as VibeOSSettings['appearance']['mode']; else if (key === 'backgroundMode' && (value === 'stretch' || value === 'fill' || value === 'pad')) this.state.settings.appearance.backgroundMode = value; else if (key === 'backgroundImage' && (value === undefined || (typeof value === 'string' && value.startsWith('data:image/') && value.length <= 14_000_000))) this.state.settings.appearance.backgroundImage = value as string | undefined; else if (key === 'autoHideChromeOnMaximize' && typeof value === 'boolean') this.state.settings.appearance.autoHideChromeOnMaximize = value; else if (key === 'dockPosition' && (value === 'left' || value === 'bottom')) this.state.settings.appearance.dockPosition = value; else if (key === 'uiTypeface' && (value === 'modern' || value === 'system' || value === 'accessible')) this.state.settings.appearance.uiTypeface = value; else if (key === 'monoTypeface' && (value === 'modern' || value === 'system' || value === 'accessible')) this.state.settings.appearance.monoTypeface = value; else if (key === 'displayScale' && (value === 'compact' || value === 'default' || value === 'comfortable' || value === 'large' || value === 'extra_large')) this.state.settings.appearance.displayScale = value; else if (key === 'notificationDuration' && typeof value === 'number' && Number.isInteger(value) && value >= 10 && value <= 60) this.state.settings.appearance.notificationDuration = value; else throw new Error('Invalid Appearance value.'); log('runtime', 'appearance updated', this.state.settings.appearance); this.persist(); this.emit({ type: 'snapshot', snapshot: this.snapshot() }); }
   private runProcess(appId: string, operation: Extract<import('@vibeos/shared').BridgeOperation, { type: 'process.run' }>) {
     const executable = operation.program.trim();

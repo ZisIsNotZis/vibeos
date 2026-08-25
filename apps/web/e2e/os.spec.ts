@@ -45,6 +45,37 @@ test('settings changes persist through a websocket snapshot', async ({ page }) =
   await expect(page.locator('.os')).toHaveAttribute('data-background-mode', 'fill');
 });
 
+test('generation access controls are independent and keep the legacy search preset visible', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: /open app launcher/i }).click();
+  await page.getByRole('button', { name: 'Settings' }).click();
+  await expect(page.getByRole('heading', { name: 'Generation access' })).toBeVisible();
+  await page.getByLabel('Knowledge generation access').selectOption('recommended');
+  await page.getByLabel('Assets generation access').selectOption('allowed');
+  await page.getByLabel('Code generation access').selectOption('off');
+  await page.getByLabel('Packages generation access').selectOption('recommended');
+  await expect(page.getByLabel('Knowledge generation access')).toHaveValue('recommended');
+  await expect(page.getByLabel('Assets generation access')).toHaveValue('allowed');
+  await expect(page.getByLabel('Code generation access')).toHaveValue('off');
+  await expect(page.getByLabel('Packages generation access')).toHaveValue('recommended');
+  await expect(page.getByRole('heading', { name: 'Legacy Search level' })).toBeVisible();
+  await expect(page.getByRole('slider', { name: 'Search level' })).toBeVisible();
+});
+
+test('generation settings explain effort levels and deferred capability reachability', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: /open app launcher/i }).click();
+  await page.getByRole('button', { name: 'Settings' }).click();
+  await expect(page.getByRole('heading', { name: 'Effort guide' })).toBeVisible();
+  const guide = page.locator('#effort-guide-heading').locator('..');
+  await expect(guide).toContainText('fast');
+  await expect(guide).toContainText('balanced');
+  await expect(guide).toContainText('quality');
+  await expect(guide).toContainText('ultra');
+  await expect(page.getByRole('heading', { name: 'Deferred capabilities stay reachable' })).toBeVisible();
+  await expect(page.getByText('never a dead button', { exact: false })).toBeVisible();
+});
+
 test('model prefix is separate from the model slider', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: /open app launcher/i }).click();

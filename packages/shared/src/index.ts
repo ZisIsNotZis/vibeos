@@ -44,6 +44,8 @@ export type ReasoningLevel = 'none' | 'low' | 'medium' | 'high' | 'xhigh' | 'max
 export type EffortLevel = 'fast' | 'balanced' | 'quality' | 'ultra';
 export type SearchLevel = 'none' | 'online_info' | 'online_content';
 export type GenerationVisibility = 'completion' | 'messages' | 'tools' | 'reasoning';
+export type GenerationAccessLevel = 'off' | 'allowed' | 'recommended';
+export type GenerationAccess = { knowledge: GenerationAccessLevel; assets: GenerationAccessLevel; code: GenerationAccessLevel; packages: GenerationAccessLevel };
 /** Theme names are stable settings values. New themes only add semantic token sets. */
 export type AppearanceMode = 'light' | 'dark' | 'desert';
 export type BackgroundMode = 'stretch' | 'fill' | 'pad';
@@ -56,6 +58,7 @@ export type VibeOSSettings = {
   reasoning: ReasoningLevel;
   effort: EffortLevel;
   search: SearchLevel;
+  generationAccess?: GenerationAccess;
   generationVisibility: GenerationVisibility;
   appearance: {
     mode: AppearanceMode;
@@ -75,6 +78,7 @@ export type SettingsIntent =
   | { type: 'set_setting'; key: 'reasoning'; value: ReasoningLevel }
   | { type: 'set_setting'; key: 'effort'; value: EffortLevel }
   | { type: 'set_setting'; key: 'search'; value: SearchLevel }
+  | { type: 'set_setting'; key: 'generationAccess'; value: GenerationAccess }
   | { type: 'set_setting'; key: 'generationVisibility'; value: GenerationVisibility }
   | { type: 'set_appearance'; key: 'mode'; value: AppearanceMode }
   | { type: 'set_appearance'; key: 'backgroundMode'; value: BackgroundMode }

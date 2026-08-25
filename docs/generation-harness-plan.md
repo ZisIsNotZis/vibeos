@@ -1,12 +1,12 @@
 # VibeOS Generation Harness Upgrade Plan
 
-Status: core redesign implemented following `docs/vibeos-design.md`. The hermetic baseline, exact OmniRoute profile routing, staged worker kit, structured handoff, candidate validation, transactional publication, bounded concurrency, durable job records, sandboxed generated-frame bridge, app-scoped persistence, and deterministic verification/repair loop are operational. Remaining hardening is listed under “Deferred hardening” below.
+Status: core redesign implemented following `docs/vibeos-design.md`. The hermetic baseline, exact OmniRoute profile routing, staged worker kit, structured handoff, candidate validation, transactional publication, bounded concurrency, durable job records, sandboxed generated-frame bridge, app-scoped persistence, and deterministic verification/repair loop are operational. The generation contract also defines effort-based scope, reachable deferred capabilities, resource-specific access policy, and a cooperative ultra budget. Remaining hardening is listed under “Deferred hardening” below.
 
 ## Implemented baseline
 
-- Ordinary generation runs in an app-owned staging directory with Codex `workspace-write`, approvals disabled, a scrubbed environment, conditional search, structured output, and transactional publication.
+- Ordinary generation runs in an app-owned staging directory with Codex `workspace-write`, approvals disabled, a scrubbed environment, resource-specific access policy, structured output, and transactional publication.
 - Effort profiles select the configured base model (`gpt-5.6-luna`, `gpt-5.6-terra`, or `gpt-5.6-sol`), optional `gh/` prefix, native reasoning effort, and distinct repair budget.
-- Workers receive a versioned, self-contained work order, acceptance contract, current node, bridge API, semantic theme contract, and explicit complete-vertical-slice guidance.
+- Workers receive a versioned, self-contained work order, acceptance contract, current node, bridge API, semantic theme contract, fidelity guidance, and explicit complete-vertical-slice/deferred-capability guidance.
 - Generated HTML runs in an opaque-origin `allow-scripts` iframe and reaches the runtime only through a channel-bound, app-bound bridge with request limits and isolated durable storage.
 - Static asset checks and effort-dependent repair run before publication. Job transitions and evidence survive under `world/.jobs/` (ignored by Git).
 - Unit, build, and deterministic Playwright suites use isolated state/world copies and do not mutate tracked artifacts.
@@ -17,7 +17,7 @@ These remain intentional follow-up work, not claims of current protection: OS/co
 
 ## Goals
 
-1. Make `ultrafast` and `fast` materially faster by reducing exploration, prompt size, validation scope, and reasoning effort.
+1. Make `fast` materially faster by reducing exploration, prompt size, validation scope, and reasoning effort while preserving a reachable primary workflow and deferred actions.
 2. Make `quality`, `research`, and `ultra` materially better through executable acceptance contracts, browser validation, visual inspection, and repair loops.
 3. Preserve open-ended application power while preventing generated JavaScript or a confused worker from damaging the host or unrelated VibeOS state.
 4. Make failures diagnosable from one job record without manually reconstructing prompts, logs, files, browser errors, and settings.
@@ -107,7 +107,11 @@ The model slider selects a base model without a provider prefix. The independent
 | `fast` | configured base model | `low` | selected policy | One focused pass | one primary browser scenario; one compact repair if it fails |
 | `balanced` | configured base model | `medium` | selected policy | Complete current workflow | focused scenarios, persistence/reload check, up to one repair |
 | `quality` | configured base model | `high` | selected policy | Polished production-style vertical slice | browser, console, assets, two sizes, both themes, screenshot review, up to two repairs |
-| `ultra` | configured base model | `ultra` | selected policy | Largest sensible coherent slice with delegation where available | adversarial and broad verification, repeated repair within explicit time/cost budget |
+| `ultra` | configured base model | `ultra` | selected policy | Maximum practical fidelity and breadth, with every deferred capability reachable | adversarial and broad verification, visual review, repeated repair within a cooperative ~60-minute budget |
+
+Effort is a tradeoff between implementation time and visual/UX quality. Scope reduction may defer breadth, asset detail, research depth, and edge-case polish; it may never remove the requested identity, primary workflow, or a reachable action for a capability the worker chose not to implement now. A deferred action opens a concrete child capability or invokes an app-owned AI command with focused state; it is never a dummy dialog, acknowledgement, dead button, or invisible omission.
+
+Ultra receives a target of approximately 60 minutes. The worker checks elapsed time before research, implementation, testing, and repair, and delivers the best accepted artifact before that target. Priority is primary workflow, recognizability, important adjacent actions, reachable deferrals, then polish. The coordinator may retain a final host safety timeout, but normal completion is cooperative rather than an early kill.
 
 The runner should invoke native Codex controls rather than merely describing effort in prose, conceptually:
 
@@ -123,7 +127,7 @@ codex exec \
   <prompt>
 ```
 
-Enable `--search` only for `online_info` and `online_content`. Network containment must also be enforced outside the prompt. `online_content` artifacts record source URL, revision/hash when available, license, and vendored files. Generated apps must remain runnable offline after publication unless the user explicitly requested a live external dependency.
+Resource access is independent: `knowledge` (facts/docs/references), `assets` (media/fonts/models/textures), `code` (repositories/examples/engines), and `packages` (npm/uv/pip/system tools). Each is `off`, `allowed`, or `recommended`; explicit user-named URLs, local paths, libraries, packages, and tools override the corresponding setting. `none` remains an offline preset. Network containment is enforced outside the prompt. Online artifacts record source URL, revision/hash when available, license, and vendored files. Generated apps remain runnable offline unless the user explicitly requests a live dependency.
 
 ## Containment model
 
@@ -167,12 +171,16 @@ The generator decides boundaries using these rules:
 - Prerequisites for the advertised primary experience are implemented now.
 - A distinct workflow with its own durable identity, navigation destination, or independently useful experience may be a child capability.
 - Effort changes fidelity, breadth, asset sophistication, and verification—not whether visible controls work.
+- If a meaningful capability is deferred, expose its normal affordance and connect it to a concrete child route or `vibeOS.ai.command` with relevant scope/state. The user always has a path forward.
 
-Asset policy follows search level:
+Resource policy follows the independent access settings:
 
-- `none`: author original procedural geometry, shaders, textures, SVG, audio, sprites, or low-poly models locally.
-- `online_info`: research facts and visual references, then author original local assets.
-- `online_content`: vendor legally usable assets, engines, or repositories with provenance and licenses.
+- `knowledge=off`: use supplied context and local reasoning only.
+- `knowledge=allowed/recommended`: research factual and visual references when useful/necessary.
+- `assets=allowed/recommended`: use suitable legally usable local/online assets and record provenance.
+- `code=allowed/recommended`: reuse established implementations, repositories, engines, and examples rather than reinventing them.
+- `packages=allowed/recommended`: install appropriate existing packages/tools when they materially improve correctness or fidelity.
+- Explicit references are always inspected when technically accessible, regardless of these settings.
 
 ## Executable acceptance contract
 

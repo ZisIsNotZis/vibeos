@@ -54,22 +54,20 @@ This yields two independent rules:
 
 ### Settings and generation policy
 
-Settings is a normal replaceable app backed by generic `settings.*` operations. It defaults to `effort: quality` and `search: none`; both values persist and are injected into every generation and repair task.
+Settings is a normal replaceable app backed by generic `settings.*` operations. It defaults to `effort: quality`, legacy `search: none`, and all resource access off; values persist and are injected into every generation and repair task.
 
 Effort is an execution contract enforced by worker model choice, native reasoning effort, scope, validation, and repair budget—not prompt wording alone:
 
 | VibeOS effort | Model | Native effort | Required delivery contract |
 | --- | --- | --- | --- |
-| `ultrafast` | `gh/gpt-5.6-terra` | `low` | Smallest coherent usable vertical slice; no worker-authored tests; deterministic platform checks still run |
 | `fast` | `gh/gpt-5.6-terra` | `low` | Complete primary interaction loop plus one focused smoke scenario |
 | `balanced` | `gh/gpt-5.6-terra` | `medium` | Complete current workflow, meaningful local state, and focused interaction tests |
 | `quality` | `gh/gpt-5.6-sol` | `high` | Production-style vertical slice, self-review, browser interaction checks, visual inspection, and repair of discovered defects; default |
-| `research` | `gh/gpt-5.6-sol` | `max` | TDD where useful, permitted research, broad interaction/state/edge-case checks, visual review, and multiple repair opportunities |
 | `ultra` | `gh/gpt-5.6-sol` | `ultra` | Largest sensible coherent slice, automatic delegation where available, adversarial review, comprehensive validation, and repeated repair within budget |
 
-The model slider stores the base family without a provider prefix. The independent `useGhPrefix` setting controls whether the runner sends `gpt-5.6-*` or `gh/gpt-5.6-*` to Codex. It defaults off for fresh settings; local OmniRoute users can enable it. Model routing is explicit and testable, and the runner sends the exact configured string without silently changing it. `ultra` is an engineering-assurance tier, while `research` emphasizes evidence and investigation. Both remain bounded by the selected search policy.
+The model slider stores the base family without a provider prefix. The independent `useGhPrefix` setting controls whether the runner sends `gpt-5.6-*` or `gh/gpt-5.6-*` to Codex. It defaults off for fresh settings; local OmniRoute users can enable it. Model routing is explicit and testable, and the runner sends the exact configured string without silently changing it. `ultra` is the maximum engineering-assurance tier and includes research when its resource policy permits it.
 
-Search contracts: `none` forbids Internet access and uses supplied/local context only (the default); `online_info` permits researching current facts while keeping the page locally authored; `online_content` permits online content or repositories as building material, including embedded HTML or GitHub projects serving a web app/backend. The worker must not exceed either selected tier. These are execution contracts, not an application-type enum; generated nodes still own their page behavior, descendants, and internal cache layout.
+Resource access is independently controlled for `knowledge` (facts, documentation, references), `assets` (media, fonts, models, textures), `code` (repositories, examples, engines), and `packages` (npm, uv, pip, and system tools). Each resource is `off`, `allowed`, or `recommended`. The legacy `search` presets remain compatible: `none` maps all resources off, `online_info` recommends knowledge, and `online_content` recommends all four. Explicitly named real URLs, local paths, libraries, packages, and tools require inspection when technically accessible regardless of the preset. These are execution contracts, not an application-type enum; generated nodes still own their page behavior, descendants, and internal cache layout.
 
 ### Recursive world tree
 
@@ -280,7 +278,9 @@ world/apps/<app-id>/
 
 The worker receives a staged, self-contained work order: exact intent and input, requested coherent outcome, read-only current node and parent/child context, versioned framework kit, typed OS bridge, theme contract, schemas, relevant examples, and executable acceptance checks. It may write only the staged output candidate. It does not inspect or modify the live repository for an ordinary generated-world task.
 
-A substantial application is allowed to be substantial. For example, a playable strategy-game skirmish capability may need setup, battlefield rendering, input, simulation, units, opponent behavior, audio, persistence, and victory/defeat in the same generated slice. Campaigns, additional maps, multiplayer, or an editor may remain lazy children. Effort changes ambition, fidelity, asset sophistication, and verification; it never excuses dead visible controls.
+A substantial application is allowed to be substantial. For example, a playable strategy-game skirmish capability may need setup, battlefield rendering, input, simulation, units, opponent behavior, audio, persistence, and victory/defeat in the same generated slice. Campaigns, additional maps, multiplayer, or an editor may remain lazy children. Effort trades implementation time for visual/UX quality: lower levels may defer breadth and polish, but never the requested identity, primary workflow, or reachability of deferred capabilities.
+
+Every meaningful deferred capability remains reachable through its ordinary affordance. That affordance opens a concrete child capability or invokes an app-owned AI command with focused state and scope. It never disappears, becomes a dummy popup, acknowledges without acting, or silently claims completion. This applies generically to apps, websites, games, editors, simulations, and creative tools.
 
 ### Persistent local state and external capabilities
 
@@ -335,7 +335,7 @@ prepare(request: CapabilityRequest): Promise<PublishedCapability>
 
 The coordinator owns cache lookup, deduplication, staging, model/profile selection, the Codex subprocess, verification, repair attempts, transactional publication, rollback, and exact-once resume. `CapabilityRequest` includes the capability key, original intent/input, parent context, requested coherent outcome, execution settings, and executable acceptance contract.
 
-Ordinary jobs run in isolated staged directories containing read-only input/framework material and a writable output directory. Codex runs with `workspace-write` and approval policy `never`, not `--dangerously-bypass-approvals-and-sandbox`. The worker environment excludes host secrets and applies external process, time, memory, file, output, concurrency, and network limits. Search `none` disables network outside the prompt; higher search modes enable only their configured behavior.
+Ordinary jobs run in isolated staged directories containing read-only input/framework material and a writable output directory. Codex runs with `workspace-write` and approval policy `never`, not `--dangerously-bypass-approvals-and-sandbox`. The worker environment excludes host secrets and applies external process, time, memory, file, output, concurrency, and network limits. Resource access is enforced outside the prompt as well as described in the work order. Ultra receives a cooperative approximately 60-minute target: the worker checks elapsed time before research, implementation, testing, and repair and delivers its best accepted artifact before the target; a host safety timeout remains only as a last resort.
 
 Repository repair jobs run in a disposable Git worktree or repository copy and may change any VibeOS-owned file there, but never the live checkout or host environment. Their complete diff and tests are validated before transactional publication.
 

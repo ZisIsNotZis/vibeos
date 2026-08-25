@@ -1,10 +1,12 @@
 import { cpSync, existsSync, lstatSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { basename, dirname, join, relative, resolve, sep } from 'node:path';
 import { homedir } from 'node:os';
-import type { AgentTask, AgentQuestion, EffortLevel, ModelLevel, SearchLevel } from '@vibeos/shared';
+import type { AgentTask, AgentQuestion, EffortLevel, GenerationAccess, GenerationAccessLevel, ModelLevel, SearchLevel } from '@vibeos/shared';
 
 export type WorkerModel = `gpt-5.6-${ModelLevel}` | `gh/gpt-5.6-${ModelLevel}`;
-export type WorkerProfile = { effort: EffortLevel; model: WorkerModel; reasoning: 'none' | 'low' | 'medium' | 'high' | 'xhigh' | 'max' | 'ultra'; repairBudget: number };
+export type WorkerProfile = { effort: EffortLevel; model: WorkerModel; reasoning: 'none' | 'low' | 'medium' | 'high' | 'xhigh' | 'max' | 'ultra'; repairBudget: number; cooperativeBudgetMs?: number };
+export const ULTRA_COOPERATIVE_BUDGET_MS = 60 * 60 * 1000;
+export type DeferredCapabilityPolicy = { requiredWhenUsed: true; mechanisms: ['child_surface', 'ai_command'] };
 export type HarnessPaths = { worldRoot: string; jobsRoot: string };
 export type ExplicitReferences = {
   local: Array<{ source: string; staged: string; kind: 'file' | 'directory' }>;
@@ -12,15 +14,33 @@ export type ExplicitReferences = {
   libraries: string[];
   forceSearch: boolean;
 };
-export type StagedJob = { id: string; root: string; input: string; framework: string; output: string; outputApp: string; evidence: string; workOrder: string; resultSchema: string; resultFile: string; liveTarget: string; appId: string; references: ExplicitReferences };
+export type StagedJob = { id: string; root: string; input: string; framework: string; output: string; outputApp: string; evidence: string; workOrder: string; resultSchema: string; resultFile: string; liveTarget: string; appId: string; references: ExplicitReferences; resourcePolicy: GenerationAccess; deferredCapabilities: DeferredCapabilityPolicy };
 export type CodexInvocation = { command: string; args: string[]; cwd: string; env: Record<string, string> };
 export type CandidateValidation = { ok: true; files: string[]; bytes: number } | { ok: false; errors: string[] };
 export type JobState = 'staged' | 'running' | 'waiting_input' | 'verifying' | 'repairing' | 'published' | 'failed';
 
-const effortTable: Record<EffortLevel, { repairBudget: number }> = { fast: { repairBudget: 0 }, balanced: { repairBudget: 1 }, quality: { repairBudget: 2 }, ultra: { repairBudget: 3 } };
+const effortTable: Record<EffortLevel, { repairBudget: number; cooperativeBudgetMs?: number }> = { fast: { repairBudget: 0 }, balanced: { repairBudget: 1 }, quality: { repairBudget: 2 }, ultra: { repairBudget: 3, cooperativeBudgetMs: ULTRA_COOPERATIVE_BUDGET_MS } };
 
 export function modelName(model: ModelLevel, useGhPrefix = false): WorkerModel { return `${useGhPrefix ? 'gh/' : ''}gpt-5.6-${model}` as WorkerModel; }
 export function selectWorkerProfile(effort: EffortLevel, model: WorkerProfile['model'] = modelName('terra'), reasoning: WorkerProfile['reasoning'] = effort === 'fast' ? 'low' : effort === 'ultra' ? 'max' : effort === 'balanced' ? 'medium' : 'high'): WorkerProfile { return { effort, model, reasoning, ...effortTable[effort] }; }
+
+const resourceLevels: GenerationAccessLevel[] = ['off', 'allowed', 'recommended'];
+const searchResourcePolicy: Record<SearchLevel, GenerationAccess> = {
+  none: { knowledge: 'off', assets: 'off', code: 'off', packages: 'off' },
+  online_info: { knowledge: 'recommended', assets: 'off', code: 'off', packages: 'off' },
+  online_content: { knowledge: 'recommended', assets: 'recommended', code: 'recommended', packages: 'recommended' }
+};
+function raise(level: GenerationAccessLevel, minimum: GenerationAccessLevel) { return resourceLevels.indexOf(level) >= resourceLevels.indexOf(minimum) ? level : minimum; }
+export function selectResourcePolicy(search: SearchLevel, configured?: Partial<GenerationAccess>, references?: ExplicitReferences): GenerationAccess {
+  const policy: GenerationAccess = { ...searchResourcePolicy[search], ...configured };
+  if (references?.urls.length) policy.knowledge = raise(policy.knowledge, 'allowed');
+  if (references?.local.length) policy.code = raise(policy.code, 'allowed');
+  if (references?.libraries.length) {
+    policy.code = raise(policy.code, 'allowed');
+    policy.packages = raise(policy.packages, 'allowed');
+  }
+  return policy;
+}
 
 export function createStagedJob(task: AgentTask, paths: HarnessPaths): StagedJob {
   const liveTarget = resolveOwnedAppTarget(task.target, paths.worldRoot);
@@ -32,6 +52,8 @@ export function createStagedJob(task: AgentTask, paths: HarnessPaths): StagedJob
   if (existsSync(liveTarget)) copySourceTree(liveTarget, outputApp);
   const settings = task.context?.settings; const profile = selectWorkerProfile(settings?.effort ?? 'quality', modelName(settings?.model ?? 'terra', settings?.useGhPrefix ?? false), settings?.reasoning ?? 'high');
   const references = inspectExplicitReferences(task);
+  const resourcePolicy = selectResourcePolicy(settings?.search ?? 'none', settings?.generationAccess, references);
+  const deferredCapabilities: DeferredCapabilityPolicy = { requiredWhenUsed: true, mechanisms: ['child_surface', 'ai_command'] };
   stageExplicitReferences(references, input);
   if (task.capability === 'app:identity' && !existsSync(join(outputApp, 'node.json'))) {
     const app = (task.input as { name?: string; id?: string } | undefined) ?? {};
@@ -45,10 +67,10 @@ export function createStagedJob(task: AgentTask, paths: HarnessPaths): StagedJob
     existingFiles: task.context.existingFiles,
     acceptance: task.context.acceptance,
     observation: task.context.observation ? { ...task.context.observation, path: 'input/observation/window.png' } : undefined,
-    settings: settings ? { model: settings.model, useGhPrefix: settings.useGhPrefix, reasoning: settings.reasoning, effort: settings.effort, search: settings.search } : undefined
+    settings: settings ? { model: settings.model, useGhPrefix: settings.useGhPrefix, reasoning: settings.reasoning, effort: settings.effort, search: settings.search, generationAccess: resourcePolicy } : undefined
   } : undefined;
   const identity = task.capability === 'app:identity' ? { requestedName: (task.input as { name?: string } | undefined)?.name ?? appId, canonicalName: canonicalAppName((task.input as { name?: string } | undefined)?.name ?? appId), appId } : undefined;
-  writeFileSync(workOrder, JSON.stringify({ v: 2, operationId: task.operationId, capability: task.capability, outcome: coherentOutcome(task), identity, intent: task.intent, input: task.input, context, target: { appId, output: 'output/app' }, profile, references }) + '\n');
+  writeFileSync(workOrder, JSON.stringify({ v: 2, operationId: task.operationId, capability: task.capability, outcome: coherentOutcome(task), identity, intent: task.intent, input: task.input, context, target: { appId, output: 'output/app' }, profile, resourcePolicy, deferredCapabilities, references }) + '\n');
   writeFileSync(join(framework, 'FRAMEWORK.md'), frameworkGuide);
   writeFileSync(join(framework, 'bridge.d.ts'), bridgeTypes);
   writeFileSync(join(framework, 'bridge.js'), bridgeClient);
@@ -62,8 +84,8 @@ export function createStagedJob(task: AgentTask, paths: HarnessPaths): StagedJob
   if (existsSync(liveTarget)) cpSync(liveTarget, join(input, 'current-node'), { recursive: true, filter: source => !source.split(sep).includes('data') });
   const resultSchema = join(input, 'result.schema.json'); const resultFile = join(evidence, 'result.json');
   writeFileSync(resultSchema, JSON.stringify(workerResultSchema, null, 2) + '\n');
-  updateJobRecord({ root } as StagedJob, 'staged', { operationId: task.operationId, capability: task.capability, profile });
-  return { id: basename(root), root, input, framework, output, outputApp, evidence, workOrder, resultSchema, resultFile, liveTarget, appId, references };
+  updateJobRecord({ root } as StagedJob, 'staged', { operationId: task.operationId, capability: task.capability, profile, resourcePolicy, deferredCapabilities });
+  return { id: basename(root), root, input, framework, output, outputApp, evidence, workOrder, resultSchema, resultFile, liveTarget, appId, references, resourcePolicy, deferredCapabilities };
 }
 
 export function updateJobRecord(staged: Pick<StagedJob, 'root'>, state: JobState, detail: Record<string, unknown> = {}) {

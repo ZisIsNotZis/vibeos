@@ -1,0 +1,165 @@
+{
+  "appId": "app-freecell",
+  "revision": 1,
+  "state": {
+    "desktopState": {
+      "visibleApps": [
+        {
+          "id": "app--by-hyperframe",
+          "name": "Hyperframe"
+        },
+        {
+          "id": "app--promax",
+          "name": "押韵大师ProMax"
+        },
+        {
+          "id": "app-3d-model-editor",
+          "name": "3d Model Editor"
+        },
+        {
+          "id": "app-3d-pinball-space-cadet",
+          "name": "3D Pinball: Space Cadet"
+        },
+        {
+          "id": "app-android-simulator",
+          "name": "Android Simulator"
+        },
+        {
+          "id": "app-cad-editor",
+          "name": "CAD Editor"
+        },
+        {
+          "id": "app-claude-code",
+          "name": "Claude Code"
+        },
+        {
+          "id": "app-codex",
+          "name": "Codex"
+        },
+        {
+          "id": "app-command-conquer-red-alert-3",
+          "name": "Command & Conquer: Red Alert 3"
+        },
+        {
+          "id": "app-cs1-6",
+          "name": "CS1.6"
+        },
+        {
+          "id": "app-dota2",
+          "name": "DOTA2"
+        },
+        {
+          "id": "app-draw-io",
+          "name": "Draw.Io"
+        },
+        {
+          "id": "app-excel",
+          "name": "Excel"
+        },
+        {
+          "id": "app-firefox",
+          "name": "Firefox"
+        },
+        {
+          "id": "app-flappy-bird",
+          "name": "Flappy Bird"
+        },
+        {
+          "id": "app-freecell",
+          "name": "FreeCell"
+        },
+        {
+          "id": "app-hyperframes-video-generator",
+          "name": "Hyperframes Video Generator"
+        },
+        {
+          "id": "app-iphone-simulator",
+          "name": "Iphone Simulator"
+        },
+        {
+          "id": "app-midi-editor",
+          "name": "Midi editor"
+        },
+        {
+          "id": "app-minesweeper",
+          "name": "Minesweeper"
+        },
+        {
+          "id": "app-music",
+          "name": "Music Studio"
+        },
+        {
+          "id": "app-outlook",
+          "name": "Outlook"
+        },
+        {
+          "id": "app-paint",
+          "name": "Paint"
+        },
+        {
+          "id": "app-paint3d",
+          "name": "Paint3d"
+        },
+        {
+          "id": "app-plants-vs-zombies",
+          "name": "Plants Vs Zombies"
+        },
+        {
+          "id": "app-poetry",
+          "name": "Poetry House"
+        },
+        {
+          "id": "app-powerpoint",
+          "name": "Powerpoint"
+        },
+        {
+          "id": "app-scientific-calculator",
+          "name": "Scientific Calculator"
+        },
+        {
+          "id": "app-sublime-text",
+          "name": "Sublime Text"
+        },
+        {
+          "id": "app-temple-run",
+          "name": "Temple Run"
+        },
+        {
+          "id": "app-tetris",
+          "name": "Tetris"
+        },
+        {
+          "id": "app-warcraft3",
+          "name": "Warcraft III"
+        },
+        {
+          "id": "app-word",
+          "name": "Word"
+        },
+        {
+          "id": "app-zed",
+          "name": "Zed"
+        },
+        {
+          "id": "assistant",
+          "name": "Assistant"
+        },
+        {
+          "id": "browser",
+          "name": "Browser"
+        },
+        {
+          "id": "settings",
+          "name": "Settings"
+        },
+        {
+          "id": "shop",
+          "name": "App Shop"
+        }
+      ],
+      "focusedAppId": "app-freecell",
+      "focusedAppTitle": "FreeCell",
+      "appCount": 39
+    }
+  }
+}

@@ -19,7 +19,12 @@ export async function verifyArtifact(root: string, effort: EffortLevel, evidence
       if (!target.startsWith(resolve(root)) || !known.has(target)) errors.push(file + ": missing local asset " + source);
     }
     if (/<script[^>]+src=["']https?:/i.test(text) || /<link[^>]+href=["']https?:/i.test(text)) warnings.push(file + ": external runtime dependency");
-    if (effort !== "fast" && /<button(?:\s[^>]*)?>[^<]*<\/button>/i.test(text) && !/(addEventListener|onclick)/.test(text)) warnings.push(file + ": visible controls may lack behavior");
+    if (effort !== "fast") {
+      const behavior = text + linkedScriptText(text, file, known);
+      for (const control of visibleButtons(text)) {
+        if (!hasControlBehavior(control, behavior)) errors.push(file + ": dead visible control" + (control.id ? ` #${control.id}` : ""));
+      }
+    }
   }
   const report = { ok: errors.length === 0, errors, warnings, scenarios }; mkdirSync(evidence, { recursive: true }); writeFileSync(join(evidence, "verification.json"), JSON.stringify(report, null, 2) + "\n"); return report;
 }
@@ -33,3 +38,37 @@ function localReferences(text: string, extension: string) {
   for (const match of text.matchAll(pattern)) values.push(match[1]);
   return values;
 }
+
+type VisibleButton = { id?: string; attributes: string };
+function visibleButtons(text: string): VisibleButton[] {
+  const buttons: VisibleButton[] = [];
+  for (const match of text.matchAll(/<button\b([^>]*)>/gi)) {
+    const attributes = match[1];
+    if (/\bhidden\b|aria-hidden\s*=\s*["']true["']|display\s*:\s*none|visibility\s*:\s*hidden/i.test(attributes)) continue;
+    const id = attributes.match(/\bid\s*=\s*["']([^"']+)["']/i)?.[1];
+    if (!/\bdisabled\b|aria-disabled\s*=\s*["']true["']/i.test(attributes)) buttons.push({ id, attributes });
+  }
+  return buttons;
+}
+
+function linkedScriptText(html: string, file: string, known: Set<string>): string {
+  const source: string[] = [];
+  for (const match of html.matchAll(/<script\b[^>]*\bsrc\s*=\s*["']([^"']+)["'][^>]*>/gi)) {
+    const target = resolve(dirname(file), match[1].split(/[?#]/)[0]);
+    if (known.has(target)) {
+      try { source.push(readFileSync(target, "utf8")); } catch {}
+    }
+  }
+  return source.join("\n");
+}
+
+function hasControlBehavior(control: VisibleButton, source: string): boolean {
+  if (/\bonclick\s*=\s*["'][^"']+/.test(control.attributes) || /\.onclick\s*=/.test(source)) return true;
+  if (!/(addEventListener\s*\(|\.onclick\s*=)/i.test(source)) return false;
+  if (!control.id) return true;
+  const id = escapeRegExp(control.id);
+  return new RegExp(`getElementById\\(\\s*["']${id}["']\\s*\\)|querySelector(?:All)?\\(\\s*["'][^"']*#${id}(?:["'])`, "i").test(source)
+    || new RegExp(`(?:data-[\\w-]+|class)\\s*=\\s*["'][^"']*${id}[^"']*["']`, "i").test(source);
+}
+
+function escapeRegExp(value: string): string { return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }

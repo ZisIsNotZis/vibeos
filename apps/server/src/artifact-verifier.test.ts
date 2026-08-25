@@ -30,3 +30,28 @@ test("artifact verifier permits browser-native Blob export code while checking s
   const report = await verifyArtifact(root, "quality", join(root, "evidence"));
   assert.equal(report.ok, true, report.errors.join("\n"));
 });
+
+test("quality verification rejects a visible control with no behavior", async () => {
+  const root = mkdtempSync(join(tmpdir(), "vibeos-verify-")); mkdirSync(join(root, "evidence"));
+  writeFileSync(join(root, "node.json"), JSON.stringify({ id: "app-example", title: "Example", kind: "app", entry: "entry.html", children: [] }));
+  writeFileSync(join(root, "entry.html"), '<!doctype html><html><body><button id="next">Open next</button></body></html>');
+  const report = await verifyArtifact(root, "quality", join(root, "evidence"));
+  assert.equal(report.ok, false);
+  assert.match(report.errors.join(" "), /dead visible control/);
+});
+
+test("quality verification accepts a control wired to child navigation", async () => {
+  const root = mkdtempSync(join(tmpdir(), "vibeos-verify-")); mkdirSync(join(root, "evidence"));
+  writeFileSync(join(root, "node.json"), JSON.stringify({ id: "app-example", title: "Example", kind: "app", entry: "entry.html", children: [] }));
+  writeFileSync(join(root, "entry.html"), '<!doctype html><html><body><button id="next">Open next</button><script>document.getElementById("next").addEventListener("click", () => window.vibeOS.navigate("/next", "destination"));</script></body></html>');
+  const report = await verifyArtifact(root, "quality", join(root, "evidence"));
+  assert.equal(report.ok, true, report.errors.join("\n"));
+});
+
+test("quality verification accepts a control wired to an app-owned AI command", async () => {
+  const root = mkdtempSync(join(tmpdir(), "vibeos-verify-")); mkdirSync(join(root, "evidence"));
+  writeFileSync(join(root, "node.json"), JSON.stringify({ id: "app-example", title: "Example", kind: "app", entry: "entry.html", children: [] }));
+  writeFileSync(join(root, "entry.html"), '<!doctype html><html><body><button id="ask">Ask</button><script>document.getElementById("ask").addEventListener("click", () => window.vibeOS.ai.command("help", { scope: "app", output: "result" }));</script></body></html>');
+  const report = await verifyArtifact(root, "quality", join(root, "evidence"));
+  assert.equal(report.ok, true, report.errors.join("\n"));
+});

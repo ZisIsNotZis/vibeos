@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bash</title>
+  <style>
+    :root {
+      --vibe-font-ui: Inter, ui-sans-serif, system-ui, sans-serif;
+      --vibe-font-mono: "DM Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+      --vibe-text-caption: calc(11px * var(--vibe-scale, 1));
+      --vibe-text-label: calc(12px * var(--vibe-scale, 1));
+      --vibe-text-body: calc(14px * var(--vibe-scale, 1));
+      --vibe-text-title: calc(18px * var(--vibe-scale, 1));
+      --vibe-text-heading: calc(24px * var(--vibe-scale, 1));
+      --vibe-line-tight: 1.15;
+      --vibe-line-normal: 1.5;
+    }
+    :root, :root[data-theme="dark"] {
+      --vibe-surface: #191923; --vibe-raised: #242431; --vibe-control: #303044;
+      --vibe-text: #f1f1f6; --vibe-muted: #aeb0c2; --vibe-border: #ffffff22;
+      --vibe-accent: #a89dfc; color-scheme: dark;
+    }
+    :root[data-theme="light"] {
+      --vibe-surface: #f7f8fc; --vibe-raised: #fff; --vibe-control: #e8ebf3;
+      --vibe-text: #20202b; --vibe-muted: #596070; --vibe-border: #20202b22;
+      --vibe-accent: #6658cf; color-scheme: light;
+    }
+    :root[data-theme="desert"] {
+      --vibe-surface: #f5e6c8; --vibe-raised: #fff7e5; --vibe-control: #dfbf82;
+      --vibe-text: #302016; --vibe-muted: #674b34; --vibe-border: #5b371f35;
+      --vibe-accent: #a85028; color-scheme: light;
+    }
+    :root[data-ui-typeface="system"] { --vibe-font-ui: system-ui, -apple-system, "Segoe UI", sans-serif; }
+    :root[data-ui-typeface="accessible"] { --vibe-font-ui: Arial, Helvetica, sans-serif; }
+    :root[data-mono-typeface="system"] { --vibe-font-mono: ui-monospace, monospace; }
+    :root[data-mono-typeface="accessible"] { --vibe-font-mono: "Courier New", monospace; }
+    :root[data-display-scale="compact"] { --vibe-scale: .8; }
+    :root[data-display-scale="comfortable"] { --vibe-scale: 1.1; }
+    :root[data-display-scale="large"] { --vibe-scale: 1.25; }
+    :root[data-display-scale="extra_large"] { --vibe-scale: 1.5; }
+
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+    body { background: var(--vibe-surface); color: var(--vibe-text); font-family: var(--vibe-font-ui); }
+    button, input { font: inherit; }
+    button { color: inherit; }
+    .app { height: 100%; display: flex; flex-direction: column; min-width: 0; }
+    .toolbar {
+      min-height: 54px; display: flex; align-items: center; gap: 14px; padding: 10px 16px;
+      border-bottom: 1px solid var(--vibe-border); background: color-mix(in srgb, var(--vibe-raised) 78%, transparent);
+    }
+    .mark { width: 28px; height: 28px; flex: 0 0 28px; }
+    .brand { min-width: 0; display: flex; align-items: baseline; gap: 9px; }
+    .brand strong { font-size: var(--vibe-text-title); line-height: var(--vibe-line-tight); letter-spacing: -.02em; }
+    .brand span { color: var(--vibe-muted); font-size: var(--vibe-text-caption); white-space: nowrap; }
+    .toolbar-spacer { flex: 1; }
+    .status { display: inline-flex; align-items: center; gap: 7px; color: var(--vibe-muted); font-size: var(--vibe-text-caption); }
+    .status-dot { width: 7px; height: 7px; border-radius: 50%; background: #58c88a; box-shadow: 0 0 0 3px color-mix(in srgb, #58c88a 18%, transparent); }
+    .clear {
+      border: 1px solid var(--vibe-border); background: var(--vibe-control); border-radius: 7px; padding: 7px 10px;
+      cursor: pointer; font-size: var(--vibe-text-label); transition: border-color .16s, background .16s;
+    }
+    .clear:hover, .clear:focus-visible { border-color: var(--vibe-accent); outline: none; }
+    .terminal-wrap { flex: 1; min-height: 0; padding: 18px; display: flex; }
+    .terminal {
+      flex: 1; min-width: 0; min-height: 0; display: flex; flex-direction: column; overflow: hidden;
+      border: 1px solid var(--vibe-border); border-radius: 10px; background: color-mix(in srgb, var(--vibe-raised) 94%, #000 6%);
+      box-shadow: 0 12px 28px color-mix(in srgb, #000 14%, transparent);
+    }
+    .terminal-bar { display: flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; border-bottom: 1px solid var(--vibe-border); background: color-mix(in srgb, var(--vibe-control) 35%, transparent); }
+    .bar-light { width: 8px; height: 8px; border-radius: 50%; opacity: .85; }
+    .bar-light.red { background: #df756b; } .bar-light.amber { background: #d7af55; } .bar-light.green { background: #5bbd85; }
+    .bar-label { margin-left: 7px; color: var(--vibe-muted); font: var(--vibe-text-caption)/1 var(--vibe-font-mono); }
+    .screen { flex: 1; min-height: 0; overflow: auto; padding: 20px 22px 10px; font: var(--vibe-text-body)/1.65 var(--vibe-font-mono); scrollbar-color: var(--vibe-control) transparent; }
+    .screen::-webkit-scrollbar { width: 10px; } .screen::-webkit-scrollbar-thumb { background: var(--vibe-control); border-radius: 8px; border: 3px solid transparent; background-clip: padding-box; }
+    .line { white-space: pre-wrap; overflow-wrap: anywhere; min-height: 1.65em; }
+    .line.prompt { color: var(--vibe-text); }
+    .prompt-user { color: var(--vibe-accent); } .prompt-path { color: var(--vibe-muted); } .prompt-symbol { color: #67cf9a; }
+    .line.output { color: var(--vibe-muted); }
+    .line.output.accent { color: var(--vibe-text); }
+    .line.output.error { color: #e4877e; }
+    .line.output.success { color: #70d39c; }
+    .line.output.dim { color: color-mix(in srgb, var(--vibe-muted) 72%, transparent); }
+    .command-row { display: flex; align-items: center; min-width: 0; }
+    .prompt-prefix { flex: 0 0 auto; white-space: pre; }
+    #command { min-width: 0; flex: 1; border: 0; outline: 0; padding: 0; background: transparent; color: var(--vibe-text); caret-color: var(--vibe-accent); font: inherit; }
+    .hint-row { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px 22px 16px; border-top: 1px solid var(--vibe-border); }
+    .hint {
+      border: 1px solid var(--vibe-border); background: transparent; color: var(--vibe-muted); border-radius: 999px;
+      padding: 5px 10px; cursor: pointer; font: var(--vibe-text-caption)/1.2 var(--vibe-font-mono); transition: color .16s, border-color .16s, background .16s;
+    }
+    .hint:hover, .hint:focus-visible { color: var(--vibe-text); border-color: var(--vibe-accent); background: color-mix(in srgb, var(--vibe-accent) 11%, transparent); outline: none; }
+    @media (max-width: 560px) {
+      .toolbar { padding-inline: 12px; gap: 10px; } .brand span, .status { display: none; }
+      .terminal-wrap { padding: 10px; } .screen { padding: 16px 14px 8px; } .hint-row { padding-inline: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app" aria-label="Bash terminal">
+    <header class="toolbar">
+      <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+        <rect x="1.5" y="1.5" width="29" height="29" rx="8" fill="none" stroke="var(--vibe-accent)" stroke-width="2"/>
+        <path d="m8 11 5 5-5 5M16 22h8" fill="none" stroke="var(--vibe-accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="brand"><strong>Bash</strong><span>interactive shell</span></div>
+      <div class="toolbar-spacer"></div>
+      <div class="status"><i class="status-dot"></i><span>session active</span></div>
+      <button class="clear" id="clear" type="button">Clear</button>
+    </header>
+    <section class="terminal-wrap">
+      <div class="terminal">
+        <div class="terminal-bar" aria-hidden="true"><i class="bar-light red"></i><i class="bar-light amber"></i><i class="bar-light green"></i><span class="bar-label">bash — session</span></div>
+        <div class="screen" id="screen" role="log" aria-live="polite" aria-label="Terminal output"></div>
+        <div class="hint-row" aria-label="Common commands">
+          <button class="hint" type="button" data-command="help">help</button>
+          <button class="hint" type="button" data-command="ls">ls</button>
+          <button class="hint" type="button" data-command="pwd">pwd</button>
+          <button class="hint" type="button" data-command="date">date</button>
+          <button class="hint" type="button" data-command="apt">apt</button>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script>
+    (() => {
+      'use strict';
+      const bridge = window.vibeOS;
+      const screen = document.getElementById('screen');
+      const input = document.createElement('input');
+      input.id = 'command'; input.autocomplete = 'off'; input.autocapitalize = 'off'; input.spellcheck = false;
+      const sessionKey = 'bash-session-v1';
+      const fallback = { cwd: '/home/user', history: [], installed: [], aptUpdatedAt: null };
+      let state = { ...fallback };
+      let historyIndex = -1;
+      let currentLine = null;
+      const files = {
+        '/home/user': { dirs: ['bin', 'projects'], files: ['README.md'] },
+        '/home/user/bin': { dirs: [], files: ['welcome.sh'] },
+        '/home/user/projects': { dirs: ['notes'], files: ['todo.txt'] },
+        '/home/user/projects/notes': { dirs: [], files: ['today.md'] },
+        '/': { dirs: ['home', 'tmp'], files: [] },
+        '/tmp': { dirs: [], files: [] }
+      };
+      const packages = {
+        curl: { version: '8.5.0-1', section: 'web', description: 'command line tool for transferring data with URLs' },
+        git: { version: '2.43.0-1', section: 'vcs', description: 'fast, scalable, distributed revision control system' },
+        jq: { version: '1.7.1-1', section: 'utils', description: 'lightweight and flexible command-line JSON processor' },
+        ripgrep: { version: '14.1.0-1', section: 'utils', description: 'recursively search directories for a regex pattern' },
+        tree: { version: '2.1.1-1', section: 'utils', description: 'display directories as trees' }
+      };
+
+      const esc = (value) => String(value).replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
+      const prompt = () => `<span class="prompt-user">user@bash</span><span class="prompt-path">:${esc(state.cwd)}</span><span class="prompt-symbol">$</span> `;
+      const append = (html, className = 'output') => {
+        const line = document.createElement('div'); line.className = `line ${className}`; line.innerHTML = html; screen.appendChild(line); return line;
+      };
+      const scrollBottom = () => { screen.scrollTop = screen.scrollHeight; };
+      const save = async () => {
+        const value = { cwd: state.cwd, history: state.history.slice(-80), installed: state.installed.slice(), aptUpdatedAt: state.aptUpdatedAt };
+        try { if (bridge?.storage) await bridge.storage.write(sessionKey, value); } catch (_) { /* session remains usable without storage */ }
+      };
+      const normalize = (raw) => {
+        const base = raw.startsWith('/') ? [] : state.cwd.split('/').filter(Boolean);
+        for (const part of raw.split('/')) {
+          if (!part || part === '.') continue;
+          if (part === '..') base.pop(); else base.push(part);
+        }
+        return `/${base.join('/')}` || '/';
+      };
+      const splitArgs = (text) => {
+        const args = []; const pattern = /"([^"\\]*(?:\\.[^"\\]*)*)"|'([^']*)'|(\S+)/g; let match;
+        while ((match = pattern.exec(text))) args.push(match[1] ?? match[2] ?? match[3]);
+        return args;
+      };
+      const printHelp = () => [
+        'Built-in commands',
+        '  apt [command]   query or change the local package catalog',
+        '  cd [dir]       change the working directory',
+        '  clear          clear the terminal',
+        '  date           print the current date and time',
+        '  echo [text]    print text',
+        '  help           show this list',
+        '  history        show recent commands',
+        '  ls [dir]       list directory contents',
+        '  pwd            print the working directory',
+        '  uname [-a]     print system information',
+        '  whoami         print the current user',
+        '',
+        'Use ↑ and ↓ to move through command history. Tab completes command names.'
+      ];
+      const printAptHelp = () => [
+        'apt — package manager',
+        '  apt update                 refresh package lists',
+        '  apt list [--installed]     list available packages',
+        '  apt search <term>          search package names and descriptions',
+        '  apt show <package>         show package details',
+        '  apt install <package>...  install packages',
+        '  apt remove <package>...   remove installed packages',
+        '  apt --version              print the apt version'
+      ];
+      const known = ['apt', 'cd', 'clear', 'date', 'echo', 'help', 'history', 'ls', 'pwd', 'uname', 'whoami'];
+      const isInstalled = (name) => state.installed.includes(name);
+      const printAptList = (onlyInstalled = false) => Object.entries(packages)
+        .filter(([name]) => !onlyInstalled || isInstalled(name))
+        .map(([name, info]) => `${name}/${info.section} ${info.version} ${isInstalled(name) ? '[installed]' : ''}`.trim())
+        .join('<br>') || '<span class="dim">No packages found.</span>';
+      const handleUnknownPackage = async (command, action, packageName) => {
+        if (!bridge?.ai?.command) {
+          append(`E: Unable to locate package ${esc(packageName)}; package assistance is unavailable.`, 'output error');
+          return;
+        }
+        try {
+          const response = await bridge.ai.command(command, {
+            scope: 'app',
+            context: {
+              app: 'bash', cwd: state.cwd, operation: action, package: packageName,
+              knownPackages: Object.keys(packages), installed: state.installed.slice()
+            },
+            output: 'result'
+          });
+          const result = typeof response?.value === 'string' && response.value.trim()
+            ? response.value : response?.summary;
+          if (typeof result === 'string' && result.trim()) append(esc(result), 'output accent');
+          else append(`E: No result was returned for ${esc(command)}.`, 'output error');
+        } catch (error) {
+          const detail = error instanceof Error && error.message ? `: ${error.message}` : '';
+          append(`E: Package assistance failed${detail}`, 'output error');
+        }
+      };
+      const runApt = async (args) => {
+        const action = args[0] || 'help';
+        if (action === '--version' || action === '-v') { append('apt 2.7.12', 'output accent'); return; }
+        if (action === 'help' || action === '--help' || action === '-h') { const lines = printAptHelp(); append(`<span class="accent">${esc(lines[0])}</span><br>${lines.slice(1).map(esc).join('<br>')}`); return; }
+        if (action === 'update') {
+          state.aptUpdatedAt = new Date().toISOString(); await save();
+          append('Hit:1 packages.local stable InRelease', 'output accent');
+          append('Reading package lists... Done', 'output success');
+          return;
+        }
+        if (action === 'list') {
+          append(printAptList(args.includes('--installed') || args.includes('--installed=true')), 'output accent');
+          return;
+        }
+        if (action === 'search') {
+          const term = args.slice(1).join(' ').toLowerCase();
+          if (!term) { append('E: You must provide at least one search term.', 'output error'); return; }
+          const matches = Object.entries(packages).filter(([name, info]) => `${name} ${info.description}`.includes(term));
+          append(matches.map(([name, info]) => `${name} — ${info.description}`).join('<br>') || '<span class="dim">No packages found.</span>');
+          return;
+        }
+        if (action === 'show') {
+          const name = args[1]; const info = packages[name];
+          if (!info) { await handleUnknownPackage(`apt ${args.join(' ')}`, action, name || ''); return; }
+          append([`Package: ${name}`, `Version: ${info.version}`, `Section: ${info.section}`, `Status: ${isInstalled(name) ? 'installed' : 'not-installed'}`, `Description: ${info.description}`].map(esc).join('<br>'), 'output accent');
+          return;
+        }
+        if (action === 'install' || action === 'remove') {
+          const names = args.slice(1).filter((name) => !name.startsWith('-'));
+          if (!names.length) { append(`E: Specify at least one package to ${action}.`, 'output error'); return; }
+          const unknown = names.filter((name) => !packages[name]);
+          if (unknown.length) { await handleUnknownPackage(`apt ${args.join(' ')}`, action, unknown[0]); return; }
+          const changed = [];
+          names.forEach((name) => {
+            const installed = isInstalled(name);
+            if (action === 'install' && !installed) { state.installed.push(name); changed.push(name); }
+            if (action === 'remove' && installed) { state.installed = state.installed.filter((item) => item !== name); changed.push(name); }
+          });
+          await save();
+          if (!changed.length) { append(`Nothing to do; requested packages are already ${action === 'install' ? 'installed' : 'removed'}.`, 'output dim'); return; }
+          if (action === 'install') {
+            append(`The following packages will be installed: ${changed.join(' ')}`, 'output accent');
+            append(changed.map((name) => `Setting up ${name} (${packages[name].version}) ... done`).join('<br>'), 'output success');
+          } else append(`Removing ${changed.join(' ')} ... done`, 'output success');
+          return;
+        }
+        append(`E: Invalid operation ${esc(action)}`, 'output error');
+        append('Try <span class="prompt-user">apt help</span> for a list of commands.', 'output dim');
+      };
+      const listDir = (path) => {
+        const item = files[path]; if (!item) return null;
+        return [...item.dirs.map((name) => `<span class="prompt-user">${esc(name)}/</span>`), ...item.files.map(esc)].join('  ') || '<span class="dim">(empty)</span>';
+      };
+      const run = async (raw, fromHistory = false) => {
+        const command = raw.trim();
+        if (!command) return;
+        append(`${prompt()}${esc(command)}`, 'prompt');
+        if (!fromHistory) { state.history.push(command); await save(); }
+        const args = splitArgs(command); const name = args.shift();
+        switch (name) {
+          case 'apt': await runApt(args); break;
+          case 'help': { const lines = printHelp(); append(`<span class="accent">${esc(lines[0])}</span><br>${lines.slice(1).map(esc).join('<br>')}`); break; }
+          case 'clear': screen.innerHTML = ''; break;
+          case 'pwd': append(esc(state.cwd), 'output accent'); break;
+          case 'whoami': append('user', 'output accent'); break;
+          case 'date': append(esc(new Date().toString()), 'output accent'); break;
+          case 'uname': append(args.includes('-a') ? 'BashOS bash 1.0.0 x86_64 terminal' : 'BashOS', 'output accent'); break;
+          case 'echo': append(esc(args.join(' '))); break;
+          case 'history': append(state.history.map((item, index) => `${String(index + 1).padStart(3, ' ')}  ${esc(item)}`).join('<br>') || '<span class="dim">No commands yet.</span>'); break;
+          case 'ls': {
+            const path = normalize(args[0] || state.cwd); const listing = listDir(path);
+            if (listing === null) append(`ls: cannot access '${esc(args[0] || path)}': No such file or directory`, 'output error'); else append(listing);
+            break;
+          }
+          case 'cd': {
+            const path = normalize(args[0] || '/home/user');
+            if (files[path]) { state.cwd = path; await save(); }
+            else append(`bash: cd: ${esc(args[0] || path)}: No such file or directory`, 'output error');
+            break;
+          }
+          default: append(`bash: ${esc(name)}: command not found`, 'output error');
+        }
+        scrollBottom();
+      };
+      const mountInput = () => {
+        if (currentLine) currentLine.remove();
+        currentLine = document.createElement('div'); currentLine.className = 'line prompt command-row';
+        const prefix = document.createElement('span'); prefix.className = 'prompt-prefix'; prefix.innerHTML = prompt();
+        currentLine.append(prefix, input); screen.appendChild(currentLine); screen.appendChild(document.createElement('div'));
+        input.value = ''; input.focus(); scrollBottom();
+      };
+      const boot = async () => {
+        try { const saved = await bridge?.storage?.read(sessionKey); if (saved && typeof saved === 'object') state = { ...fallback, ...saved, history: Array.isArray(saved.history) ? saved.history : [], installed: Array.isArray(saved.installed) ? saved.installed.filter((name) => packages[name]) : [] }; } catch (_) { /* use fresh session */ }
+        append('<span class="accent">Bash 1.0.0</span> — ready for commands.', 'output accent');
+        append('Type <span class="prompt-user">help</span> to see available commands.', 'output dim');
+        mountInput();
+      };
+      input.addEventListener('keydown', async (event) => {
+        if (event.key === 'Enter') { const value = input.value; mountInput(); await run(value); mountInput(); }
+        else if (event.key === 'ArrowUp') { event.preventDefault(); if (!state.history.length) return; historyIndex = Math.min(historyIndex + 1, state.history.length - 1); input.value = state.history[state.history.length - 1 - historyIndex] || ''; }
+        else if (event.key === 'ArrowDown') { event.preventDefault(); historyIndex = Math.max(historyIndex - 1, -1); input.value = historyIndex < 0 ? '' : state.history[state.history.length - 1 - historyIndex] || ''; }
+        else if (event.key === 'Tab') { event.preventDefault(); const value = input.value; const matches = known.filter((item) => item.startsWith(value)); if (matches.length === 1) input.value = `${matches[0]} `; else if (matches.length > 1) { append(matches.map(esc).join('  ')); scrollBottom(); } }
+      });
+      document.getElementById('clear').addEventListener('click', () => { screen.innerHTML = ''; mountInput(); });
+      document.querySelectorAll('[data-command]').forEach((button) => button.addEventListener('click', async () => { const value = button.dataset.command; mountInput(); await run(value); mountInput(); }));
+      screen.addEventListener('click', () => input.focus());
+      bridge?.commands?.setContext?.(() => ({ app: 'bash', cwd: state.cwd, commandCount: state.history.length }));
+      boot();
+    })();
+  </script>
+</body>
+</html>

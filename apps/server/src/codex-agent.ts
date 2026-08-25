@@ -35,7 +35,7 @@ export class CodexAgentAdapter implements AgentAdapter {
     const invocation = buildCodexInvocation(staged, profile, search, prompt, this.command, process.env, staged.references.forceSearch);
     const eventsFile = `${staged.evidence}/events.jsonl`; const stderrFile = `${staged.evidence}/stderr.log`;
     log('codex', `job=${staged.id} ${task.capability} model=${profile.model} reasoning=${profile.reasoning} effort=${profile.effort} search=${search}`); log('codex', `command: ${invocation.command} ${invocation.args.map(arg => JSON.stringify(arg)).join(' ')}`); updateJobRecord(staged, 'running'); this.progress({ taskId: task.operationId, title, kind: 'begin', text: 'Working…', status: 'active' });
-    let result = await workerSlots.run(() => runChild(invocation, eventsFile, stderrFile, event => this.progress({ taskId: task.operationId, title, ...event, status: 'active' })));
+    let result = await workerSlots.run(() => runChild(invocation, eventsFile, stderrFile, event => this.progress({ taskId: task.operationId, title, ...event, status: 'active' }), workerTimeout(profile)));
     if (!result.ok) { updateJobRecord(staged, 'failed', { error: result.message }); this.progress({ taskId: task.operationId, title, kind: 'end', text: result.message, status: 'error' }); return result; }
     try {
       const initial = readStructuredWorkerResult(staged.resultFile);
@@ -61,7 +61,7 @@ export class CodexAgentAdapter implements AgentAdapter {
           ? 'Repair the identity artifact directly. Read input/repair.json and input/work-order.json. Ensure output/app/node.json is valid JSON with stable id, canonical non-empty title from identity.canonicalName, kind="app", and icon="icon.svg". Create output/app/icon.svg as a distinctive, recognizable app-specific drawable SVG derived from the requested app identity; never use generic sparkle, emoji, Lucide, placeholder, or unrelated artwork. Remove all references to framework/, input/, or staged paths from published files. Do not use malformed apply_patch syntax. Validate the files, then return the structured result.'
           : 'Repair output/app immediately. Read input/repair.json and input/work-order.json. Preserve working behavior, fix every reported defect, and ensure the requested route is represented by the correct node.json. For route /, the app-root node.json must define surface or a valid local entry; an unreferenced index.html is not loadable. Remove staged framework paths, recheck acceptance, and return the structured result.';
         const repair = buildCodexInvocation(staged, profile, search, repairPrompt, this.command, process.env, staged.references.forceSearch);
-        result = await workerSlots.run(() => runChild(repair, eventsFile, stderrFile, event => this.progress({ taskId: task.operationId, title, ...event, status: 'active' }))); if (!result.ok) { updateJobRecord(staged, 'failed', { error: result.message }); this.progress({ taskId: task.operationId, title, kind: 'end', text: result.message, status: 'error' }); return result; }
+        result = await workerSlots.run(() => runChild(repair, eventsFile, stderrFile, event => this.progress({ taskId: task.operationId, title, ...event, status: 'active' }), workerTimeout(profile))); if (!result.ok) { updateJobRecord(staged, 'failed', { error: result.message }); this.progress({ taskId: task.operationId, title, kind: 'end', text: result.message, status: 'error' }); return result; }
       }
       const candidate = validateCandidateTree(staged.outputApp); if (!candidate.ok) throw new Error(`Candidate rejected: ${candidate.errors.join('; ')}`);
       const candidateWorld = `${staged.root}/candidate-world`; writeFileSync(`${staged.evidence}/candidate.json`, JSON.stringify(candidate, null, 2) + '\n');
@@ -85,6 +85,15 @@ export class CodexAgentAdapter implements AgentAdapter {
 
 class WorkerSlots { private active = 0; private readonly waiting: Array<() => void> = []; constructor(private readonly limit: number) {} async run<T>(work: () => Promise<T>) { if (this.active >= this.limit) await new Promise<void>(resolve => this.waiting.push(resolve)); this.active++; try { return await work(); } finally { this.active--; this.waiting.shift()?.(); } } }
 const workerSlots = new WorkerSlots(Math.max(1, Number(process.env.VIBEOS_GENERATION_CONCURRENCY ?? 2)));
+
+function workerTimeout(profile: ReturnType<typeof selectWorkerProfile>) {
+  const configured = Number(process.env.VIBEOS_GENERATION_TIMEOUT_MS ?? 15 * 60_000);
+  if (!profile.cooperativeBudgetMs) return configured;
+  // Ultra's budget is a worker target. Keep a small host-only safety margin so
+  // a cooperative worker can finish its current handoff instead of being
+  // killed at the target boundary.
+  return Math.max(configured, profile.cooperativeBudgetMs + 5 * 60_000);
+}
 
 const fixedPrompt = `You are the VibeOS generated-world worker. Execute immediately; do not narrate a plan or wait for approval. Read framework/FRAMEWORK.md, framework/bridge.d.ts, framework/theme.css, input/acceptance.json, the compact task JSON below, and inherited AGENTS memory. Write only output/app. If input/observation/window.png exists, inspect it when visual state matters, but prefer declared state/contracts for semantic truth. Deliver production-quality work and return only after the current page is genuinely complete and self-reviewed.
 
@@ -118,8 +127,10 @@ const effortPrompt: Record<'fast' | 'balanced' | 'quality' | 'ultra', string> = 
   fast: 'EFFORT fast: focus scope tightly; still deliver a reasonable working page, test its primary workflow once, and do not ship visible dead behavior.',
   balanced: 'EFFORT balanced: complete the page workflow, test primary interactions and one related path, and fix discovered issues before return.',
   quality: 'EFFORT quality: prioritize production-quality UI, behavior, accessibility, persistence, responsive layout, and theme compatibility over speed; self-review and smoke-test before return.',
-  ultra: 'EFFORT ultra: use maximum diligence; research when permitted, inspect edge cases, test broadly across workflows/themes/viewports, and repair every discovered quality issue before return.'
+  ultra: 'EFFORT ultra: use maximum diligence within a cooperative 60-minute budget (60 minutes). Check elapsed time before research, implementation, testing, and repair; preserve the primary workflow, recognizability, and reachable deferred actions before spending time on polish. Return the best accepted artifact before the budget is exhausted.'
 };
+
+const deferredCapabilityPrompt = 'Deferred capability policy: if breadth does not fit, keep the requested identity and primary workflow complete. Expose every meaningful deferred capability through a concrete child surface or an app-owned AI command with focused state; never use a dead button, dummy dialog, acknowledgement, or invisible omission.';
 
 const searchPrompt: Record<SearchLevel, string> = {
   none: 'SEARCH none: do not browse, fetch, install, or use online information/content unless the task explicitly names a real URL, local/host path, or library; explicit references always require inspection/use.',
@@ -136,7 +147,7 @@ function readMemoryBlock(staged: ReturnType<typeof createStagedJob>) {
 function compactJsonBlock(task: AgentTask, search: SearchLevel, staged: ReturnType<typeof createStagedJob>) {
   const settings = task.context?.settings;
   const context = task.context && Object.fromEntries(Object.entries({ node: task.context.node, parent: task.context.parent, siblings: task.context.siblings, existingFiles: task.context.existingFiles, acceptance: task.context.acceptance, observation: task.context.observation ? { ...task.context.observation, path: 'input/observation/window.png' } : undefined }).filter(([, value]) => value !== undefined));
-  return JSON.stringify({ v: 2, operationId: task.operationId, capability: task.capability, intent: task.intent, input: task.input, context, target: { appId: staged.appId, output: 'output/app' }, settings: settings ? { model: settings.model, useGhPrefix: settings.useGhPrefix, reasoning: settings.reasoning, effort: settings.effort, search: settings.search } : { model: 'terra', useGhPrefix: false, reasoning: 'high', effort: 'quality', search }, references: staged.references, identity: task.capability === 'app:identity' ? { ...(task.input as object), canonicalName: String((task.input as { name?: unknown }).name ?? staged.appId).trim() } : undefined }, (_, value) => value === undefined ? undefined : value);
+  return JSON.stringify({ v: 2, operationId: task.operationId, capability: task.capability, intent: task.intent, input: task.input, context, target: { appId: staged.appId, output: 'output/app' }, settings: settings ? { model: settings.model, useGhPrefix: settings.useGhPrefix, reasoning: settings.reasoning, effort: settings.effort, search: settings.search, generationAccess: staged.resourcePolicy } : { model: 'terra', useGhPrefix: false, reasoning: 'high', effort: 'quality', search, generationAccess: staged.resourcePolicy }, resourcePolicy: staged.resourcePolicy, deferredCapabilities: staged.deferredCapabilities, references: staged.references, identity: task.capability === 'app:identity' ? { ...(task.input as object), canonicalName: String((task.input as { name?: unknown }).name ?? staged.appId).trim() } : undefined }, (_, value) => value === undefined ? undefined : value);
 }
 
 export function buildPrompt(task: AgentTask, search: SearchLevel, staged: ReturnType<typeof createStagedJob>) {
@@ -144,19 +155,20 @@ export function buildPrompt(task: AgentTask, search: SearchLevel, staged: Return
   const settings = task.context?.settings;
   const memory = readMemoryBlock(staged);
   return ['[FIXED VibeOS WORK CONTRACT]\n' + fixedPrompt + '\n' + goal + '\nStructured handoff: return only input/result.schema.json. Ordinary completion is ready with statePatches:[] question:null value:null. State patches include appId, revision, RFC-6902 add/replace/remove operations, and JSON-text values. Persist only the smallest complete app state; never overwrite unrelated fields. A material blocking choice may return needs_input with no patches and a typed choices/text question; otherwise do not ask.',
-    '[ACTIVE EFFORT POLICY]\n' + effortPrompt[settings?.effort ?? 'quality'],
+    '[ACTIVE EFFORT POLICY]\n' + effortPrompt[settings?.effort ?? 'quality'] + '\n' + deferredCapabilityPrompt,
     '[ACTIVE SEARCH POLICY]\n' + searchPrompt[search] + (staged.references.forceSearch ? '\nEXPLICIT REFERENCE OVERRIDE: inspect input/references and query the named real URLs/libraries now, regardless of the selected search level. A VibeOS browser route is not a real-world URL request.' : ''),
+    '[ACTIVE RESOURCE POLICY]\n' + Object.entries(staged.resourcePolicy).map(([resource, level]) => `${resource}=${level}`).join(', ') + '. The policy is independent per resource: knowledge covers facts/docs, assets covers media/fonts/models/textures, code covers repositories/examples/engines, and packages covers npm/uv/pip/system tools. An off resource is not used; allowed means use when useful; recommended means prefer it when materially helpful. Explicit references override only the corresponding resource and remain subject to host containment.',
     '[INHERITED AGENTS MEMORY]\n' + (memory || '(none)'),
     '[TASK JSON]\n' + compactJsonBlock(task, search, staged)].join('\n\n');
 }
 
 function taskTitle(task: AgentTask) { const app = typeof task.input === 'object' && task.input && 'name' in task.input ? String((task.input as { name?: unknown }).name ?? '') : task.target.split('/').at(-1)?.replace(/^app-/, '').replace(/[-_]+/g, ' ') ?? 'System'; const action = task.capability === 'app:identity' ? 'Install' : task.capability.startsWith('ai:command') ? 'Command' : task.capability.startsWith('surface:') ? 'Open' : task.capability.startsWith('repair:') ? 'Repair' : 'Update'; return `${app || 'System'} — ${action}`; }
-function runChild(invocation: ReturnType<typeof buildCodexInvocation>, eventsFile: string, stderrFile: string, onEvent?: (event: Pick<AgentProgress, 'kind' | 'text'>) => void): Promise<AgentResult> {
+function runChild(invocation: ReturnType<typeof buildCodexInvocation>, eventsFile: string, stderrFile: string, onEvent?: (event: Pick<AgentProgress, 'kind' | 'text'>) => void, timeoutMs = Number(process.env.VIBEOS_GENERATION_TIMEOUT_MS ?? 15 * 60_000)): Promise<AgentResult> {
   return new Promise(resolve => {
     const child = spawn(invocation.command, invocation.args, { cwd: invocation.cwd, env: invocation.env, detached: true, stdio: ['ignore', 'pipe', 'pipe'] });
     let settled = false; let eventBytes = 0; let errorBytes = 0; let stderrTail = '';
     const finish = (result: AgentResult) => { if (!settled) { settled = true; clearTimeout(timer); resolve(result); } };
-    const timer = setTimeout(() => { try { process.kill(-child.pid!, 'SIGKILL'); } catch {} finish({ ok: false, message: 'Generation timed out.' }); }, Number(process.env.VIBEOS_GENERATION_TIMEOUT_MS ?? 15 * 60_000));
+    const timer = setTimeout(() => { try { process.kill(-child.pid!, 'SIGKILL'); } catch {} finish({ ok: false, message: 'Generation timed out.' }); }, timeoutMs);
     let stdoutRemainder = '';
     child.stdout.on('data', chunk => {
       const text = chunk.toString();

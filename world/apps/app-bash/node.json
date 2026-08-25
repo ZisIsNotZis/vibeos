@@ -1,0 +1,9 @@
+{
+  "id": "app-bash",
+  "title": "Bash",
+  "kind": "app",
+  "status": "ready",
+  "icon": "icon.svg",
+  "children": [],
+  "entry": "index.html"
+}

@@ -132,6 +132,22 @@
     .project-row-main span { display: block; color: var(--on-surface-variant); font-size: var(--vibe-text-caption); }
     .empty { text-align: center; padding: 45px 20px; border: 1px dashed var(--outline); border-radius: var(--radius-md); color: var(--on-surface-variant); }
     .empty strong { color: var(--on-surface); display: block; margin-bottom: 4px; }
+    .desktop-summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 25px 0 20px; }
+    .desktop-stat { border: 1px solid var(--outline); background: var(--surface-raised); border-radius: var(--radius-md); padding: 16px; }
+    .desktop-stat-label { color: var(--on-surface-variant); font-size: var(--vibe-text-caption); }
+    .desktop-stat-value { display: block; margin-top: 5px; font-family: var(--vibe-font-mono); font-size: 25px; letter-spacing: -.06em; }
+    .desktop-section { border: 1px solid var(--outline); background: var(--surface-raised); border-radius: var(--radius-lg); overflow: hidden; }
+    .desktop-section-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 18px 20px; border-bottom: 1px solid var(--outline); }
+    .desktop-section-head p { color: var(--on-surface-variant); font-size: var(--vibe-text-label); }
+    .desktop-list { display: grid; }
+    .desktop-row { display: flex; align-items: center; gap: 13px; padding: 13px 20px; border-bottom: 1px solid var(--outline); min-width: 0; }
+    .desktop-row:last-child { border-bottom: 0; }
+    .desktop-app-icon { width: 34px; height: 34px; flex: 0 0 34px; border-radius: 9px; display: grid; place-items: center; background: color-mix(in srgb, var(--primary) 16%, var(--control)); color: var(--primary); font-family: var(--vibe-font-mono); font-size: 12px; font-weight: 700; }
+    .desktop-row-main { min-width: 0; flex: 1; }
+    .desktop-row-main strong { display: block; font-size: var(--vibe-text-label); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .desktop-row-main span { display: block; color: var(--on-surface-variant); font-size: var(--vibe-text-caption); margin-top: 2px; }
+    .desktop-badge { color: var(--brand-mint); font-size: var(--vibe-text-caption); white-space: nowrap; }
+    .desktop-empty { padding: 36px 20px; color: var(--on-surface-variant); text-align: center; }
     .editor { max-width: 1180px; margin: 0 auto; }
     .editor-head { display: flex; align-items: center; gap: 12px; margin-bottom: 22px; }
     .back-btn { border: 0; background: transparent; color: var(--on-surface-variant); padding: 5px; display: grid; place-items: center; }
@@ -170,6 +186,7 @@
       .topbar { padding: 0 20px; }.content { padding: 25px 20px; }
       .hero { grid-template-columns: 1fr; }.hero-art { min-height: 105px; }.hero-art svg { height: 180px; top: -38px; }.project-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .editor-layout { grid-template-columns: 1fr; }.inspector { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 14px; }.inspector h3, .inspector-note { grid-column: 1 / -1; }.field { margin-top: 0; margin-bottom: 13px; }
+      .desktop-summary { grid-template-columns: 1fr; }
     }
     @media (max-width: 560px) {
       .topbar { height: 62px; flex-basis: 62px; padding: 0 14px; }.crumb { display: none; }.top-actions { width: 100%; }.search { width: auto; flex: 1; }.content { padding: 20px 14px; }.stats { gap: 7px; }.stat { padding: 11px; }.stat-value { font-size: 19px; }.project-grid { grid-template-columns: 1fr; }.hero-card { padding: 21px; }.hero-art { display: none; }.page-title-row { align-items: flex-start; flex-direction: column; }.toolbar { align-items: stretch; flex-direction: column; }.select { width: 100%; }.editor-head { flex-wrap: wrap; }.editor-head .btn { margin-left: auto; }.inspector { display: block; }.inspector h3 { margin-bottom: 10px; }
@@ -183,6 +200,7 @@
       <div class="nav-label">Workspace</div>
       <nav class="nav" aria-label="Workspace">
         <button class="nav-btn active" data-page="overview"><svg class="icon" aria-hidden="true"><use href="#i-grid"></use></svg><span>Overview</span></button>
+        <button class="nav-btn" data-page="desktop"><svg class="icon" aria-hidden="true"><use href="#i-monitor"></use></svg><span>Desktop</span></button>
         <button class="nav-btn" data-page="projects"><svg class="icon" aria-hidden="true"><use href="#i-stack"></use></svg><span>Projects</span></button>
         <button class="nav-btn" data-page="assets"><svg class="icon" aria-hidden="true"><use href="#i-image"></use></svg><span>Assets</span></button>
         <button class="nav-btn" data-page="team"><svg class="icon" aria-hidden="true"><use href="#i-users"></use></svg><span>Team</span></button>
@@ -196,6 +214,7 @@
   </div>
   <svg xmlns="http://www.w3.org/2000/svg" hidden>
     <symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="4" width="6" height="6" rx="1" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="4" y="14" width="6" height="6" rx="1" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="14" width="6" height="6" rx="1" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+    <symbol id="i-monitor" viewBox="0 0 24 24"><rect x="3.5" y="4" width="17" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 20h8M12 16v4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
     <symbol id="i-stack" viewBox="0 0 24 24"><path d="m4 8 8-4 8 4-8 4-8-4Z M4 12l8 4 8-4 M4 16l8 4 8-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
     <symbol id="i-image" viewBox="0 0 24 24"><rect x="3.5" y="4" width="17" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="8.5" cy="9" r="1.5" fill="currentColor"/><path d="m5 17 4.5-4 3 2.5 2-2 4.5 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
     <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3.5 19c.6-3 2.4-4.5 5.5-4.5s4.9 1.5 5.5 4.5M15.5 5.5a3 3 0 0 1 0 5.8M16 14.7c2.5.2 3.9 1.6 4.5 4.3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
@@ -212,7 +231,7 @@
       const bridge = window.vibeOS;
       const key = 'hyperframe.workspace.v1';
       const defaults = {
-        page: 'overview',
+        page: 'desktop',
         query: '',
         sort: 'Recently edited',
         projectId: null,
@@ -223,6 +242,45 @@
           { id: 'field-notes', title: 'Field notes — Kyoto', kind: 'Editorial cut', edited: 'Aug 18', status: 'Ready to share', scenes: 8, headline: 'A slower point of view', body: 'Notes from the edge of the city.' }
         ]
       };
+      const desktopApps = [
+        ['app--hyperframe', 'Hyperframe', 'Creative workspace'],
+        ['app-promax', '押韵大师ProMax', 'Writing studio'],
+        ['app-3d-model-editor', '3d Model Editor', 'Design tool'],
+        ['app-3d-pinball-space-cadet', '3D Pinball: Space Cadet', 'Games'],
+        ['app-android-simulator', 'Android Simulator', 'Development'],
+        ['app-cad-editor', 'CAD Editor', 'Design tool'],
+        ['app-claude-code', 'Claude Code', 'Development'],
+        ['app-codex', 'Codex', 'Development'],
+        ['app-command-conquer-red-alert-3', 'Command & Conquer: Red Alert 3', 'Games'],
+        ['app-cs1-6', 'CS1.6', 'Games'],
+        ['app-dota2', 'DOTA2', 'Games'],
+        ['app-draw-io', 'Draw.Io', 'Diagramming'],
+        ['app-excel', 'Excel', 'Productivity'],
+        ['app-firefox', 'Firefox', 'Web browser'],
+        ['app-flappy-bird', 'Flappy Bird', 'Games'],
+        ['app-freecell', 'FreeCell', 'Games'],
+        ['app-music', 'Music Studio', 'Audio'],
+        ['app-iphone-simulator', 'Iphone Simulator', 'Development'],
+        ['app-midi-editor', 'Midi editor', 'Audio'],
+        ['app-outlook', 'Outlook', 'Productivity'],
+        ['app-paint', 'Paint', 'Graphics'],
+        ['app-paint3d', 'Paint3d', 'Graphics'],
+        ['app-plants-vs-zombies', 'Plants Vs Zombies', 'Games'],
+        ['app-poetry', 'Poetry House', 'Writing studio'],
+        ['app-powerpoint', 'Powerpoint', 'Productivity'],
+        ['app-scientific-calculator', 'Scientific Calculator', 'Productivity'],
+        ['app-word', 'Word', 'Productivity'],
+        ['app-sublime-text', 'Sublime Text', 'Developer tool'],
+        ['app-temple-run', 'Temple Run', 'Games'],
+        ['app-tetris', 'Tetris', 'Games'],
+        ['app-warcraft3', 'Warcraft III', 'Games'],
+        ['app-zed', 'Zed', 'Developer tool'],
+        ['app-hyperframes-video-generator', 'Hyperframes Video Generator', 'Creative workspace'],
+        ['assistant', 'Assistant', 'System'],
+        ['browser', 'Browser', 'System'],
+        ['settings', 'Settings', 'System'],
+        ['shop', 'App Shop', 'System']
+      ];
       let state = structuredClone(defaults);
       const app = document.getElementById('app'), content = document.getElementById('content'), search = document.getElementById('search');
       const esc = (value) => String(value ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
@@ -244,6 +302,12 @@
         const sorted = [...list].sort((a,b) => state.sort === 'Title A–Z' ? a.title.localeCompare(b.title) : state.sort === 'Scene count' ? b.scenes - a.scenes : state.projects.indexOf(a) - state.projects.indexOf(b));
         return `<div class="page-title-row"><div><div class="eyebrow">Library</div><h1 style="margin-top:8px">Projects</h1><p>${state.projects.length} compositions in your workspace.</p></div><button class="btn primary" data-action="new">${icon('plus')}New composition</button></div><div class="toolbar"><label class="search" style="width:min(280px,100%)"><svg class="icon" aria-hidden="true"><use href="#i-search"></use></svg><span class="sr-only">Filter projects</span><input id="project-filter" type="search" value="${esc(state.query)}" aria-label="Filter projects" autocomplete="off"></label><select class="select" id="sort" aria-label="Sort projects"><option ${state.sort === 'Recently edited' ? 'selected' : ''}>Recently edited</option><option ${state.sort === 'Title A–Z' ? 'selected' : ''}>Title A–Z</option><option ${state.sort === 'Scene count' ? 'selected' : ''}>Scene count</option></select></div><div class="all-projects">${sorted.length ? sorted.map((p,i) => `<div class="project-row"><div class="row-thumb" style="filter:hue-rotate(${i * 42}deg)"></div><div class="project-row-main"><strong>${esc(p.title)}</strong><span>${esc(p.kind)} · ${p.scenes} scenes · edited ${esc(p.edited.toLowerCase())}</span></div><span class="project-status">${esc(p.status)}</span><button class="btn" data-open="${esc(p.id)}">Open ${icon('arrow')}</button></div>`).join('') : `<div class="empty"><strong>No projects match “${esc(state.query)}”</strong>Clear the filter to see everything.</div>`}</div>`;
       }
+      function desktopPage() {
+        const matches = desktopApps.filter(([id, name, type]) => `${name} ${type}`.toLowerCase().includes(state.query.toLowerCase()));
+        const system = desktopApps.filter(([, , type]) => type === 'System').length;
+        const initials = (name) => name.replace(/[^A-Za-z0-9]/g, '').slice(0, 2).toUpperCase() || '•';
+        return `<div class="page-title-row"><div><div class="eyebrow">Workspace status</div><h1 style="margin-top:8px">Desktop</h1><p>Apps and tools available in this workspace.</p></div><button class="btn" data-action="refresh-desktop">Refresh list</button></div><div class="desktop-summary"><div class="desktop-stat"><span class="desktop-stat-label">Available apps</span><strong class="desktop-stat-value">${desktopApps.length}</strong></div><div class="desktop-stat"><span class="desktop-stat-label">System tools</span><strong class="desktop-stat-value">${system}</strong></div><div class="desktop-stat"><span class="desktop-stat-label">Workspace</span><strong class="desktop-stat-value">Ready</strong></div></div><section class="desktop-section"><div class="desktop-section-head"><div><h2>App inventory</h2><p>Select an app to open its workspace.</p></div><span class="desktop-badge">${matches.length} shown</span></div><div class="desktop-list">${matches.length ? matches.map(([id, name, type]) => `<div class="desktop-row"><div class="desktop-app-icon" aria-hidden="true">${esc(initials(name))}</div><div class="desktop-row-main"><strong>${esc(name)}</strong><span>${esc(type)}</span></div><button class="btn" data-open-app="${esc(id)}">Open ${icon('arrow')}</button></div>`).join('') : '<div class="desktop-empty">No apps match this search.</div>'}</div></section>`;
+      }
       function simplePage(kind) {
         const data = kind === 'assets' ? {eyebrow:'Library', title:'Assets', body:'Keep the visual building blocks for every composition close at hand.', action:'Add an asset'} : {eyebrow:'Workspace', title:'Team', body:'Your shared creative space is ready for focused collaboration.', action:'Invite a collaborator'};
         return `<div class="page-title-row"><div><div class="eyebrow">${data.eyebrow}</div><h1 style="margin-top:8px">${data.title}</h1><p>${data.body}</p></div><button class="btn primary" data-action="${kind === 'assets' ? 'asset' : 'invite'}">${icon('plus')}${data.action}</button></div><div class="empty" style="margin-top:28px"><strong>${kind === 'assets' ? 'Your asset shelf is clear.' : 'A calm room for good work.'}</strong><span>${kind === 'assets' ? 'Add a file to make it available across your compositions.' : 'Invite someone to start shaping the next frame together.'}</span></div>`;
@@ -256,11 +320,11 @@
       function render() {
         app.hidden = false; search.value = state.query; document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.page === state.page));
         document.getElementById('crumb-label').textContent = state.page === 'editor' ? 'Editor' : state.page[0].toUpperCase() + state.page.slice(1);
-        content.innerHTML = state.page === 'overview' ? overview() : state.page === 'projects' ? projectsPage() : state.page === 'editor' ? editor() : simplePage(state.page);
+        content.innerHTML = state.page === 'overview' ? overview() : state.page === 'desktop' ? desktopPage() : state.page === 'projects' ? projectsPage() : state.page === 'editor' ? editor() : simplePage(state.page);
       }
       async function create() { const id = `composition-${Date.now()}`; state.projects.unshift({id,title:'Untitled composition',kind:'New composition',edited:'Just now',status:'In progress',scenes:1,headline:'A clear point of view',body:'Start with one strong frame.'}); state.projectId = id; state.page = 'editor'; state.playing = false; await save(); render(); document.getElementById('editor-title-input')?.select(); notify('New composition created.'); }
       async function updateProject(field, value) { const p = current(); if (!p) return; p[field] = value; p.edited = 'Just now'; await save(); const target = document.getElementById(field === 'headline' ? 'stage-headline' : 'stage-body'); if (target) target.textContent = value || (field === 'headline' ? 'A clear point of view' : 'Start with one strong frame.'); }
-      content.addEventListener('click', async (event) => { const page = event.target.closest('[data-page]')?.dataset.page; if (page) { state.page = page; state.playing = false; await save(); render(); return; } const open = event.target.closest('[data-open]')?.dataset.open; if (open) { state.projectId = open; state.page = 'editor'; state.playing = false; await save(); render(); return; } const action = event.target.closest('[data-action]')?.dataset.action; if (!action) return; if (action === 'new') return create(); if (action === 'back') { state.page = 'projects'; state.playing = false; await save(); render(); return; } if (action === 'play') { state.playing = !state.playing; render(); return; } if (action === 'save') { await save(); notify('Composition saved.'); return; } if (action === 'add-scene') { const p = current(); if (p) { p.scenes += 1; await save(); render(); notify('Scene added.'); } return; } if (action === 'duplicate') { const p = current(); if (p) { p.scenes += 1; await save(); render(); notify('Scene duplicated.'); } return; } if (action === 'asset') return notify('Choose a local file to add to your shelf.', 'info'); if (action === 'invite') return notify('Invite link is available from your workspace administrator.', 'info'); });
+      content.addEventListener('click', async (event) => { const page = event.target.closest('[data-page]')?.dataset.page; if (page) { state.page = page; state.playing = false; await save(); render(); return; } const openApp = event.target.closest('[data-open-app]')?.dataset.openApp; if (openApp) { try { await bridge?.dispatch?.({type:'open_surface', appId:openApp, route:'/'}); } catch (_) { notify('This app could not be opened.', 'error'); } return; } const open = event.target.closest('[data-open]')?.dataset.open; if (open) { state.projectId = open; state.page = 'editor'; state.playing = false; await save(); render(); return; } const action = event.target.closest('[data-action]')?.dataset.action; if (!action) return; if (action === 'new') return create(); if (action === 'refresh-desktop') { render(); notify('App list refreshed.', 'info'); return; } if (action === 'back') { state.page = 'projects'; state.playing = false; await save(); render(); return; } if (action === 'play') { state.playing = !state.playing; render(); return; } if (action === 'save') { await save(); notify('Composition saved.'); return; } if (action === 'add-scene') { const p = current(); if (p) { p.scenes += 1; await save(); render(); notify('Scene added.'); } return; } if (action === 'duplicate') { const p = current(); if (p) { p.scenes += 1; await save(); render(); notify('Scene duplicated.'); } return; } if (action === 'asset') return notify('Choose a local file to add to your shelf.', 'info'); if (action === 'invite') return notify('Invite link is available from your workspace administrator.', 'info'); });
       content.addEventListener('input', async (event) => { const el = event.target; if (el.id === 'editor-title-input') { const p = current(); if (p) { p.title = el.value; await save(); } } if (el.id === 'headline-input') updateProject('headline', el.value); if (el.id === 'body-input') updateProject('body', el.value); if (el.id === 'project-filter') { state.query = el.value; search.value = state.query; render(); document.getElementById('project-filter')?.focus(); } });
       content.addEventListener('change', async (event) => { if (event.target.id === 'sort') { state.sort = event.target.value; await save(); render(); } });
       search.addEventListener('input', () => { state.query = search.value; if (state.page !== 'editor') render(); });

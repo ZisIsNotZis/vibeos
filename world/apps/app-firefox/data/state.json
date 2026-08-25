@@ -1,0 +1,202 @@
+{
+  "appId": "app-firefox",
+  "revision": 1,
+  "state": {
+    "desktop": {
+      "focusedAppId": "app-firefox",
+      "applicationCount": 38,
+      "applications": [
+        {
+          "id": "app--by-hyperframe",
+          "name": "Hyperframe",
+          "revision": 0
+        },
+        {
+          "id": "app--promax",
+          "name": "押韵大师ProMax",
+          "revision": 0
+        },
+        {
+          "id": "app-3d-model-editor",
+          "name": "3d Model Editor",
+          "revision": 0
+        },
+        {
+          "id": "app-3d-pinball-space-cadet",
+          "name": "3D Pinball: Space Cadet",
+          "revision": 16
+        },
+        {
+          "id": "app-android-simulator",
+          "name": "Android Simulator",
+          "revision": 0
+        },
+        {
+          "id": "app-cad-editor",
+          "name": "CAD Editor",
+          "revision": 0
+        },
+        {
+          "id": "app-claude-code",
+          "name": "Claude Code",
+          "revision": 0
+        },
+        {
+          "id": "app-codex",
+          "name": "Codex",
+          "revision": 0
+        },
+        {
+          "id": "app-command-conquer-red-alert-3",
+          "name": "Command & Conquer: Red Alert 3",
+          "revision": 3
+        },
+        {
+          "id": "app-cs1-6",
+          "name": "CS1.6",
+          "revision": 0
+        },
+        {
+          "id": "app-dota2",
+          "name": "DOTA2",
+          "revision": 1
+        },
+        {
+          "id": "app-draw-io",
+          "name": "Draw.Io",
+          "revision": 0
+        },
+        {
+          "id": "app-excel",
+          "name": "Excel",
+          "revision": 0
+        },
+        {
+          "id": "app-firefox",
+          "name": "Firefox",
+          "revision": 0
+        },
+        {
+          "id": "app-flappy-bird",
+          "name": "Flappy Bird",
+          "revision": 0
+        },
+        {
+          "id": "app-freecell",
+          "name": "FreeCell",
+          "revision": 0
+        },
+        {
+          "id": "app-hyperframes-video-generator",
+          "name": "Hyperframes Video Generator",
+          "revision": 0
+        },
+        {
+          "id": "app-iphone-simulator",
+          "name": "Iphone Simulator",
+          "revision": 0
+        },
+        {
+          "id": "app-midi-editor",
+          "name": "Midi editor",
+          "revision": 0
+        },
+        {
+          "id": "app-minesweeper",
+          "name": "Minesweeper",
+          "revision": 0
+        },
+        {
+          "id": "app-music",
+          "name": "Music Studio",
+          "revision": 0
+        },
+        {
+          "id": "app-outlook",
+          "name": "Outlook",
+          "revision": 0
+        },
+        {
+          "id": "app-paint",
+          "name": "Paint",
+          "revision": 0
+        },
+        {
+          "id": "app-paint3d",
+          "name": "Paint3d",
+          "revision": 0
+        },
+        {
+          "id": "app-plants-vs-zombies",
+          "name": "Plants Vs Zombies",
+          "revision": 0
+        },
+        {
+          "id": "app-poetry",
+          "name": "Poetry House",
+          "revision": 0
+        },
+        {
+          "id": "app-powerpoint",
+          "name": "Powerpoint",
+          "revision": 0
+        },
+        {
+          "id": "app-scientific-calculator",
+          "name": "Scientific Calculator",
+          "revision": 0
+        },
+        {
+          "id": "app-sublime-text",
+          "name": "Sublime Text",
+          "revision": 37
+        },
+        {
+          "id": "app-temple-run",
+          "name": "Temple Run",
+          "revision": 0
+        },
+        {
+          "id": "app-tetris",
+          "name": "Tetris",
+          "revision": 0
+        },
+        {
+          "id": "app-warcraft3",
+          "name": "Warcraft III",
+          "revision": 0
+        },
+        {
+          "id": "app-word",
+          "name": "Word",
+          "revision": 2
+        },
+        {
+          "id": "app-zed",
+          "name": "Zed",
+          "revision": 0
+        },
+        {
+          "id": "assistant",
+          "name": "Assistant",
+          "revision": 0
+        },
+        {
+          "id": "browser",
+          "name": "Browser",
+          "revision": 0
+        },
+        {
+          "id": "settings",
+          "name": "Settings",
+          "revision": 0
+        },
+        {
+          "id": "shop",
+          "name": "App Shop",
+          "revision": 0
+        }
+      ]
+    }
+  }
+}
