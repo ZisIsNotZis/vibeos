@@ -1,0 +1,94 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{microtype}
+\usepackage{url}
+
+\title{VibeOS: Lazy Backend-Owned Generation for an Imagined Local Operating System}
+\author{Independent Research}
+\date{September 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+VibeOS is a browser-hosted prototype for software and world nodes that may not exist when a user requests them. Its central design is lazy backend-owned generation: the runtime represents a missing capability as an operation, stages a scoped work order, asks an external worker for a structured artifact, validates the candidate, publishes it transactionally, and resumes the user-facing operation. This paper documents the design and the evidence currently present in the repository. The contribution is an implementation architecture and an explicit evidence boundary, not a claim that generated software is generally safe, reliable, or superior to conventional applications. In the inspected source snapshot, 75 server tests pass, including tests for staging, resource policy, structured handoff, artifact validation, rollback, state isolation, and generic runtime behavior. Browser end-to-end tests, provider-backed generation quality, latency, and security under adversarial workloads are not established by this artifact. We release a compact source-level account, claim ledger, and reproduction instructions so that stronger claims can be tested rather than inferred.
+\end{abstract}
+
+\section{Introduction}
+Software systems normally assume that an application is installed before its interface is opened. VibeOS explores the inverse interaction: a user addresses a node in a local world tree, and an unavailable surface can be prepared on demand. The system is motivated by local, persistent, extensible software rather than by a general-purpose cloud operating system. It uses a browser for presentation and a backend runtime for durable world state and generation orchestration.
+
+The design combines four ideas. First, applications are replaceable world content behind a generic operating-system boundary. Second, a cache miss is a typed operation rather than an implicit promise. Third, generation is performed in a staged worker workspace with a structured result contract. Fourth, a candidate is published only after source-level checks and can be rolled back if post-publication loading fails. These ideas are related to retrieval and tool-using agents, but VibeOS treats the generated artifact and its lifecycle as the primary unit of delivery.
+
+This paper makes three deliberately narrow contributions: (1) a precise description of the runtime and generation seams implemented in VibeOS; (2) a claim ledger that separates source-backed observations from proposals and unverified hypotheses; and (3) a reproducibility path based on the repository, deterministic tests, and a pinned source snapshot. We do not report an accuracy benchmark, a latency benchmark, or a security proof.
+
+\section{System Model}
+Let $W$ be a durable world tree, $R$ the runtime state, and $i$ a user intent. A surface request is resolved by the following transition:
+\begin{equation}
+ (R,i,W) \rightarrow \begin{cases} (R',\mathrm{ready},W) & \text{if the requested surface is cached},\\
+ (R',\mathrm{generating},W) \rightarrow (R'',\mathrm{ready},W') & \text{after validated publication},\\
+ (R'',\mathrm{failed},W) & \text{if generation or validation fails.}
+ \end{cases}
+\end{equation}
+The world tree is therefore both content storage and a cache, while mutable application data is kept separately from replaceable source content. This separation is important: replacing an artifact must not silently erase its state.
+
+The core boundary follows a capability-independent rule. The runtime owns addressing, windows, focus, persistence, transport, validation, generation, and diagnostics. Generated content owns its visual design, routes, controls, state schema, and domain behavior. A core branch keyed to a particular application name would violate this boundary and is not part of the intended model.
+
+\section{Lazy Generation Harness}
+\subsection{Work orders and staging}
+For a missing application surface, the harness creates a temporary job below \texttt{world/.jobs/}. The job contains \texttt{input/}, \texttt{framework/}, \texttt{output/app/}, and \texttt{evidence/}. The work order records a version, operation identifier, capability, original intent, context, acceptance criteria, worker profile, resource policy, and explicit references. An existing application source tree is copied into the output tree without its mutable \texttt{data/} directory.
+
+The worker receives a narrow environment: an ephemeral invocation, a job working directory, a workspace-write sandbox, a JSON output schema, and a designated result file. Search and resource access are explicit. The implemented resource dimensions are \textit{knowledge}, \textit{assets}, \textit{code}, and \textit{packages}; each has an \texttt{off}, \texttt{allowed}, or \texttt{recommended} level. This is a policy seam, not a claim that the host container supplies a complete security boundary.
+
+\subsection{Structured handoff}
+The worker result is not inferred from a textual sentinel. A valid result has status \texttt{ready} or \texttt{needs\_input}, a summary, and optional JSON-text state-patch values. Waiting for input cannot be combined with state patches. Patches are decoded and applied by the runtime, which checks the target application and revision through the application-state module. A question is emitted as a typed runtime event and may resume the worker through its question identifier.
+
+\subsection{Validation and publication}
+Before publication, the harness rejects symbolic links, non-regular files, multiple hard links, excessive file counts, excessive sizes, and excessive directory depth. The artifact verifier checks local HTML and CSS references and, at non-fast effort, reports visible buttons without detectable behavior. Publication copies the candidate to an incoming sibling, preserves existing mutable data, swaps the source subtree, invokes an optional post-publication validator, and restores the previous subtree on failure. These checks are intentionally modest: they do not establish semantic correctness, browser isolation, provenance, or absence of malicious behavior.
+
+\section{Runtime and Bridge}
+The runtime opens or navigates a window before ensuring its surface. It reuses a ready surface, coalesces concurrent requests for the same app-and-route key, and emits generation and completion events. A generated frame receives a channel-bound bridge for state, storage, notifications, navigation, dispatch, context menus, commands, and AI commands. Bridge dispatch rejects an intent that names another application, and process execution is limited to an allowlist of interpreters with an app-owned working directory and bounded arguments and time.
+
+Application state is namespaced by application identifier and persisted as revisioned JSON. A bridge state write or AI state patch is applied through the same state boundary; stale revisions and invalid patch operations are rejected. This gives generated content a generic interface without granting it unrestricted control of the host runtime.
+
+\section{Evidence}
+Table~\ref{tab:evidence} records the current evidence boundary. Tests are deterministic unit or integration tests unless explicitly marked otherwise. The source snapshot is VibeOS version 0.1.0 at repository revision \texttt{90b23f277a52c1862a764a97a9ddd99c8630e4f4}; the working tree also contained pre-existing documentation edits during inspection.
+
+\begin{table}[h]
+\centering
+\small
+\caption{Source-linked evidence available for this paper.}
+\label{tab:evidence}
+\begin{tabular}{p{0.28\linewidth}p{0.62\linewidth}}
+\toprule
+Claim area & Evidence in the repository \\
+\midrule
+Runtime & \texttt{apps/server/src/runtime.test.ts}; generic windows, cache reuse, persistence, bridge calls, questions, and concurrent request coalescing. \\
+Harness & \texttt{apps/server/src/generation-harness.test.ts}; staging, profiles, policies, containment arguments, structured results, patches, and rollback. \\
+Artifact checks & \texttt{apps/server/src/artifact-verifier.test.ts}; broken assets and dead controls are rejected; wired controls are accepted. \\
+World contract & \texttt{apps/server/src/world-contract.test.ts} and \texttt{world-loader.test.ts}; target containment and entrypoint loading. \\
+Observed run & \texttt{npm test}; TypeScript build plus 75 server tests passed on 2026-09-01. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The evidence demonstrates implemented code paths and test expectations. It does not demonstrate that an arbitrary external model can produce a usable artifact, that the browser UI is free of visual defects, or that a production deployment is safe. No benchmark dataset, provider trace, generated-job corpus, human evaluation, or ablation is included with this package.
+
+\section{Related Work}
+Retrieval-augmented generation grounds language-model output in external documents \cite{lewis2020retrieval}; tool-using agent work emphasizes interleaving reasoning and actions \cite{yao2023react}. VibeOS differs in scope: it treats a generated, locally published application surface as a durable cache entry, and it specifies a handoff and publication lifecycle around that entry. Browser isolation and sandboxing are established security research topics \cite{barth2008security}; the present artifact uses process and path restrictions but does not claim to reproduce a browser or container security boundary. JSON Patch provides a standard vocabulary for revisioned state mutations \cite{rfc6902}, which VibeOS uses at its runtime seam.
+
+\section{Limitations and Reproducibility}
+The prototype depends on Node.js 20+, npm, and a configured external worker for live generation. The deterministic test suite substitutes an agent adapter and therefore cannot establish provider quality, cost, or reliability. The repository contains no benchmark harness for generation success rate, time-to-ready, token use, task quality, accessibility, or recovery under process termination. Browser end-to-end and screenshot evidence are separate from the server test result and should be run in an environment with the required browser tooling before any visual or UX claim is made.
+
+To reproduce the reported source-level check, from the VibeOS repository run \texttt{npm install} followed by \texttt{npm test}. The latter builds the server workspace and runs \texttt{node --test dist/*.test.js}. A live worker requires the configured provider and may access resources according to the selected policy; it is not needed for the reported 75-test result. The claim ledger in \texttt{papers/CLAIMS.md} is the normative map from prose to evidence and caveat.
+
+\section{Conclusion}
+VibeOS shows one implementable pattern for imagined local software: make absence explicit, stage backend-owned work, require a structured handoff, validate before publication, preserve mutable state, and resume the original intent. The current evidence supports this as a prototype architecture and testable implementation. It does not support broad claims about generated-software quality or safety. The next useful experiments are provider-independent generation benchmarks, browser-level verification, adversarial containment tests, provenance accounting, and recovery measurements with published fixtures.
+
+\bibliographystyle{plain}
+\bibliography{references}
+\end{document}
