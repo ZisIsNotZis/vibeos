@@ -5,3 +5,21 @@ playwright-report/
 test-results/
 dev.log
 world/.jobs/
+
+# Common local caches and temporary workspaces
+__pycache__/
+.pi/
+.tmp/
+worktrees/
+.worktrees/
+.DS_Store
+
+# Local secrets, test caches, and generated logs
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.cache/
+.env
+.env.*
+!.env.example
+*.log

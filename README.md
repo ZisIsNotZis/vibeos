@@ -2,10 +2,7 @@
 
 English | [简体中文](README.zh-CN.md)
 
-VibeOS is a browser-hosted operating-system runtime for software that does not
-exist yet. It provides desktop windows, a launcher, persistence, generic app
-bridges, and a lazy generation harness that prepares missing world nodes and
-resumes the user’s action.
+VibeOS is a browser-hosted operating-system runtime for software that does not exist yet. It provides desktop windows, a launcher, persistence, generic app bridges, and a lazy generation harness that prepares missing world nodes and resumes the user’s action.
 
 ## Quickstart
 
@@ -18,24 +15,15 @@ npm run build
 npm run dev
 ```
 
-Open the Vite URL. The backend listens on `ws://localhost:8787` and exposes
-`/health`. Browser checks run with `npm run e2e --workspace @vibeos/web`.
+Open the Vite URL. The backend listens on `ws://localhost:8787` and exposes `/health`. Browser checks run with `npm run e2e --workspace @vibeos/web`.
 
 ## Architecture
 
-The core owns generic mechanisms: world addressing, window lifecycle, focus,
-storage, themes, transport, generation, validation, and diagnostics. Generated
-world content owns app meaning, UI, behavior, state, and children. A cache miss
-stages a scoped Codex worker, validates the artifact, publishes it under
-`world/`, and resumes the original intent. See the canonical design documents:
-[`docs/vibeos-design.md`](docs/vibeos-design.md) and
-[`docs/generation-harness-plan.md`](docs/generation-harness-plan.md).
+The core owns generic mechanisms: world addressing, window lifecycle, focus, storage, themes, transport, generation, validation, and diagnostics. Generated world content owns app meaning, UI, behavior, state, and children. A cache miss stages a scoped Codex worker, validates the artifact, publishes it under `world/`, and resumes the original intent. See the canonical design documents: [`docs/vibeos-design.md`](docs/vibeos-design.md) and [`docs/generation-harness-plan.md`](docs/generation-harness-plan.md).
 
 ## Current status and version
 
-Version `0.1.0` is declared in the root and workspace package manifests; tags
-use `vMAJOR.MINOR.PATCH`. This is a useful, innovative prototype, not a
-production operating system. Current screenshots are in `docs/screenshots/`.
+Version `0.1.0` is declared in the root and workspace package manifests; tags use `vMAJOR.MINOR.PATCH`. This is a useful, innovative prototype, not a production operating system. Current screenshots are in `docs/screenshots/`.
 
 ## Future vision
 
@@ -45,10 +33,7 @@ explicit device bridges. These are aspirations, not current guarantees.
 
 ## Contributing
 
-Issues and focused PRs are welcome. Keep core generic, put app-specific meaning
-in `world/`, and include tests plus screenshots for visual changes. Agents can
-triage, investigate, test, document, and implement accepted issues; maintainers
-review and merge. Read [`AGENTS.md`](AGENTS.md) before changing the runtime.
+Issues and focused PRs are welcome. Keep core generic, put app-specific meaning in `world/`, and include tests plus screenshots for visual changes. Agents can triage, investigate, test, document, and implement accepted issues; maintainers review and merge. Read [`AGENTS.md`](AGENTS.md) before changing the runtime.
 
 ## 中文简介
 
