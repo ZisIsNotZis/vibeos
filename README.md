@@ -23,7 +23,7 @@ The core owns generic mechanisms: world addressing, window lifecycle, focus, sto
 
 ## Current status and version
 
-Version `0.1.0` is declared in the root and workspace package manifests; tags use `vMAJOR.MINOR.PATCH`. This is a useful, innovative prototype, not a production operating system. Current screenshots are in `docs/screenshots/`.
+Version `0.1.0` is declared in the root and workspace package manifests; tags use `vMAJOR.MINOR.PATCH`. This reached its experimental goal as a **closed (milestone)** prototype; no further development is planned unless the project's inputs or goals change. Current screenshots are in `docs/screenshots/`. See [`docs/project-status.md`](docs/project-status.md).
 
 ## Future vision
 
