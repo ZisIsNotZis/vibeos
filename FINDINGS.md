@@ -40,7 +40,7 @@
 | N7 | 没有默认联网、没有生产级认证、没有远程协作、浏览器内没有任意原生执行 | 4 条非目标 | `docs/vibeos-design.md:22` | 成立 |
 | N8 | 加固尚未完成：资源/网络限额、取消重启恢复、资产来源与许可证、无障碍门禁、系统视图迁移全在 backlog，且"不是当前安全保证" | 6 项 | `docs/generation-harness-plan.md:15-18` | 成立 |
 | N9 | 论文包不声称复现了截图、基准数据、生成作业轨迹或 provider 相关的质量结果 | 4 类不声称 | `papers/CLAIMS.md:25` | 成立 |
-| N10 | `README.md:30` 说标签按 `vMAJOR.MINOR.PATCH`，但仓库当前没有任何标签（`git tag` 无输出） | 0 个标签 | `README.md:30` | 部分 |
+| N10 | 仓库至今没有任何标签（`git tag` 无输出）；版本 `0.1.0` 自初始提交 `ec8a198` 起未变更，`README.md:30` 已写明这一点并把 `vMAJOR.MINOR.PATCH` 降为将来打标签时的命名规则 | 0 个标签 | `README.md:30`、`git tag`、`package.json:5` | 成立 |
 
 ## 撤回 / 回退记录
 

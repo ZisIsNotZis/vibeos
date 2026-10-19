@@ -8,7 +8,7 @@
 
 - 关闭声明：`docs/project-status.md:9-12` —— "Closed as a milestone (2026-09-29)"，实验目标已达成，除非项目输入或目标改变否则不再开发；同一结论见 `README.md:30`。
 - 性质：实验性、本地优先，不是生产操作系统（`docs/project-status.md:25`）。
-- 版本：根 `package.json:5` 为 `0.1.0`，`apps/server`、`apps/web`、`packages/shared` 三个 workspace 同为 `0.1.0`；`README.md:30` 说标签按 `vMAJOR.MINOR.PATCH`，但仓库当前没有任何标签（`git tag` 无输出）。
+- 版本：根 `package.json:5` 为 `0.1.0`，`apps/server`、`apps/web`、`packages/shared` 三个 workspace 同为 `0.1.0`；该版本自初始提交 `ec8a198`（2026-08-19）起未变更，仓库至今没有任何标签（`git tag` 无输出）。`README.md:30` 已按这个现状表述：无已发布的标签，`vMAJOR.MINOR.PATCH` 只作为将来打标签时的命名规则。
 - 仓库最后一次提交 2026-10-19（`659ee89 Show the project screenshot in the README`），是展示性改动，不是功能改动。
 - 边界：本次只读仓内文件，未运行 `npm test` / `npm run build` / `npm run e2e`；仓内记录的测试结果见 `FINDINGS.md` 并对"当前是否仍成立"标注为未知。
 
