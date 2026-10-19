@@ -4,6 +4,10 @@ English | [简体中文](README.zh-CN.md)
 
 VibeOS is a browser-hosted operating-system runtime for software that does not exist yet. It provides desktop windows, a launcher, persistence, generic app bridges, and a lazy generation harness that prepares missing world nodes and resumes the user’s action.
 
+![VibeOS desktop](docs/screenshots/desktop.png)
+
+The desktop, launcher, settings and a generated app running in a browser tab — screenshots committed under `docs/screenshots/`.
+
 ## Quickstart
 
 Requires Node.js 20+, npm, and a configured `codex` CLI/provider.
