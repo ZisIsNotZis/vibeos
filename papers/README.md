@@ -27,7 +27,7 @@ Live generation additionally requires the configured external worker/provider de
 
 ## Compilation
 
-`pdflatex`, `latexmk`, `bibtex`, and `biber` were not available in the preparation environment, so no PDF is included and no generated compilation files were added. With a LaTeX toolchain, compile from this directory with `pdflatex main.tex`, `bibtex main`, and two further `pdflatex main.tex` runs; keep auxiliary files out of version control.
+The manuscript compiles to [`main.pdf`](main.pdf), which is committed. To rebuild it from this directory with a LaTeX toolchain, run `pdflatex main.tex`, `bibtex main`, and two further `pdflatex main.tex` runs; keep auxiliary files (`.aux`, `.log`, `.bbl`, `.blg`, `.out`) out of version control.
 
 ## Submission status
 

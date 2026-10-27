@@ -1,6 +1,6 @@
 # VibeOS design
 
-Status: implementation in progress. This is the canonical architectural summary; executable behavior and tests remain the authority when they differ.
+Status: closed experimental milestone (see [`project-status.md`](project-status.md)). This is the canonical architectural summary; executable behavior and tests remain the authority when they differ.
 
 ## Core boundary
 
