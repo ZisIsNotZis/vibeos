@@ -23,3 +23,6 @@ worktrees/
 .env.*
 !.env.example
 *.log
+
+# Runtime state written by the server at VIBEOS_STATE_FILE (world/.runtime-state.json)
+world/.runtime-state.json
